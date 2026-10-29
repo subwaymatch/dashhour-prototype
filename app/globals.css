@@ -1,0 +1,145 @@
+@import "tailwindcss";
+
+@theme {
+  --color-navy-950: #0d1137;
+  --color-navy-900: #151a4f;
+  --color-navy-800: #1d2468;
+  --color-navy-700: #2c3484;
+  --color-navy-200: #c9cce6;
+  --color-navy-100: #e6e8f4;
+  --color-gold-800: #6e6139;
+  --color-gold-700: #7d6e42;
+  --color-gold-600: #8a7a4b;
+  --color-gold-500: #b4a67a;
+  --color-gold-300: #d8cfae;
+  --color-gold-100: #f3efe3;
+  --color-paper: #eceae4;
+  --color-ink: #1d1f2e;
+  --color-muted: #6b6b76;
+  --color-map-land: #f3f0e8;
+  --color-map-block: #e8e3d6;
+  --color-map-park: #dbe5cc;
+  --color-line-2: #3b9f4a;
+  --color-line-sb: #c3283a;
+
+  --font-sans: var(--font-inter), var(--font-noto-kr), ui-sans-serif, system-ui, -apple-system, "Apple SD Gothic Neo", sans-serif;
+  --font-display: var(--font-inter), var(--font-noto-kr), ui-sans-serif, system-ui, sans-serif;
+
+  --animate-spin-once: spin-once 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  --animate-pulse-ring: pulse-ring 2.4s ease-out infinite;
+  --animate-ticket-out: ticket-out 2.1s cubic-bezier(0.3, 0.7, 0.2, 1) forwards;
+  --animate-kiosk-blink: kiosk-blink 0.6s steps(2) infinite;
+
+  @keyframes spin-once {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes pulse-ring {
+    0% {
+      transform: scale(0.6);
+      opacity: 0.55;
+    }
+    100% {
+      transform: scale(2.4);
+      opacity: 0;
+    }
+  }
+  @keyframes ticket-out {
+    0% {
+      transform: translateY(-34px);
+    }
+    55% {
+      transform: translateY(0);
+    }
+    75% {
+      transform: translateY(0) rotate(0deg);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(26px) rotate(-6deg);
+      opacity: 0;
+    }
+  }
+  @keyframes kiosk-blink {
+    to {
+      opacity: 0.25;
+    }
+  }
+}
+
+:root {
+  color-scheme: light;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Inter reads best slightly tightened; Korean text keeps its natural spacing.
+   In the base layer so tracking utilities still win. */
+@layer base {
+  body {
+    letter-spacing: -0.012em;
+  }
+  :lang(ko) {
+    letter-spacing: 0;
+  }
+}
+
+/* Base UI portals render into the body; give them their own stacking context. */
+.root {
+  isolation: isolate;
+}
+
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Torn-paper edge used on the ticket, after the zig-zag in the original design. */
+@utility ticket-edges {
+  --tooth: 14px;
+  mask:
+    conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / var(--tooth) 51% repeat-x,
+    conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top / var(--tooth) 51% repeat-x;
+}
+
+/* Perforation between a card and its tear-off button. */
+@utility perforated {
+  background-image: radial-gradient(circle at center, currentColor 1.2px, transparent 1.6px);
+  background-size: 2px 7px;
+  background-repeat: repeat-y;
+}
+
+/* Ruled notepad paper for the sketch gallery. */
+@utility notepad {
+  background-color: #fbf6dc;
+  background-image:
+    linear-gradient(90deg, transparent 2.4rem, #e8a3a3 2.4rem, #e8a3a3 calc(2.4rem + 1px), transparent calc(2.4rem + 1px)),
+    repeating-linear-gradient(180deg, transparent 0 27px, #c7d6e6 27px 28px);
+}
+
+@utility scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--color-navy-900) 25%, transparent) transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
