@@ -32,7 +32,7 @@ const SKETCHES: Sketch[] = [
       "A small map (tap to open the full map), walking, bus and taxi times, and a crowd-by-hour chart.",
       "A one-line summary such as “60% quieter than other times”.",
     ],
-    href: "/",
+    href: "/branch/shinhan-gangnam",
   },
   {
     slug: "02-take-ticket",
@@ -43,7 +43,7 @@ const SKETCHES: Sketch[] = [
       "A confirmation popup with the branch and the number of people waiting, then OK or Cancel.",
       "OK plays a short loading screen while the ticket prints.",
     ],
-    href: "/",
+    href: "/branch/shinhan-gangnam",
     wide: true,
   },
   {
@@ -56,7 +56,7 @@ const SKETCHES: Sketch[] = [
       "The people-waiting count goes down as the queue moves, and a ring shows the wait running out.",
       "A route button gets you to the branch in time.",
     ],
-    href: "/?tab=ticket",
+    href: "/ticket",
   },
   {
     slug: "05-map",
@@ -67,7 +67,7 @@ const SKETCHES: Sketch[] = [
       "Numbered pins rank nearby branches; the selected branch appears in a card at the bottom.",
       "Selected by default: your favorite within 5 km, or else the branch with the shortest queue.",
     ],
-    href: "/?tab=map",
+    href: "/map",
   },
   {
     slug: "06-ticket-box",
@@ -79,16 +79,16 @@ const SKETCHES: Sketch[] = [
       "One ticket per person at a time, so people can't hold places in several queues.",
       "Missing your turn three times without cancelling adds a penalty.",
     ],
-    href: "/?tab=ticket",
+    href: "/ticket",
   },
 ];
 
 const STACK = [
   { name: "Vinext", detail: "Next.js App Router on Vite, prerendered and served from Cloudflare Workers" },
-  { name: "Base UI", detail: "Tabs, Dialog, Alert Dialog, Menu, Toast, Collapsible, Toggle Group, Meter, Progress, Switch, Input" },
+  { name: "Base UI", detail: "Drawer, Dialog, Alert Dialog, Menu, Toast, Radio Group, Toggle Group, Switch, Meter, Progress, Input" },
   { name: "Tailwind CSS 4", detail: "Navy and gold palette carried over from the 2016 visual design" },
   { name: "Lucide", detail: "Open-source icons in place of the original hand-drawn set" },
-  { name: "GPT Image 2.5", detail: "Redrew the notepad photos as clean, text-free pen sketches with transparent backgrounds" },
+  { name: "GPT Image 2.5", detail: "Redrew the notepad photos as clean, text-free pen sketches, and painted the branch scenes and onboarding illustrations" },
 ];
 
 export default function StoryPage() {
@@ -161,8 +161,9 @@ export default function StoryPage() {
             </h2>
             <p className="mt-4 leading-relaxed text-ink/80">
               Queue lengths are simulated from a typical day at a Korean bank branch, with a quiet mid-morning and rushes at
-              lunch and before closing. A demo clock runs ten times faster than real time so you can watch a ticket count
-              down, and you can change its speed from the ⋮ menu.
+              lunch and before closing. Each counter type (deposits, loans, foreign exchange and business banking) keeps its
+              own queue, as on a real ticket kiosk. A demo clock runs ten times faster than real time so you can watch a
+              ticket count down, get called to a counter, or miss your turn. You can change its speed from the ⋮ menu.
             </p>
           </div>
           <dl className="divide-y divide-navy-900/10 rounded-2xl bg-white px-6 shadow-[0_1px_2px_rgba(13,17,55,0.06)]">

@@ -1,9 +1,10 @@
 "use client";
 
 import * as React from "react";
-import { Star } from "lucide-react";
+import { LocateFixed, Minus, Plus, Star } from "lucide-react";
 import { USER } from "@/lib/data";
 import type { Lang } from "@/lib/i18n";
+import { BankBadge } from "./bank-badge";
 import { useStore, type BranchView } from "./store";
 import { cx } from "./ui";
 
@@ -130,8 +131,8 @@ function MapArt({ lang, route }: { lang: Lang; route?: string }) {
       </g>
       {/* Subway lines run under the two main roads. */}
       <g fill="none" strokeWidth="6" strokeLinecap="round" opacity="0.9">
-        <path d={lineThrough(offset(GANGNAM, TEHERAN, 5), TEHERAN)} stroke="var(--color-line-2)" />
-        <path d={lineThrough(offset(GANGNAM, DAERO, 5), DAERO)} stroke="var(--color-line-sb)" />
+        <path d={lineThrough(offset(GANGNAM, TEHERAN, 5), TEHERAN)} stroke="var(--color-subway-2)" />
+        <path d={lineThrough(offset(GANGNAM, DAERO, 5), DAERO)} stroke="var(--color-subway-sb)" />
       </g>
       <g fontFamily="var(--font-sans)" fontWeight="700" letterSpacing="3" fontSize="13" fill="#a59c84">
         {ROAD_LABELS.map((r) => (
@@ -156,7 +157,7 @@ function MapArt({ lang, route }: { lang: Lang; route?: string }) {
                   key={l}
                   cx={s.lines.length > 1 ? (i ? 4 : -4) : 0}
                   r="4.5"
-                  fill={l === "2" ? "var(--color-line-2)" : "var(--color-line-sb)"}
+                  fill={l === "2" ? "var(--color-subway-2)" : "var(--color-subway-sb)"}
                 />
               ))}
             </g>
@@ -195,7 +196,7 @@ function routeTo(b: { x: number; y: number }) {
 /* Markers                                                             */
 /* ------------------------------------------------------------------ */
 
-function Pin({ view, selected, onSelect, lang }: { view: BranchView; selected: boolean; onSelect: () => void; lang: Lang }) {
+function Pin({ view, selected, onSelect }: { view: BranchView; selected: boolean; onSelect: () => void }) {
   const { t } = useStore();
   return (
     <button
@@ -203,45 +204,28 @@ function Pin({ view, selected, onSelect, lang }: { view: BranchView; selected: b
       onClick={onSelect}
       aria-pressed={selected}
       aria-label={`${view.fullName}, ${view.wait} ${t("min")}, ${t("waitingCount", { n: view.waiting })}`}
-      className={cx(
-        "group absolute z-10 -translate-x-1/2 -translate-y-full outline-none",
-        selected && "z-20",
-      )}
+      className={cx("group absolute z-10 -translate-x-1/2 -translate-y-full outline-none", selected && "z-20")}
       style={{ left: `${view.x / 10}%`, top: `${view.y / 10}%` }}
     >
       <span
         className={cx(
-          "relative block origin-bottom transition-transform duration-200",
-          selected ? "scale-[1.35]" : "group-hover:scale-110",
+          "flex origin-bottom flex-col items-center transition-transform duration-200",
+          selected ? "scale-110" : "group-hover:scale-105",
         )}
       >
-        <svg viewBox="0 0 28 36" className="h-9 w-7 drop-shadow-[0_2px_3px_rgba(13,17,55,0.35)]">
-          <path
-            d="M14 35s12-11.6 12-21A12 12 0 0 0 2 14c0 9.4 12 21 12 21Z"
-            fill={view.favorite || selected ? "var(--color-navy-900)" : "white"}
-            stroke="var(--color-navy-900)"
-            strokeWidth="2"
-          />
-        </svg>
         <span
           className={cx(
-            "absolute inset-x-0 top-[5px] flex justify-center text-[13px] leading-[18px] font-black",
-            view.favorite || selected ? "text-white" : "text-navy-900",
+            "flex items-center gap-1 rounded-full py-1 pr-2.5 pl-1 text-[12.5px] font-bold whitespace-nowrap shadow-float ring-1 transition-colors tabular",
+            selected ? "bg-navy-900 text-white ring-navy-900" : "bg-white text-ink ring-black/5",
+            "group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-navy-700",
           )}
         >
-          {view.favorite ? <Star className="size-[15px] fill-gold-500 text-gold-500" aria-hidden /> : view.rank}
+          <BankBadge bank={view.bank} className="size-5 text-[7.5px]" />
+          {view.favorite && <Star className="size-3 fill-gold-500 text-gold-500" aria-hidden />}
+          {view.wait}
+          <span className="-ml-0.5 text-[10.5px] font-semibold opacity-70">{t("min")}</span>
         </span>
-      </span>
-      <span
-        className={cx(
-          "pointer-events-none absolute top-full left-1/2 mt-1 -translate-x-1/2 rounded-full px-2 py-0.5 text-[11px] font-bold whitespace-nowrap shadow-sm transition-opacity",
-          selected
-            ? "bg-navy-900 text-white opacity-100"
-            : "bg-white text-navy-900 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100",
-        )}
-        lang={lang}
-      >
-        {view.wait} {t("min")}
+        <span className={cx("-mt-1 size-2.5 rotate-45 rounded-[2px]", selected ? "bg-navy-900" : "bg-white")} />
       </span>
     </button>
   );
@@ -251,23 +235,65 @@ function Pin({ view, selected, onSelect, lang }: { view: BranchView; selected: b
 /* Full, pannable map                                                  */
 /* ------------------------------------------------------------------ */
 
-export function CityMap({ className, minSize = 680 }: { className?: string; minSize?: number }) {
-  const { views, selected, select, lang, t, ticketBranch } = useStore();
+const ZOOMS = [1, 1.35, 1.8];
+
+const controlButton = cx(
+  "inline-flex size-11 items-center justify-center bg-white text-ink transition-colors hover:bg-paper disabled:text-muted/50",
+  "outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-navy-700",
+);
+
+export function CityMap({
+  className,
+  minSize = 680,
+  controlsClassName = "right-3 bottom-3",
+  focusTop = 0.42,
+}: {
+  className?: string;
+  minSize?: number;
+  controlsClassName?: string;
+  /** Where to place the selected branch vertically, as a fraction of the viewport. */
+  focusTop?: number;
+}) {
+  const { favorites, others, selected, select, lang, t, ticketBranch } = useStore();
   const scroller = React.useRef<HTMLDivElement>(null);
   const drag = React.useRef<{ x: number; y: number; left: number; top: number; moved: boolean } | null>(null);
+  const [zoom, setZoom] = React.useState(0);
+  const pins = [...favorites, ...others];
+  if (!pins.some((p) => p.id === selected.id)) pins.push(selected);
+
+  const centerOn = React.useCallback(
+    (x: number, y: number, smooth: boolean) => {
+      const el = scroller.current;
+      if (!el) return;
+      el.scrollTo({
+        left: (x / 1000) * el.scrollWidth - el.clientWidth / 2,
+        top: (y / 1000) * el.scrollHeight - el.clientHeight * focusTop,
+        behavior: smooth ? "smooth" : "auto",
+      });
+    },
+    [focusTop],
+  );
 
   // Keep the selected branch in view.
   React.useEffect(() => {
     const el = scroller.current;
     if (!el) return;
-    const size = el.scrollWidth;
-    el.scrollTo({
-      left: (selected.x / 1000) * size - el.clientWidth / 2,
-      top: (selected.y / 1000) * el.scrollHeight - el.clientHeight * 0.42,
-      behavior: drag.current === null && el.dataset.ready ? "smooth" : "auto",
-    });
+    centerOn(selected.x, selected.y, Boolean(el.dataset.ready));
     el.dataset.ready = "1";
-  }, [selected.id, selected.x, selected.y]);
+  }, [selected.id, selected.x, selected.y, centerOn]);
+
+  // Zoom around the middle of the viewport.
+  const zoomTo = (next: number) => {
+    const el = scroller.current;
+    if (!el) return;
+    const cx0 = (el.scrollLeft + el.clientWidth / 2) / el.scrollWidth;
+    const cy0 = (el.scrollTop + el.clientHeight / 2) / el.scrollHeight;
+    setZoom(next);
+    requestAnimationFrame(() => {
+      el.scrollLeft = cx0 * el.scrollWidth - el.clientWidth / 2;
+      el.scrollTop = cy0 * el.scrollHeight - el.clientHeight / 2;
+    });
+  };
 
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     if (e.pointerType !== "mouse" || e.button !== 0) return;
@@ -296,37 +322,52 @@ export function CityMap({ className, minSize = 680 }: { className?: string; minS
   };
 
   return (
-    <div
-      ref={scroller}
-      role="region"
-      aria-label={t("mapLabel")}
-      className={cx(
-        "relative h-full w-full overflow-auto overscroll-contain bg-map-land [container-type:size] [scrollbar-width:none] select-none",
-        "cursor-grab active:cursor-grabbing",
-        className,
-      )}
-      onPointerDown={onPointerDown}
-      onPointerMove={onPointerMove}
-      onPointerUp={endDrag}
-      onPointerLeave={endDrag}
-      onClickCapture={onClickCapture}
-    >
-      <div className="relative aspect-square" style={{ width: `max(100cqw, 100cqh, ${minSize}px)` }}>
-        <svg viewBox="0 0 1000 1000" className="absolute inset-0 size-full" aria-hidden>
-          <MapArt lang={lang} route={ticketBranch ? routeTo(ticketBranch) : undefined} />
-        </svg>
+    <div className={cx("relative h-full w-full overflow-hidden bg-map-land", className)}>
+      <div
+        ref={scroller}
+        role="region"
+        aria-label={t("mapLabel")}
+        className="no-scrollbar absolute inset-0 cursor-grab overflow-auto overscroll-contain [container-type:size] select-none active:cursor-grabbing"
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={endDrag}
+        onPointerLeave={endDrag}
+        onClickCapture={onClickCapture}
+      >
         <div
-          className="absolute -translate-x-1/2 -translate-y-1/2"
-          style={{ left: `${USER.x / 10}%`, top: `${USER.y / 10}%` }}
-          aria-label={t("you")}
-          role="img"
+          className="relative aspect-square transition-[width] duration-300"
+          style={{ width: `calc(max(100cqw, 100cqh, ${minSize}px) * ${ZOOMS[zoom]})` }}
         >
-          <span className="absolute inset-0 rounded-full bg-sky-500 animate-pulse-ring" />
-          <span className="relative block size-4 rounded-full border-[3px] border-white bg-sky-500 shadow-md" />
+          <svg viewBox="0 0 1000 1000" className="absolute inset-0 size-full" aria-hidden>
+            <MapArt lang={lang} route={ticketBranch ? routeTo(ticketBranch) : undefined} />
+          </svg>
+          <div
+            className="absolute -translate-x-1/2 -translate-y-1/2"
+            style={{ left: `${USER.x / 10}%`, top: `${USER.y / 10}%` }}
+            aria-label={t("you")}
+            role="img"
+          >
+            <span className="absolute inset-0 animate-pulse-ring rounded-full bg-sky-500" />
+            <span className="relative block size-4 rounded-full border-[3px] border-white bg-sky-500 shadow-md" />
+          </div>
+          {pins.map((v) => (
+            <Pin key={v.id} view={v} selected={v.id === selected.id} onSelect={() => select(v.id)} />
+          ))}
         </div>
-        {views.map((v) => (
-          <Pin key={v.id} view={v} lang={lang} selected={v.id === selected.id} onSelect={() => select(v.id)} />
-        ))}
+      </div>
+      <div className={cx("absolute flex flex-col gap-2", controlsClassName)}>
+        <button type="button" className={cx(controlButton, "rounded-full shadow-float")} aria-label={t("recenter")} onClick={() => centerOn(USER.x, USER.y, true)}>
+          <LocateFixed className="size-5" />
+        </button>
+        <div className="flex flex-col overflow-hidden rounded-full shadow-float">
+          <button type="button" className={controlButton} aria-label={t("zoomIn")} disabled={zoom === ZOOMS.length - 1} onClick={() => zoomTo(zoom + 1)}>
+            <Plus className="size-5" />
+          </button>
+          <span className="h-px bg-line" aria-hidden />
+          <button type="button" className={controlButton} aria-label={t("zoomOut")} disabled={zoom === 0} onClick={() => zoomTo(zoom - 1)}>
+            <Minus className="size-5" />
+          </button>
+        </div>
       </div>
     </div>
   );
