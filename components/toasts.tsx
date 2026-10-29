@@ -6,7 +6,7 @@ import { X } from "lucide-react";
 export function Toasts() {
   return (
     <Toast.Portal>
-      <Toast.Viewport className="fixed top-[calc(8.25rem+env(safe-area-inset-top))] right-3 left-3 z-50 mx-auto w-auto max-w-sm outline-none sm:right-4 sm:left-auto sm:w-[22rem] lg:top-20">
+      <Toast.Viewport className="fixed top-[calc(0.75rem+env(safe-area-inset-top))] right-3 left-3 z-50 mx-auto w-auto max-w-sm outline-none sm:right-4 sm:left-auto sm:w-[22rem] lg:top-20">
         <ToastList />
       </Toast.Viewport>
     </Toast.Portal>

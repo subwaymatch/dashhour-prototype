@@ -1,4 +1,4 @@
-import { CLOSE_MIN, OPEN_MIN } from "./data";
+import { CLOSE_MIN, OPEN_MIN, type ServiceKey } from "./data";
 
 /** The demo always opens at 10:32, the time on the original screenshots. */
 export const SIM_START = 10 * 60 + 32;
@@ -37,24 +37,39 @@ export function formatDistance(m: number) {
 }
 
 export type Ticket = {
+  id: string;
   branchId: string;
+  service: ServiceKey;
   number: number;
   /** Simulated minute the ticket was printed. */
   issuedAt: number;
   /** People ahead when the ticket was printed. */
   ahead: number;
+  /** Places added by "delay my turn". */
+  delayed: number;
   rate: number;
+  /** Counter that calls this number. */
+  counter: number;
+  /** Notify when this many people are ahead (0 = off). */
+  alertAt: number;
 };
 
+/** Minutes after being called before an unclaimed ticket is released as a no-show. */
+export const GRACE_MIN = 10;
+
 export function ticketStatus(t: Ticket, sim: number) {
-  const total = t.ahead * t.rate;
-  const remaining = Math.max(0, total - (sim - t.issuedAt));
+  const total = (t.ahead + t.delayed) * t.rate;
+  const elapsed = sim - t.issuedAt;
+  const remaining = Math.max(0, total - elapsed);
   return {
     total,
     remaining,
     ahead: Math.ceil(remaining / t.rate - 1e-6),
     progress: total > 0 ? 1 - remaining / total : 1,
     called: remaining <= 0,
-    arriveBy: t.issuedAt + total,
+    calledAt: t.issuedAt + total,
+    /** Minutes left to reach the counter once called. */
+    grace: Math.max(0, GRACE_MIN - (elapsed - total)),
+    missed: elapsed - total > GRACE_MIN,
   };
 }

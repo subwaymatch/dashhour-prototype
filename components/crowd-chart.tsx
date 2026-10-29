@@ -17,7 +17,7 @@ function yFor(level: number) {
 }
 
 /** Hour-by-hour crowd curve with a marker for the current demo time, after sketch ④. */
-export function CrowdChart({ branch }: { branch: Branch }) {
+export function CrowdChart({ branch, best }: { branch: Branch; best?: number }) {
   const { sim, t } = useStore();
   const now = dayMinute(sim);
 
@@ -47,6 +47,16 @@ export function CrowdChart({ branch }: { branch: Branch }) {
         <line key={l} x1={PAD.left} x2={W - PAD.right} y1={yFor(l)} y2={yFor(l)} stroke="var(--color-navy-900)" strokeOpacity="0.07" />
       ))}
       <line x1={PAD.left} x2={W - PAD.right} y1={H - PAD.bottom} y2={H - PAD.bottom} stroke="var(--color-navy-900)" strokeOpacity="0.25" />
+      {best !== undefined && (
+        <rect
+          x={xFor(best)}
+          y={PAD.top - 6}
+          width={xFor(best + 30) - xFor(best)}
+          height={H - PAD.bottom - PAD.top + 6}
+          rx="4"
+          fill="rgb(16 185 129 / 0.12)"
+        />
+      )}
       <path d={area} fill={`url(#crowd-fill-${branch.id})`} />
       <path d={line} fill="none" stroke="var(--color-gold-500)" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
       {[9, 12, 15]

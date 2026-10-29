@@ -13,22 +13,47 @@
   --color-gold-500: #b4a67a;
   --color-gold-300: #d8cfae;
   --color-gold-100: #f3efe3;
-  --color-paper: #eceae4;
+  --color-paper: #f3f2ee;
+  --color-line: #e7e4dc;
   --color-ink: #1d1f2e;
   --color-muted: #6b6b76;
   --color-map-land: #f3f0e8;
   --color-map-block: #e8e3d6;
   --color-map-park: #dbe5cc;
-  --color-line-2: #3b9f4a;
-  --color-line-sb: #c3283a;
+  --color-subway-2: #3b9f4a;
+  --color-subway-sb: #c3283a;
 
   --font-sans: var(--font-inter), var(--font-noto-kr), ui-sans-serif, system-ui, -apple-system, "Apple SD Gothic Neo", sans-serif;
   --font-display: var(--font-inter), var(--font-noto-kr), ui-sans-serif, system-ui, sans-serif;
+
+  --shadow-card: 0 1px 2px rgb(13 17 55 / 0.04), 0 8px 24px -12px rgb(13 17 55 / 0.14);
+  --shadow-float: 0 2px 6px rgb(13 17 55 / 0.08), 0 18px 40px -12px rgb(13 17 55 / 0.28);
 
   --animate-spin-once: spin-once 0.7s cubic-bezier(0.4, 0, 0.2, 1);
   --animate-pulse-ring: pulse-ring 2.4s ease-out infinite;
   --animate-ticket-out: ticket-out 2.1s cubic-bezier(0.3, 0.7, 0.2, 1) forwards;
   --animate-kiosk-blink: kiosk-blink 0.6s steps(2) infinite;
+  --animate-shimmer: shimmer 1.4s ease-in-out infinite;
+  --animate-rise: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
 
   @keyframes spin-once {
     to {
@@ -127,6 +152,18 @@ body {
   background-image:
     linear-gradient(90deg, transparent 2.4rem, #e8a3a3 2.4rem, #e8a3a3 calc(2.4rem + 1px), transparent calc(2.4rem + 1px)),
     repeating-linear-gradient(180deg, transparent 0 27px, #c7d6e6 27px 28px);
+}
+
+@utility skeleton {
+  background: linear-gradient(90deg, #ebe8e1 25%, #f5f3ee 50%, #ebe8e1 75%) 0 0 / 200% 100%;
+  animation: var(--animate-shimmer);
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @utility scrollbar-thin {
