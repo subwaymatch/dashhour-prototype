@@ -30,21 +30,21 @@ export function Onboarding() {
         <Dialog.Popup
           className={cx(
             "fixed inset-0 flex flex-col bg-paper outline-none transition-[opacity,transform] duration-300 data-ending-style:opacity-0 data-starting-style:opacity-0",
-            "sm:inset-auto sm:top-1/2 sm:left-1/2 sm:h-auto sm:w-[26rem] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:overflow-hidden sm:rounded-[28px] sm:shadow-2xl",
+            "sm:inset-auto sm:top-1/2 sm:left-1/2 sm:h-auto sm:w-[26rem] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:overflow-hidden sm:rounded-lg sm:shadow-2xl",
           )}
         >
           <div className="flex justify-end px-4 pt-[calc(0.75rem+env(safe-area-inset-top))] sm:pt-4">
-            <Dialog.Close className={cx("rounded-full px-3 py-1.5 text-[14px] font-medium text-muted hover:bg-black/5", focusRing)}>{t("skip")}</Dialog.Close>
+            <Dialog.Close className={cx("rounded-md px-3 py-1.5 text-sm font-medium text-muted hover:bg-black/5", focusRing)}>{t("skip")}</Dialog.Close>
           </div>
           <div className="flex flex-1 flex-col items-center justify-center px-8 text-center">
             <div className="relative aspect-square w-full max-w-[280px]">
               <div className="absolute inset-[8%] rounded-full bg-gold-100" aria-hidden />
               <img key={slide.image} src={`/images/${slide.image}.webp`} alt="" className="relative size-full animate-rise object-contain" />
             </div>
-            <Dialog.Title key={slide.title} className="mt-6 animate-rise text-[24px] leading-tight font-bold tracking-tight text-ink">
+            <Dialog.Title key={slide.title} className="mt-6 animate-rise text-xl leading-tight font-bold tracking-tight text-ink">
               {t(slide.title)}
             </Dialog.Title>
-            <Dialog.Description key={slide.body} className="mt-3 max-w-xs animate-rise text-[15px] leading-relaxed text-muted">
+            <Dialog.Description key={slide.body} className="mt-3 max-w-xs animate-rise text-sm leading-relaxed text-muted">
               {t(slide.body)}
             </Dialog.Description>
           </div>
@@ -62,7 +62,7 @@ export function Onboarding() {
                 />
               ))}
             </div>
-            <button type="button" className={cx(navyButton, "h-14 w-full text-[16px]")} onClick={() => (last ? setShowOnboarding(false) : setStep(step + 1))}>
+            <button type="button" className={cx(navyButton, "h-14 w-full")} onClick={() => (last ? setShowOnboarding(false) : setStep(step + 1))}>
               {last ? t("getStarted") : t("next")}
             </button>
           </div>

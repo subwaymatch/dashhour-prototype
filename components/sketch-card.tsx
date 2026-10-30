@@ -20,7 +20,7 @@ export function SketchCard({ sketch }: { sketch: Sketch }) {
   const [original, setOriginal] = React.useState(false);
   const id = React.useId();
   return (
-    <article className={cx("flex flex-col overflow-hidden rounded-2xl bg-white shadow-[0_1px_2px_rgba(13,17,55,0.06),0_12px_32px_rgba(13,17,55,0.07)]", sketch.wide && "md:col-span-2")}>
+    <article className={cx("flex flex-col overflow-hidden rounded-lg bg-white shadow-[0_1px_2px_rgba(13,17,55,0.06),0_12px_32px_rgba(13,17,55,0.07)]", sketch.wide && "md:col-span-2")}>
       <div className={cx("relative overflow-hidden", original ? "bg-ink" : "notepad")}>
         <div className={cx("relative mx-auto", sketch.wide ? "aspect-[3/2] max-w-2xl" : "aspect-[3/4] max-w-md")}>
           <img
@@ -38,19 +38,19 @@ export function SketchCard({ sketch }: { sketch: Sketch }) {
             className={cx("absolute inset-0 size-full object-contain transition-opacity duration-300", !original && "opacity-0")}
           />
         </div>
-        <span className="absolute top-4 left-4 flex size-9 items-center justify-center rounded-full bg-navy-950 font-display text-[15px] font-black text-white">
+        <span className="absolute top-4 left-4 flex size-9 items-center justify-center rounded-full bg-navy-950 font-display text-sm font-black text-white">
           {sketch.number}
         </span>
       </div>
       <div className="flex flex-1 flex-col gap-3 p-6">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h3 className="text-xl font-extrabold text-navy-900">{sketch.title}</h3>
-            <p lang="ko" className="text-[14px] font-medium text-gold-700">
+            <h3 className="text-lg font-extrabold text-navy-900">{sketch.title}</h3>
+            <p lang="ko" className="text-sm font-medium text-gold-700">
               {sketch.titleKo}
             </p>
           </div>
-          <label htmlFor={id} className="flex shrink-0 cursor-pointer items-center gap-2 text-[13px] font-semibold text-muted">
+          <label htmlFor={id} className="flex shrink-0 cursor-pointer items-center gap-2 text-xs font-semibold text-muted">
             Original page
             <Switch.Root
               id={id}
@@ -62,7 +62,7 @@ export function SketchCard({ sketch }: { sketch: Sketch }) {
             </Switch.Root>
           </label>
         </div>
-        <ul className="flex flex-col gap-1.5 text-[14px] leading-relaxed text-ink/80">
+        <ul className="flex flex-col gap-1.5 text-sm leading-relaxed text-ink/80">
           {sketch.notes.map((n) => (
             <li key={n} className="flex gap-2">
               <span className="mt-[9px] size-1.5 shrink-0 rounded-full bg-gold-500" aria-hidden />
@@ -72,7 +72,7 @@ export function SketchCard({ sketch }: { sketch: Sketch }) {
         </ul>
         <Link
           href={sketch.href}
-          className="mt-auto inline-flex items-center gap-1.5 self-start pt-2 text-[14px] font-bold text-gold-700 hover:text-gold-800 hover:underline"
+          className="mt-auto inline-flex items-center gap-1.5 self-start pt-2 text-sm font-bold text-gold-700 hover:text-gold-800 hover:underline"
         >
           See it in the prototype <ArrowRight className="size-4" aria-hidden />
         </Link>

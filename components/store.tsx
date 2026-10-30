@@ -24,6 +24,7 @@ import {
   type VisitStatus,
 } from "@/lib/data";
 import { translate, type Lang, type StringKey } from "@/lib/i18n";
+import { WALKING_ROUTES } from "@/lib/routes";
 import {
   DEFAULT_SPEED,
   SIM_START,
@@ -239,7 +240,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         wait: queues.general!.wait,
         queues,
         distance: distanceMetres(b),
-        travel: travelMinutes(b),
+        travel: travelMinutes(b, WALKING_ROUTES[b.id]?.metres),
         crowd,
         quieterBy: Math.round((1 - crowd / averageCrowd(b)) * 100),
         bestTime: quietestSlot(b),
