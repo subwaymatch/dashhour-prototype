@@ -1,23 +1,11 @@
 import type { SVGProps } from "react";
 
-/** The Dash Hour badge: a queue ticket with a torn, zig-zag bottom edge. */
+/** The Dash Hour mark: a ticket with its gold stub torn off along the notches. */
 export function LogoMark(props: SVGProps<SVGSVGElement>) {
   return (
-    <svg viewBox="0 0 40 44" aria-hidden {...props}>
-      <path d="M5 2.5C5 1.7 5.7 1 6.5 1h27c.8 0 1.5.7 1.5 1.5S34.3 4 33.5 4h-27C5.7 4 5 3.3 5 2.5Z" fill="currentColor" />
-      <path d="M4 9a2 2 0 0 1 2-2h28a2 2 0 0 1 2 2v26l-4 4-4-4-4 4-4-4-4 4-4-4-4 4-4-4Z" fill="currentColor" />
-      <text
-        x="20"
-        y="28"
-        textAnchor="middle"
-        fontSize="17"
-        fontWeight="900"
-        fontFamily="var(--font-display)"
-        letterSpacing="-0.5"
-        fill="var(--color-navy-950)"
-      >
-        DH
-      </text>
+    <svg viewBox="0 0 40 28" aria-hidden {...props}>
+      <path d="M4 2h19.5a3.5 3.5 0 0 0 2.5 3.354v17.292A3.5 3.5 0 0 0 23.5 26H4a3 3 0 0 1-3-3V5a3 3 0 0 1 3-3Z" fill="currentColor" />
+      <path d="M28 5.354A3.5 3.5 0 0 0 30.5 2H36a3 3 0 0 1 3 3v18a3 3 0 0 1-3 3h-5.5a3.5 3.5 0 0 0-2.5-3.354Z" fill="var(--color-gold-500)" />
     </svg>
   );
 }
