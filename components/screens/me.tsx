@@ -35,7 +35,7 @@ function VisitRow({ visit }: { visit: Visit }) {
   return (
     <li>
       <Link href={`/branch/${view.id}`} className={cx("flex items-center gap-3 rounded-md px-2 py-3 hover:bg-paper", focusRing)}>
-        <BankBadge bank={view.bank} className="size-10 text-xs" />
+        <BankBadge bank={view.bank} className="size-10" />
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-semibold text-ink">{view.fullName}</p>
           <p className="truncate text-xs text-muted">

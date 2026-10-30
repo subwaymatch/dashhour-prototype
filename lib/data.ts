@@ -2,16 +2,21 @@ import type { Localized } from "./i18n";
 
 export type BankKey = "shinhan" | "woori" | "hana" | "kb" | "ibk" | "nh" | "citi" | "sc" | "mg";
 
-export const BANKS: Record<BankKey, { name: Localized; short: string; color: string; ink: string }> = {
-  shinhan: { name: { en: "Shinhan Bank", ko: "신한은행" }, short: "SH", color: "#0046ff", ink: "#ffffff" },
-  woori: { name: { en: "Woori Bank", ko: "우리은행" }, short: "W", color: "#0067ac", ink: "#ffffff" },
-  hana: { name: { en: "Hana Bank", ko: "하나은행" }, short: "H", color: "#008c8c", ink: "#ffffff" },
-  kb: { name: { en: "KB Kookmin", ko: "KB국민은행" }, short: "KB", color: "#ffbc00", ink: "#3d3428" },
-  ibk: { name: { en: "IBK", ko: "IBK기업은행" }, short: "IBK", color: "#004ea2", ink: "#ffffff" },
-  nh: { name: { en: "NongHyup", ko: "NH농협은행" }, short: "NH", color: "#00a650", ink: "#ffffff" },
-  citi: { name: { en: "Citibank", ko: "씨티은행" }, short: "C", color: "#056dae", ink: "#ffffff" },
-  sc: { name: { en: "SC First", ko: "SC제일은행" }, short: "SC", color: "#0473ea", ink: "#ffffff" },
-  mg: { name: { en: "MG Saemaeul", ko: "새마을금고" }, short: "MG", color: "#1d4ea1", ink: "#ffffff" },
+/**
+ * Banks and their badges. A badge shows the logo in `public/banks/<key>.webp`, made by
+ * `scripts/fetch_bank_logos.py`; `round` marks a logo that is itself a disc, so it fills the badge.
+ * MG has no freely licensed logo file, so its badge spells out `letters` in the bank's colour instead.
+ */
+export const BANKS: Record<BankKey, { name: Localized; round?: boolean; letters?: { text: string; color: string } }> = {
+  shinhan: { name: { en: "Shinhan Bank", ko: "신한은행" }, round: true },
+  woori: { name: { en: "Woori Bank", ko: "우리은행" }, round: true },
+  hana: { name: { en: "Hana Bank", ko: "하나은행" } },
+  kb: { name: { en: "KB Kookmin", ko: "KB국민은행" } },
+  ibk: { name: { en: "IBK", ko: "IBK기업은행" } },
+  nh: { name: { en: "NongHyup", ko: "NH농협은행" } },
+  citi: { name: { en: "Citibank", ko: "씨티은행" } },
+  sc: { name: { en: "SC First", ko: "SC제일은행" } },
+  mg: { name: { en: "MG Saemaeul", ko: "새마을금고" }, letters: { text: "MG", color: "#1d4ea1" } },
 };
 
 /* ------------------------------------------------------------------ */

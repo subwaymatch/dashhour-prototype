@@ -8,7 +8,9 @@ It started as a hackathon project in 2016 with six pages of pen sketches. This r
 - **Desktop:** branch list, map and branch panel side by side, with My ticket and Account pages.
 - **`/story`:** a "from sketch to prototype" page. It shows the redrawn sketches, a switch to see each original notepad page, and English summaries of the Korean notes.
 
-Queue data is simulated; the map, stations and walking routes are real, and branch locations and addresses are illustrative. A demo clock starts at 10:32 and runs 10× faster than real time, so you can watch a ticket count down, get called to a counter, or miss your turn. You can change the speed, switch between English and 한국어, replay the intro or reset the demo from the ⋮ menu or the account page.
+> **Not affiliated with any bank.** Dash Hour is an independent prototype. The banks named in it have not endorsed or sponsored it, and their names and logos are trademarks of their owners, used only to identify each bank. See [Bank names and logos](#bank-names-and-logos).
+
+Queue data is simulated; the map, stations and walking routes are real, and branch locations, addresses and phone numbers are illustrative. A demo clock starts at 10:32 and runs 10× faster than real time, so you can watch a ticket count down, get called to a counter, or miss your turn. You can change the speed, switch between English and 한국어, replay the intro or reset the demo from the ⋮ menu or the account page.
 
 ## Screens
 
@@ -59,6 +61,25 @@ All images were made with OpenAI GPT Image 2.5 (`gpt-image-2.5-sunburst`) at `qu
 
 App icons (`public/icon-*.png`, `apple-touch-icon.png`) are rendered from `public/icon.svg`.
 
+## Bank names and logos
+
+Dash Hour is not affiliated with, endorsed by or sponsored by Shinhan Bank, Woori Bank, Hana Bank, KB Kookmin Bank, IBK Industrial Bank of Korea, NH NongHyup Bank, Citibank Korea, SC First Bank or MG Saemaeul Geumgo. Their names and logos are trademarks of their respective owners and appear here only to identify each bank in a design demo. The branches' locations, addresses, phone numbers, counters and queues are illustrative and are not the banks' real information. If you represent one of these banks and want its logo removed, please open an issue.
+
+The logos are cut from files on Wikimedia Commons that Commons lists as public domain. Copyright status aside, every one of them is a trademark. `scripts/fetch_bank_logos.py` downloads each file, keeps the symbol and writes `public/banks/<bank>.webp`.
+
+| Bank | Commons file | Commons licence |
+| --- | --- | --- |
+| Shinhan Bank | [Shinhan Bank Logo (ENG).svg](https://commons.wikimedia.org/wiki/File:Shinhan_Bank_Logo_(ENG).svg) | Public domain, trademarked |
+| Woori Bank | [Logo of Woori Bank.svg](https://commons.wikimedia.org/wiki/File:Logo_of_Woori_Bank.svg) | Public domain |
+| Hana Bank | [Hana Bank Logo (eng).svg](https://commons.wikimedia.org/wiki/File:Hana_Bank_Logo_(eng).svg) | Public domain, trademarked |
+| KB Kookmin Bank | [KB logo.svg](https://commons.wikimedia.org/wiki/File:KB_logo.svg) | Public domain, trademarked |
+| IBK | [Industrial Bank of Korea Logo.svg](https://commons.wikimedia.org/wiki/File:Industrial_Bank_of_Korea_Logo.svg) | Public domain, trademarked |
+| NH NongHyup Bank | [NACF (NongHyup) Logo.svg](https://commons.wikimedia.org/wiki/File:NACF_(NongHyup)_Logo.svg) | Public domain, trademarked |
+| Citibank | [Citibank.svg](https://commons.wikimedia.org/wiki/File:Citibank.svg) | Public domain, trademarked |
+| SC First Bank | [Standard Chartered Logo (2021, Logo only).svg](https://commons.wikimedia.org/wiki/File:Standard_Chartered_Logo_(2021,_Logo_only).svg) | Public domain, trademarked |
+
+MG Saemaeul Geumgo has no freely licensed logo file on Commons, so its badge shows the letters "MG" in the bank's blue instead of its logo.
+
 ## Project layout
 
 ```
@@ -67,8 +88,9 @@ app/story/           the sketch-to-prototype case study
 components/          shell, cards, map, ticket, sheets, onboarding, store
 components/screens/  one file per screen
 lib/                 branches, services and crowd model, demo clock, EN/KO strings, walking routes
+public/banks/        bank logos (see Bank names and logos)
 public/images/       generated branch scenes and illustrations
 public/sketches/     redrawn sketches (WebP) and original pages
-scripts/             image generation and walking-route scripts
+scripts/             image generation, walking-route and bank-logo scripts
 sketches/            full-size transparent PNG sketches + redraw script
 ```

@@ -331,7 +331,7 @@ function Pin({ view, selected, onSelect }: { view: BranchView; selected: boolean
             "group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-navy-700",
           )}
         >
-          <BankBadge bank={view.bank} className="size-5 text-[7.5px]" />
+          <BankBadge bank={view.bank} className="size-5" />
           {view.favorite && <Star className="size-3 fill-gold-500 text-gold-500" aria-hidden />}
           {view.wait}
           <span className="-ml-0.5 text-2xs font-semibold opacity-70">{t("min")}</span>

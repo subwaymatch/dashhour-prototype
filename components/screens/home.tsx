@@ -41,7 +41,7 @@ function Recommendation({ view }: { view: BranchView }) {
   return (
     <div className="overflow-hidden rounded-lg bg-white shadow-float ring-1 ring-line/70">
       <Link href={`/branch/${view.id}`} className="flex items-center gap-3 px-4 pt-4 pb-3 outline-none focus-visible:bg-paper">
-        <BankBadge bank={view.bank} className="size-11 text-xs" />
+        <BankBadge bank={view.bank} className="size-11" />
         <div className="min-w-0 flex-1">
           <p className="flex items-center gap-1 text-xs font-semibold text-emerald-700">
             <Zap className="size-3.5" aria-hidden />
@@ -189,7 +189,7 @@ function BranchPanel({ view }: { view: BranchView }) {
         <div className="absolute inset-0 bg-gradient-to-t from-navy-950/70 via-transparent" />
         <FavoriteButton view={view} tone="dark" className="absolute top-3 right-3" />
         <div className="absolute inset-x-4 bottom-3 flex items-end gap-3 text-white">
-          <BankBadge bank={view.bank} className="size-10 text-xs ring-2 ring-white/80" />
+          <BankBadge bank={view.bank} className="size-10 ring-2 ring-white/80" />
           <div className="min-w-0">
             <p className="text-xs text-white/75">{view.bankName}</p>
             <h2 className="truncate text-lg leading-tight font-bold">{view.branchName}</h2>

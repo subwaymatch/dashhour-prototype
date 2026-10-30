@@ -99,7 +99,7 @@ function CardHeader({ view }: { view: BranchView }) {
   const { t } = useStore();
   return (
     <div className="flex items-start gap-3 pr-10">
-      <BankBadge bank={view.bank} className="mt-0.5 size-11 text-xs" />
+      <BankBadge bank={view.bank} className="mt-0.5 size-11" />
       <div className="min-w-0 flex-1">
         <p className="flex items-center gap-1.5 text-xs font-medium text-muted">
           {view.bankName}

@@ -247,7 +247,7 @@ function TitleBlock({ view }: { view: BranchView }) {
   const level = crowdLabelKey(view.crowd);
   return (
     <div className="flex items-start gap-3">
-      <BankBadge bank={view.bank} className="size-12 text-sm ring-4 ring-white" />
+      <BankBadge bank={view.bank} className="size-12 ring-4 ring-white" />
       <div className="min-w-0 flex-1">
         <p className="text-sm font-medium text-muted">{view.bankName}</p>
         <h1 className="text-xl leading-tight font-bold tracking-tight text-ink lg:text-2xl">{view.branchName}</h1>

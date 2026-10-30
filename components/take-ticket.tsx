@@ -68,7 +68,7 @@ function SheetBody({ view }: { view: BranchView }) {
 
   const header = (
     <div className="flex items-start gap-3">
-      <BankBadge bank={view.bank} className="size-11 text-xs" />
+      <BankBadge bank={view.bank} className="size-11" />
       <div className="min-w-0 flex-1">
         <Drawer.Title className="text-lg leading-tight font-bold text-ink">{view.fullName}</Drawer.Title>
         <Drawer.Description className="mt-0.5 truncate text-xs text-muted">{view.address[lang]}</Drawer.Description>
