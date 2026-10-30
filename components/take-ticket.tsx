@@ -31,26 +31,26 @@ function ServiceOption({ view, service }: { view: BranchView; service: ServiceKe
       value={service}
       disabled={!queue}
       className={cx(
-        "group flex w-full cursor-pointer items-center gap-3 rounded-2xl px-3.5 py-3 text-left ring-1 ring-line transition-colors outline-none",
+        "group flex w-full cursor-pointer items-center gap-3 rounded-md px-3.5 py-3 text-left ring-1 ring-line transition-colors outline-none",
         "hover:bg-paper/70 data-checked:bg-gold-100/70 data-checked:ring-2 data-checked:ring-gold-600",
         "data-disabled:cursor-not-allowed data-disabled:opacity-45 data-disabled:hover:bg-transparent",
         "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-700",
       )}
     >
-      <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-paper text-navy-900 group-data-checked:bg-white">
+      <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-paper text-navy-900 group-data-checked:bg-white">
         <Icon className="size-5" aria-hidden />
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block text-[15px] font-semibold text-ink">{SERVICES[service].name[lang]}</span>
-        <span className="block truncate text-[12.5px] text-muted">{queue ? SERVICES[service].desc[lang] : t("notOffered")}</span>
+        <span className="block text-sm font-semibold text-ink">{SERVICES[service].name[lang]}</span>
+        <span className="block truncate text-xs text-muted">{queue ? SERVICES[service].desc[lang] : t("notOffered")}</span>
       </span>
       {queue && (
         <span className="shrink-0 text-right">
-          <span className="block font-display text-[17px] font-bold text-navy-900 tabular">
+          <span className="block font-display text-base font-bold text-navy-900 tabular">
             {queue.wait}
-            <span className="ml-0.5 text-[12px] font-semibold">{t("min")}</span>
+            <span className="ml-0.5 text-xs font-semibold">{t("min")}</span>
           </span>
-          <span className="block text-[12px] text-muted">{t("waitingCount", { n: queue.waiting })}</span>
+          <span className="block text-xs text-muted">{t("waitingCount", { n: queue.waiting })}</span>
         </span>
       )}
       <span className="flex size-5 shrink-0 items-center justify-center rounded-full ring-2 ring-line group-data-checked:ring-gold-600">
@@ -68,10 +68,10 @@ function SheetBody({ view }: { view: BranchView }) {
 
   const header = (
     <div className="flex items-start gap-3">
-      <BankBadge bank={view.bank} className="size-11 text-[13px]" />
+      <BankBadge bank={view.bank} className="size-11 text-xs" />
       <div className="min-w-0 flex-1">
-        <Drawer.Title className="text-[19px] leading-tight font-bold text-ink">{view.fullName}</Drawer.Title>
-        <Drawer.Description className="mt-0.5 truncate text-[13px] text-muted">{view.address[lang]}</Drawer.Description>
+        <Drawer.Title className="text-lg leading-tight font-bold text-ink">{view.fullName}</Drawer.Title>
+        <Drawer.Description className="mt-0.5 truncate text-xs text-muted">{view.address[lang]}</Drawer.Description>
       </div>
       <Drawer.Close aria-label={t("close")} className={cx("-mt-1 -mr-1 inline-flex size-9 items-center justify-center rounded-full text-muted hover:bg-paper", focusRing)}>
         <X className="size-5" />
@@ -84,11 +84,11 @@ function SheetBody({ view }: { view: BranchView }) {
     return (
       <>
         {header}
-        <div className="mt-5 flex gap-3 rounded-2xl bg-paper p-4">
+        <div className="mt-5 flex gap-3 rounded-md bg-paper p-4">
           <CircleAlert className="mt-0.5 size-5 shrink-0 text-gold-700" aria-hidden />
           <div>
-            <p className="text-[15px] font-semibold text-ink">{t(restricted ? "restrictedTitle" : "oneTicketTitle")}</p>
-            <p className="mt-1 text-[13.5px] leading-relaxed text-muted">
+            <p className="text-sm font-semibold text-ink">{t(restricted ? "restrictedTitle" : "oneTicketTitle")}</p>
+            <p className="mt-1 text-xs leading-relaxed text-muted">
               {restricted
                 ? t("restrictedBody")
                 : t("oneTicketBody", { num: ticket!.number, branch: ticketBranch?.fullName ?? "" })}
@@ -120,35 +120,35 @@ function SheetBody({ view }: { view: BranchView }) {
   return (
     <>
       {header}
-      <h3 className="mt-6 mb-3 text-[14px] font-semibold text-ink">{t("chooseService")}</h3>
+      <h3 className="mt-6 mb-3 text-sm font-semibold text-ink">{t("chooseService")}</h3>
       <RadioGroup value={service} onValueChange={(v) => setService(v as ServiceKey)} aria-label={t("chooseService")} className="flex flex-col gap-2">
         {ALL_SERVICES.map((s) => (
           <ServiceOption key={s} view={view} service={s} />
         ))}
       </RadioGroup>
 
-      <div className="mt-4 grid grid-cols-2 gap-2 rounded-2xl bg-navy-900 p-4 text-white">
+      <div className="mt-4 grid grid-cols-2 gap-2 rounded-md bg-navy-900 p-4 text-white">
         <div>
-          <p className="flex items-center gap-1.5 text-[12px] text-white/60">
+          <p className="flex items-center gap-1.5 text-xs text-white/60">
             <Clock3 className="size-3.5" aria-hidden />
             {queue && queue.wait > 0 ? t("etaLabel") : t("turnNow")}
           </p>
-          <p className="mt-0.5 font-display text-[24px] font-bold tabular">{formatClock(turnAt)}</p>
+          <p className="mt-0.5 font-display text-xl font-bold tabular">{formatClock(turnAt)}</p>
         </div>
         <div>
-          <p className="flex items-center gap-1.5 text-[12px] text-white/60">
+          <p className="flex items-center gap-1.5 text-xs text-white/60">
             <Footprints className="size-3.5" aria-hidden />
             {t("walkMin", { n: view.travel.walk })}
           </p>
-          <p className="mt-0.5 text-[15px] leading-tight font-semibold text-gold-300">
+          <p className="mt-0.5 text-sm leading-tight font-semibold text-gold-300">
             {leaveAt <= sim ? t("leaveNowShort") : t("leaveByShort", { t: formatClock(leaveAt) })}
           </p>
         </div>
       </div>
 
-      <label className="mt-4 flex cursor-pointer items-center gap-3 rounded-2xl px-1 py-1">
+      <label className="mt-4 flex cursor-pointer items-center gap-3 rounded-md px-1 py-1">
         <BellRing className="size-5 text-navy-900" aria-hidden />
-        <span className="flex-1 text-[14px] text-ink">{t("alertMe")}</span>
+        <span className="flex-1 text-sm text-ink">{t("alertMe")}</span>
         <Switch.Root
           checked={alert}
           onCheckedChange={setAlert}
@@ -158,9 +158,9 @@ function SheetBody({ view }: { view: BranchView }) {
         </Switch.Root>
       </label>
 
-      <p className="mt-3 text-[12px] leading-relaxed text-muted">{t("policy")}</p>
+      <p className="mt-3 text-xs leading-relaxed text-muted">{t("policy")}</p>
 
-      <button type="button" disabled={!queue} onClick={() => takeTicket(service, alert)} className={cx(primaryButton, "mt-5 h-14 w-full text-[17px]")}>
+      <button type="button" disabled={!queue} onClick={() => takeTicket(service, alert)} className={cx(primaryButton, "mt-5 h-14 w-full")}>
         {t("confirm")}
       </button>
     </>
@@ -182,7 +182,7 @@ export function TakeTicketSheet() {
         <Drawer.Viewport className="fixed inset-0 flex items-end justify-center lg:items-center lg:p-6">
           <Drawer.Popup
             className={cx(
-              "flex max-h-[92dvh] w-full max-w-lg flex-col overflow-hidden rounded-t-[28px] bg-white shadow-2xl outline-none lg:rounded-[28px]",
+              "flex max-h-[92dvh] w-full max-w-lg flex-col overflow-hidden rounded-t-lg bg-white shadow-2xl outline-none lg:rounded-lg",
               "[transform:translateY(var(--drawer-swipe-movement-y))] transition-transform duration-[400ms] ease-[cubic-bezier(0.32,0.72,0,1)]",
               "data-starting-style:[transform:translateY(100%)] data-ending-style:[transform:translateY(100%)] data-swiping:duration-0",
               "lg:data-starting-style:[transform:translateY(24px)] lg:data-ending-style:[transform:translateY(24px)] lg:data-starting-style:opacity-0 lg:data-ending-style:opacity-0",
@@ -239,7 +239,7 @@ export function IssuingOverlay() {
           className="fixed inset-0 flex flex-col items-center justify-center gap-8 outline-none transition-opacity duration-200 data-ending-style:opacity-0 data-starting-style:opacity-0"
           aria-busy
         >
-          <Dialog.Title className="text-[22px] font-bold text-gold-300">{t("issuing")}</Dialog.Title>
+          <Dialog.Title className="text-lg font-bold text-gold-300">{t("issuing")}</Dialog.Title>
           <Kiosk />
         </Dialog.Popup>
       </Dialog.Portal>

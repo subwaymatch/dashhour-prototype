@@ -12,14 +12,19 @@ function MobileMap() {
   const { selected, t } = useStore();
   return (
     <div className="fixed inset-x-0 top-0 bottom-[calc(4rem+env(safe-area-inset-bottom))] lg:hidden">
-      <CityMap minSize={760} controlsClassName="right-3 bottom-[10.5rem]" focusTop={0.45} />
+      <CityMap
+        controlsClassName="right-3 bottom-[10.5rem]"
+        focusTop={0.45}
+        // MapLibre's stylesheet is unlayered, so this needs `!` to beat it.
+        className="[&_.maplibregl-ctrl-bottom-left]:bottom-[10.5rem]!"
+      />
       <div className="pointer-events-none absolute inset-x-0 top-0 bg-gradient-to-b from-map-land/90 via-map-land/50 to-transparent px-3 pt-[calc(0.75rem+env(safe-area-inset-top))] pb-6">
         <div className="pointer-events-auto mx-auto max-w-xl">
           <SearchDialog
             trigger={
               <button
                 type="button"
-                className={cx("flex h-12 w-full items-center gap-3 rounded-2xl bg-white px-4 text-left text-[15px] text-muted shadow-float", focusRing)}
+                className={cx("flex h-12 w-full items-center gap-3 rounded-md bg-white px-4 text-left text-sm text-muted shadow-float", focusRing)}
               >
                 <Search className="size-5 text-ink" aria-hidden />
                 {t("searchPlaceholder")}

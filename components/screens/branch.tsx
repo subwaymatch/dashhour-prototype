@@ -44,9 +44,9 @@ const ALL_SERVICES: ServiceKey[] = ["general", "loan", "fx", "business"];
 
 export function Section({ title, icon: Icon, aside, children, className }: { title: string; icon?: typeof MapPin; aside?: React.ReactNode; children: React.ReactNode; className?: string }) {
   return (
-    <section className={cx("rounded-[22px] bg-white p-5 shadow-card ring-1 ring-line/70", className)}>
+    <section className={cx("rounded-lg bg-white p-5 shadow-card ring-1 ring-line/70", className)}>
       <div className="flex items-start justify-between gap-3">
-        <h2 className="flex items-center gap-2 text-[15px] font-bold text-ink">
+        <h2 className="flex items-center gap-2 text-sm font-bold text-ink">
           {Icon && <Icon className="size-4 text-navy-900" aria-hidden />}
           {title}
         </h2>
@@ -59,11 +59,11 @@ export function Section({ title, icon: Icon, aside, children, className }: { tit
 
 function CrowdNote({ view }: { view: BranchView }) {
   const { t } = useStore();
-  if (Math.abs(view.quieterBy) < 5) return <span className="text-[12.5px] text-muted">{t("usual")}</span>;
+  if (Math.abs(view.quieterBy) < 5) return <span className="text-xs text-muted">{t("usual")}</span>;
   const quieter = view.quieterBy > 0;
   const Icon = quieter ? TrendingDown : TrendingUp;
   return (
-    <span className={cx("flex items-center gap-1 text-right text-[12.5px] font-semibold", quieter ? "text-emerald-700" : "text-rose-700")}>
+    <span className={cx("flex items-center gap-1 text-right text-xs font-semibold", quieter ? "text-emerald-700" : "text-rose-700")}>
       <Icon className="size-3.5 shrink-0" aria-hidden />
       {t(quieter ? "quieter" : "busier", { n: Math.abs(view.quieterBy) })}
     </span>
@@ -79,22 +79,22 @@ export function ServiceQueues({ view }: { view: BranchView }) {
         const Icon = SERVICE_ICONS[s];
         return (
           <li key={s} className={cx("flex items-center gap-3 py-3", !q && "opacity-45")}>
-            <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-paper text-navy-900">
+            <span className="flex size-9 shrink-0 items-center justify-center rounded-md bg-paper text-navy-900">
               <Icon className="size-[18px]" aria-hidden />
             </span>
             <div className="min-w-0 flex-1">
-              <p className="text-[14.5px] font-semibold text-ink">{SERVICES[s].name[lang]}</p>
-              <p className="truncate text-[12.5px] text-muted">
+              <p className="text-sm font-semibold text-ink">{SERVICES[s].name[lang]}</p>
+              <p className="truncate text-xs text-muted">
                 {q ? t("nowServing", { n: servingAt(view, s, Math.floor(dayMinute(sim))) }) : t("notOffered")}
               </p>
             </div>
             {q && (
               <div className="text-right">
-                <p className="font-display text-[17px] font-bold text-navy-900 tabular">
+                <p className="font-display text-base font-bold text-navy-900 tabular">
                   {q.wait}
-                  <span className="ml-0.5 text-[12px] font-semibold">{t("min")}</span>
+                  <span className="ml-0.5 text-xs font-semibold">{t("min")}</span>
                 </p>
-                <p className="text-[12px] text-muted">{t("waitingCount", { n: q.waiting })}</p>
+                <p className="text-xs text-muted">{t("waitingCount", { n: q.waiting })}</p>
               </div>
             )}
           </li>
@@ -109,7 +109,7 @@ export function CrowdSection({ view, className }: { view: BranchView; className?
   return (
     <Section title={t("crowd")} icon={ChartSpline} aside={<CrowdNote view={view} />} className={className}>
       <CrowdChart branch={view} best={view.bestTime} />
-      <p className="mt-3 flex items-center gap-2 rounded-xl bg-emerald-50 px-3 py-2 text-[13px] font-medium text-emerald-800">
+      <p className="mt-3 flex items-center gap-2 rounded-md bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-800">
         <Sparkles className="size-4 shrink-0" aria-hidden />
         {t("bestTime", { t: `${formatClock(view.bestTime)}–${formatClock(view.bestTime + 30)}` })}
       </p>
@@ -125,23 +125,23 @@ export function RouteSection({ view, className }: { view: BranchView; className?
     { icon: CarTaxiFront, label: t("taxi"), min: view.travel.taxi },
   ];
   return (
-    <Section title={t("route")} icon={MapPin} aside={<span className="text-right text-[12.5px] font-semibold text-navy-900">{view.via[lang]}</span>} className={className}>
+    <Section title={t("route")} icon={MapPin} aside={<span className="text-right text-xs font-semibold text-navy-900">{view.via[lang]}</span>} className={className}>
       <button
         type="button"
         onClick={() => showOnMap(view.id)}
         aria-label={t("map")}
-        className="block w-full overflow-hidden rounded-2xl ring-1 ring-line outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-700"
+        className="block w-full overflow-hidden rounded-md ring-1 ring-line outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-700"
       >
         <MiniMap branch={view} className="h-36" />
       </button>
       <ul className="mt-3 grid grid-cols-3 gap-2">
         {modes.map(({ icon: Icon, label, min }) => (
-          <li key={label} className="flex flex-col items-center rounded-xl bg-paper py-2.5">
+          <li key={label} className="flex flex-col items-center rounded-md bg-paper py-2.5">
             <Icon className="size-[18px] text-navy-900" aria-hidden />
-            <span className="mt-1 text-[12px] text-muted">{label}</span>
-            <span className="text-[15px] font-bold text-ink tabular">
+            <span className="mt-1 text-xs text-muted">{label}</span>
+            <span className="text-sm font-bold text-ink tabular">
               {min}
-              <span className="ml-0.5 text-[11px] font-semibold text-muted">{t("min")}</span>
+              <span className="ml-0.5 text-2xs font-semibold text-muted">{t("min")}</span>
             </span>
           </li>
         ))}
@@ -168,11 +168,11 @@ function InfoSection({ view, className }: { view: BranchView; className?: string
           <div key={label} className="flex items-center gap-3 py-3">
             <Icon className="size-[18px] shrink-0 text-muted" aria-hidden />
             <div className="min-w-0 flex-1">
-              <dt className="text-[12px] text-muted">{label}</dt>
-              <dd className="text-[14px] font-medium text-ink">{value}</dd>
+              <dt className="text-xs text-muted">{label}</dt>
+              <dd className="text-sm font-medium text-ink">{value}</dd>
             </div>
             {action && (
-              <button type="button" onClick={action.run} className={cx("inline-flex h-8 items-center gap-1.5 rounded-full bg-paper px-3 text-[12.5px] font-semibold text-navy-900 hover:bg-line", focusRing)}>
+              <button type="button" onClick={action.run} className={cx("inline-flex h-8 items-center gap-1.5 rounded-md bg-paper px-3 text-xs font-semibold text-navy-900 hover:bg-line", focusRing)}>
                 <action.icon className="size-3.5" aria-hidden />
                 {action.label}
               </button>
@@ -192,7 +192,7 @@ function Facilities({ view, className }: { view: BranchView; className?: string 
         {view.amenities.map((a) => {
           const Icon = AMENITY_ICONS[a];
           return (
-            <li key={a} className="inline-flex items-center gap-1.5 rounded-full bg-navy-100/70 px-3 py-1.5 text-[13px] font-medium text-navy-900">
+            <li key={a} className="inline-flex items-center gap-1.5 rounded-md bg-navy-100/70 px-3 py-1.5 text-xs font-medium text-navy-900">
               <Icon className="size-3.5" aria-hidden />
               {AMENITIES[a][lang]}
             </li>
@@ -220,7 +220,7 @@ function Hero({ view }: { view: BranchView }) {
   };
   const glass = "inline-flex size-10 items-center justify-center rounded-full bg-black/25 text-white backdrop-blur-md transition-colors hover:bg-black/35 " + focusRing;
   return (
-    <div className="relative h-[300px] overflow-hidden lg:h-[360px] lg:rounded-[28px]">
+    <div className="relative h-[300px] overflow-hidden lg:h-[360px] lg:rounded-lg">
       <img src={`/images/${view.photo}.webp`} alt="" className="absolute inset-0 size-full object-cover" />
       <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-black/55" />
       <div className="absolute inset-x-0 top-0 flex items-center gap-2 px-3 pt-[calc(0.75rem+env(safe-area-inset-top))] lg:px-4 lg:pt-4">
@@ -247,11 +247,11 @@ function TitleBlock({ view }: { view: BranchView }) {
   const level = crowdLabelKey(view.crowd);
   return (
     <div className="flex items-start gap-3">
-      <BankBadge bank={view.bank} className="size-12 text-[14px] ring-4 ring-white" />
+      <BankBadge bank={view.bank} className="size-12 text-sm ring-4 ring-white" />
       <div className="min-w-0 flex-1">
-        <p className="text-[14px] font-medium text-muted">{view.bankName}</p>
-        <h1 className="text-[26px] leading-tight font-bold tracking-tight text-ink lg:text-[32px]">{view.branchName}</h1>
-        <p className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-muted">
+        <p className="text-sm font-medium text-muted">{view.bankName}</p>
+        <h1 className="text-xl leading-tight font-bold tracking-tight text-ink lg:text-2xl">{view.branchName}</h1>
+        <p className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted">
           <span className="inline-flex items-center gap-1.5 font-semibold text-emerald-700">
             <span className="size-2 rounded-full bg-emerald-500" />
             {t("openUntil", { t: `${CLOSE_MIN / 60}:00` })}
@@ -264,7 +264,7 @@ function TitleBlock({ view }: { view: BranchView }) {
             {t(level)}
           </span>
         </p>
-        <p className="mt-1 truncate text-[13px] text-muted">{view.address[lang]}</p>
+        <p className="mt-1 truncate text-xs text-muted">{view.address[lang]}</p>
       </div>
     </div>
   );
@@ -274,15 +274,15 @@ function Stats({ view }: { view: BranchView }) {
   const { t } = useStore();
   const level = Math.round(view.crowd * 100);
   return (
-    <div className="grid grid-cols-3 divide-x divide-line rounded-[22px] bg-white py-4 shadow-card ring-1 ring-line/70">
+    <div className="grid grid-cols-3 divide-x divide-line rounded-lg bg-white py-4 shadow-card ring-1 ring-line/70">
       {[
         { label: t("minWait"), value: view.wait },
         { label: t("inQueue"), value: view.waiting },
         { label: t("crowdNow"), value: `${level}%` },
       ].map((s) => (
         <div key={s.label} className="px-2 text-center">
-          <p className="font-display text-[26px] leading-none font-bold text-navy-900 tabular">{s.value}</p>
-          <p className="mt-1.5 text-[12px] text-muted">{s.label}</p>
+          <p className="font-display text-xl leading-none font-bold text-navy-900 tabular">{s.value}</p>
+          <p className="mt-1.5 text-xs text-muted">{s.label}</p>
         </div>
       ))}
     </div>
@@ -299,7 +299,7 @@ export function BranchScreen({ id }: { id: string }) {
       <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start lg:gap-6">
         <div>
           <Hero view={view} />
-          <div className="relative -mt-8 rounded-t-[28px] bg-paper px-4 pt-5 lg:mt-6 lg:rounded-none lg:px-0 lg:pt-0">
+          <div className="relative -mt-8 rounded-t-lg bg-paper px-4 pt-5 lg:mt-6 lg:rounded-none lg:px-0 lg:pt-0">
             <TitleBlock view={view} />
             <div className="mt-5 flex flex-col gap-4 pb-28 lg:pb-0">
               <Stats view={view} />
@@ -321,18 +321,18 @@ export function BranchScreen({ id }: { id: string }) {
           <Section title={t("servicesTitle")}>
             <ServiceQueues view={view} />
           </Section>
-          <div className="rounded-[22px] bg-navy-900 p-5 text-white shadow-float">
-            <p className="text-[13px] text-white/65">{SERVICES.general.name[lang]}</p>
-            <p className="font-display text-[40px] leading-none font-bold tabular">
+          <div className="rounded-lg bg-navy-900 p-5 text-white shadow-float">
+            <p className="text-xs text-white/65">{SERVICES.general.name[lang]}</p>
+            <p className="font-display text-3xl leading-none font-bold tabular">
               {view.wait}
-              <span className="ml-1 text-[16px] font-semibold text-white/70">{t("min")}</span>
+              <span className="ml-1 text-base font-semibold text-white/70">{t("min")}</span>
             </p>
             <Meter.Root value={Math.round(view.crowd * 100)} className="mt-4" aria-label={t("crowdNow")}>
               <Meter.Track className="block h-1.5 overflow-hidden rounded-full bg-white/15">
                 <Meter.Indicator className="block h-full rounded-full bg-gold-500" />
               </Meter.Track>
             </Meter.Root>
-            <TakeTicketButton view={view} className="mt-5 h-12 w-full justify-center text-[16px]" />
+            <TakeTicketButton view={view} size="lg" className="mt-5 w-full justify-center" />
           </div>
         </aside>
       </div>
@@ -340,13 +340,13 @@ export function BranchScreen({ id }: { id: string }) {
       <div className="fixed inset-x-0 bottom-[calc(4rem+env(safe-area-inset-bottom))] z-20 border-t border-line bg-white/95 px-4 py-3 backdrop-blur-xl lg:hidden">
         <div className="mx-auto flex max-w-xl items-center gap-3">
           <div className="min-w-0 flex-1">
-            <p className="font-display text-[22px] leading-none font-bold text-navy-900 tabular">
+            <p className="font-display text-lg leading-none font-bold text-navy-900 tabular">
               {view.wait}
-              <span className="ml-1 text-[13px] font-semibold">{t("minWait")}</span>
+              <span className="ml-1 text-xs font-semibold">{t("minWait")}</span>
             </p>
-            <p className="mt-1 text-[12.5px] text-muted">{t("waitingCount", { n: view.waiting })}</p>
+            <p className="mt-1 text-xs text-muted">{t("waitingCount", { n: view.waiting })}</p>
           </div>
-          <TakeTicketButton view={view} className="h-12 px-6 text-[15px]" />
+          <TakeTicketButton view={view} size="lg" />
         </div>
       </div>
     </div>

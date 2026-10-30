@@ -12,20 +12,26 @@ export const headerIconButton = cx(
 );
 
 export const primaryButton = cx(
-  "inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-gold-600 px-5 text-[17px] font-bold text-white transition-colors",
+  "inline-flex h-12 items-center justify-center gap-2 rounded-md bg-gold-600 px-5 text-sm font-bold text-white transition-colors",
   "hover:bg-gold-700 active:bg-gold-800 disabled:opacity-50",
   focusRing,
 );
 
 export const secondaryButton = cx(
-  "inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-navy-900/15 bg-white px-5 text-[15px] font-semibold text-navy-900 transition-colors",
+  "inline-flex h-12 items-center justify-center gap-2 rounded-md border border-navy-900/15 bg-white px-5 text-sm font-semibold text-navy-900 transition-colors",
   "hover:bg-navy-100/60 active:bg-navy-100",
   focusRing,
 );
 
 export const navyButton = cx(
-  "inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-navy-900 px-5 text-[15px] font-bold text-white transition-colors",
+  "inline-flex h-12 items-center justify-center gap-2 rounded-md bg-navy-900 px-5 text-sm font-bold text-white transition-colors",
   "hover:bg-navy-800 active:bg-navy-950",
+  focusRing,
+);
+
+export const dangerButton = cx(
+  "inline-flex h-12 items-center justify-center gap-2 rounded-md bg-rose-700 px-5 text-sm font-bold text-white transition-colors",
+  "hover:bg-rose-800 active:bg-rose-900",
   focusRing,
 );
 

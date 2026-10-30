@@ -26,6 +26,19 @@
   --font-sans: var(--font-inter), var(--font-noto-kr), ui-sans-serif, system-ui, -apple-system, "Apple SD Gothic Neo", sans-serif;
   --font-display: var(--font-inter), var(--font-noto-kr), ui-sans-serif, system-ui, sans-serif;
 
+  /* One type scale for the whole app. Line height comes from `leading-*` or the parent. */
+  --text-*: initial;
+  --text-2xs: 0.6875rem; /* 11px: tab labels, tags, overlines */
+  --text-xs: 0.8125rem; /* 13px: captions and secondary lines */
+  --text-sm: 0.9375rem; /* 15px: body, buttons, list titles */
+  --text-base: 1.0625rem; /* 17px: card titles, inputs */
+  --text-lg: 1.25rem; /* 20px: screen titles, inline numbers */
+  --text-xl: 1.625rem; /* 26px: page titles, card numbers */
+  --text-2xl: 2rem; /* 32px: large numbers */
+  --text-3xl: 2.5rem; /* 40px */
+  --text-4xl: 3.75rem; /* 60px: story headline */
+  --text-5xl: 5.75rem; /* 92px: ticket number */
+
   --shadow-card: 0 1px 2px rgb(13 17 55 / 0.04), 0 8px 24px -12px rgb(13 17 55 / 0.14);
   --shadow-float: 0 2px 6px rgb(13 17 55 / 0.08), 0 18px 40px -12px rgb(13 17 55 / 0.28);
 
@@ -137,6 +150,36 @@ body {
   mask:
     conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / var(--tooth) 51% repeat-x,
     conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top / var(--tooth) 51% repeat-x;
+}
+
+/* Ticket-stub cards are built from two halves. Each half loses a quarter circle at the seam,
+   so the notches are real holes instead of paper-coloured dots painted on top. */
+@utility notch-bottom {
+  --notch: 7px;
+  mask:
+    radial-gradient(circle at 0 100%, #0000 var(--notch), #000 calc(var(--notch) + 0.5px)) left / 51% 100% no-repeat,
+    radial-gradient(circle at 100% 100%, #0000 var(--notch), #000 calc(var(--notch) + 0.5px)) right / 51% 100% no-repeat;
+}
+@utility notch-top {
+  --notch: 7px;
+  mask:
+    radial-gradient(circle at 0 0, #0000 var(--notch), #000 calc(var(--notch) + 0.5px)) left / 51% 100% no-repeat,
+    radial-gradient(circle at 100% 0, #0000 var(--notch), #000 calc(var(--notch) + 0.5px)) right / 51% 100% no-repeat;
+}
+
+/* Shadows that follow what is painted (notches included). A box-shadow traces the rectangle.
+   The first drop-shadow stands in for the hairline ring the other cards use. */
+@utility shape-shadow {
+  filter: drop-shadow(0 0 0.5px rgb(13 17 55 / 0.28)) drop-shadow(0 6px 10px rgb(13 17 55 / 0.07));
+}
+@utility shape-shadow-float {
+  filter: drop-shadow(0 0 0.5px rgb(13 17 55 / 0.28)) drop-shadow(0 10px 16px rgb(13 17 55 / 0.14));
+}
+/* A 2px outline around the shape, from four hard shadows, for the selected card. */
+@utility shape-outline {
+  --c: var(--color-navy-900);
+  filter: drop-shadow(2px 0 0 var(--c)) drop-shadow(-2px 0 0 var(--c)) drop-shadow(0 2px 0 var(--c)) drop-shadow(0 -2px 0 var(--c))
+    drop-shadow(0 6px 10px rgb(13 17 55 / 0.1));
 }
 
 /* Perforation between a card and its tear-off button. */

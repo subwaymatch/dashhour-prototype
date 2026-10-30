@@ -88,6 +88,7 @@ const STACK = [
   { name: "Base UI", detail: "Drawer, Dialog, Alert Dialog, Menu, Toast, Radio Group, Toggle Group, Switch, Meter, Progress, Input" },
   { name: "Tailwind CSS 4", detail: "Navy and gold palette carried over from the 2016 visual design" },
   { name: "Lucide", detail: "Open-source icons in place of the original hand-drawn set" },
+  { name: "MapLibre", detail: "A real street map of Gangnam from OpenStreetMap, served by OpenFreeMap, with walking routes from OSRM" },
   { name: "GPT Image 2.5", detail: "Redrew the notepad photos as clean, text-free pen sketches, and painted the branch scenes and onboarding illustrations" },
 ];
 
@@ -96,14 +97,14 @@ export default function StoryPage() {
     <div className="min-h-dvh bg-paper">
       <header className="bg-navy-950 text-white">
         <div className="mx-auto flex h-16 max-w-6xl items-center gap-3 px-5">
-          <Link href="/" className="flex items-center gap-3 rounded-md outline-none focus-visible:outline-2 focus-visible:outline-gold-300">
+          <Link href="/" className="flex items-center gap-3 rounded-sm outline-none focus-visible:outline-2 focus-visible:outline-gold-300">
             <LogoMark className="h-8 w-auto text-white" />
-            <Wordmark className="text-[20px]" />
+            <Wordmark className="text-lg" />
           </Link>
           <div className="flex-1" />
           <Link
             href="/"
-            className="inline-flex h-10 items-center gap-2 rounded-full bg-gold-500 px-4 text-[14px] font-bold text-navy-950 transition-colors hover:bg-gold-300"
+            className="inline-flex h-10 items-center gap-2 rounded-md bg-gold-500 px-4 text-sm font-bold text-navy-950 transition-colors hover:bg-gold-300"
           >
             Open the prototype <ArrowRight className="size-4" aria-hidden />
           </Link>
@@ -112,16 +113,16 @@ export default function StoryPage() {
 
       <main className="mx-auto max-w-6xl px-5 pt-14 pb-24">
         <section className="max-w-3xl">
-          <p className="text-[13px] font-bold tracking-[0.18em] text-gold-700 uppercase">Hackathon project · 2016</p>
-          <h1 className="mt-3 font-display text-4xl leading-[1.05] font-black tracking-tight text-navy-900 sm:text-6xl">
+          <p className="text-xs font-bold tracking-[0.18em] text-gold-700 uppercase">Hackathon project · 2016</p>
+          <h1 className="mt-3 font-display text-3xl leading-[1.05] font-black tracking-tight text-navy-900 sm:text-4xl">
             From a notepad to a working prototype
           </h1>
-          <p className="mt-6 text-lg leading-relaxed text-ink/80">
+          <p className="mt-6 text-base leading-relaxed text-ink/80">
             Dash Hour lets you take a bank&rsquo;s queue number before you get there. It shows how long each nearby branch&rsquo;s
             queue is, how busy it usually gets through the day, and when you need to leave so you arrive just as your
             number is called.
           </p>
-          <p className="mt-4 text-lg leading-relaxed text-ink/80">
+          <p className="mt-4 text-base leading-relaxed text-ink/80">
             The idea started as six pages of pen sketches. Those pages have been redrawn below, with the Korean notes from
             each page summarised in English. The prototype rebuilds the app from them as a responsive web app: the original
             three-tab layout on phones and a list, map and detail view on larger screens.
@@ -129,11 +130,11 @@ export default function StoryPage() {
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               href="/"
-              className="inline-flex h-12 items-center gap-2 rounded-xl bg-navy-900 px-5 text-[15px] font-bold text-white transition-colors hover:bg-navy-800"
+              className="inline-flex h-12 items-center gap-2 rounded-md bg-navy-900 px-5 text-sm font-bold text-white transition-colors hover:bg-navy-800"
             >
               <Monitor className="size-5" aria-hidden /> Try it on desktop
             </Link>
-            <p className="flex items-center gap-2 text-[15px] text-ink/70">
+            <p className="flex items-center gap-2 text-sm text-ink/70">
               <Smartphone className="size-5 text-navy-900" aria-hidden />
               On a phone it switches to the original three-tab app, and you can add it to your home screen.
             </p>
@@ -142,10 +143,10 @@ export default function StoryPage() {
 
         <section className="mt-20" aria-labelledby="sketches">
           <div className="flex items-end justify-between gap-4">
-            <h2 id="sketches" className="font-display text-3xl font-black tracking-tight text-navy-900">
+            <h2 id="sketches" className="font-display text-2xl font-black tracking-tight text-navy-900">
               The sketches
             </h2>
-            <p className="hidden text-[14px] text-muted sm:block">Turn on “Original page” to see each scanned notepad page.</p>
+            <p className="hidden text-sm text-muted sm:block">Turn on “Original page” to see each scanned notepad page.</p>
           </div>
           <div className="mt-8 grid gap-6 md:grid-cols-2">
             {SKETCHES.map((s) => (
@@ -156,21 +157,21 @@ export default function StoryPage() {
 
         <section className="mt-20 grid gap-10 md:grid-cols-[1fr_1.4fr]" aria-labelledby="stack">
           <div>
-            <h2 id="stack" className="font-display text-3xl font-black tracking-tight text-navy-900">
+            <h2 id="stack" className="font-display text-2xl font-black tracking-tight text-navy-900">
               How it&rsquo;s built
             </h2>
-            <p className="mt-4 leading-relaxed text-ink/80">
+            <p className="mt-4 text-base leading-relaxed text-ink/80">
               Queue lengths are simulated from a typical day at a Korean bank branch, with a quiet mid-morning and rushes at
               lunch and before closing. Each counter type (deposits, loans, foreign exchange and business banking) keeps its
               own queue, as on a real ticket kiosk. A demo clock runs ten times faster than real time so you can watch a
               ticket count down, get called to a counter, or miss your turn. You can change its speed from the ⋮ menu.
             </p>
           </div>
-          <dl className="divide-y divide-navy-900/10 rounded-2xl bg-white px-6 shadow-[0_1px_2px_rgba(13,17,55,0.06)]">
+          <dl className="divide-y divide-navy-900/10 rounded-lg bg-white px-6 shadow-[0_1px_2px_rgba(13,17,55,0.06)]">
             {STACK.map((s) => (
               <div key={s.name} className="grid gap-1 py-4 sm:grid-cols-[9rem_1fr] sm:gap-4">
-                <dt className="font-extrabold text-navy-900">{s.name}</dt>
-                <dd className="text-[15px] text-ink/75">{s.detail}</dd>
+                <dt className="text-base font-extrabold text-navy-900">{s.name}</dt>
+                <dd className="text-sm text-ink/75">{s.detail}</dd>
               </div>
             ))}
           </dl>

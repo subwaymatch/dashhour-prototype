@@ -96,6 +96,7 @@ const STRINGS = {
   recenter: { en: "Show my location", ko: "내 위치 보기" },
   zoomIn: { en: "Zoom in", ko: "확대" },
   zoomOut: { en: "Zoom out", ko: "축소" },
+  mapError: { en: "The map couldn't load. Check your connection and refresh.", ko: "지도를 불러오지 못했어요. 연결을 확인하고 새로고침해 주세요." },
   line2: { en: "Line 2", ko: "2호선" },
   sinbundang: { en: "Sinbundang", ko: "신분당선" },
 

@@ -53,7 +53,7 @@ export function CrowdChart({ branch, best }: { branch: Branch; best?: number }) 
           y={PAD.top - 6}
           width={xFor(best + 30) - xFor(best)}
           height={H - PAD.bottom - PAD.top + 6}
-          rx="4"
+          rx="2"
           fill="rgb(16 185 129 / 0.12)"
         />
       )}
@@ -62,7 +62,7 @@ export function CrowdChart({ branch, best }: { branch: Branch; best?: number }) 
       {[9, 12, 15]
         .filter((h) => Math.abs(xFor(h * 60) - labelX) > 56)
         .map((h) => (
-          <text key={h} x={xFor(h * 60)} y={H - 12} textAnchor="middle" fontSize="10" fill="var(--color-muted)">
+          <text key={h} x={xFor(h * 60)} y={H - 12} textAnchor="middle" fontSize="11" fill="var(--color-muted)">
             {`${h}:00`}
           </text>
         ))}
@@ -70,8 +70,8 @@ export function CrowdChart({ branch, best }: { branch: Branch; best?: number }) 
       <circle cx={nx} cy={PAD.top - 6} r="3.5" fill="var(--color-navy-900)" />
       <circle cx={nx} cy={ny} r="4.5" fill="white" stroke="var(--color-navy-900)" strokeWidth="2" />
       <g transform={`translate(${labelX} ${H - PAD.bottom + 4})`}>
-        <rect x="-30" y="0" width="60" height="16" rx="8" fill="var(--color-navy-900)" />
-        <text y="11.5" textAnchor="middle" fontSize="10" fontWeight="700" fill="white" className="tabular">
+        <rect x="-30" y="0" width="60" height="16" rx="3" fill="var(--color-navy-900)" />
+        <text y="11.5" textAnchor="middle" fontSize="11" fontWeight="700" fill="white" className="tabular">
           {formatClock(sim)}
         </text>
       </g>

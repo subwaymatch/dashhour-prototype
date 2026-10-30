@@ -10,7 +10,7 @@ import { SERVICES } from "@/lib/data";
 import { formatClock, formatCountdown, formatDistance } from "@/lib/sim";
 import { SERVICE_ICONS } from "./take-ticket";
 import { useStore } from "./store";
-import { backdropClass, cx, focusRing, navyButton, popupAnimation, primaryButton, secondaryButton } from "./ui";
+import { backdropClass, cx, dangerButton, focusRing, navyButton, popupAnimation, primaryButton, secondaryButton } from "./ui";
 
 const R = 84;
 const CIRC = 2 * Math.PI * R;
@@ -61,7 +61,7 @@ export function TicketStub({ className }: { className?: string }) {
     <div className={cx("mx-auto w-full max-w-[400px] drop-shadow-[0_16px_32px_rgba(13,17,55,0.16)]", className)}>
       <div className="ticket-edges relative bg-white px-6 pt-9 pb-7 text-center">
         <div className="flex items-center justify-between">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-paper px-3 py-1.5 text-[12.5px] font-semibold text-navy-900">
+          <span className="inline-flex items-center gap-1.5 rounded-md bg-paper px-3 py-1.5 text-xs font-semibold text-navy-900">
             <ServiceIcon className="size-3.5" aria-hidden />
             {SERVICES[ticket.service].name[lang]}
           </span>
@@ -75,15 +75,15 @@ export function TicketStub({ className }: { className?: string }) {
           </button>
         </div>
 
-        <p className={cx("mt-5 text-[15px] font-semibold", status.called ? "text-rose-700" : "text-navy-900")}>
+        <p className={cx("mt-5 text-sm font-semibold", status.called ? "text-rose-700" : "text-navy-900")}>
           {status.called ? t("goToCounter", { n: ticket.counter }) : t("beThereBy", { t: formatClock(status.calledAt) })}
         </p>
-        <p className="mt-1 font-display text-[92px] leading-[0.95] font-extrabold tracking-[-0.04em] text-navy-900 tabular">{ticket.number}</p>
-        <p className="mt-3 text-[18px] leading-tight">
+        <p className="mt-1 font-display text-5xl leading-[0.95] font-extrabold tracking-[-0.04em] text-navy-900 tabular">{ticket.number}</p>
+        <p className="mt-3 text-base leading-tight">
           <span className="font-bold text-gold-700">{ticketBranch.bankName}</span>{" "}
           <span className="font-medium text-gold-700">{ticketBranch.branchName}</span>
         </p>
-        <p className="mt-1 text-[13px] text-muted">
+        <p className="mt-1 text-xs text-muted">
           {formatDistance(ticketBranch.distance)} · {t("walkMin", { n: ticketBranch.travel.walk })}
         </p>
 
@@ -91,34 +91,34 @@ export function TicketStub({ className }: { className?: string }) {
           {status.called ? (
             <div className="mx-auto flex max-w-[260px] flex-col items-center">
               <img src="/images/your-turn.webp" alt="" className="size-40 object-contain" />
-              <p className="mt-2 text-[13px] leading-relaxed text-muted">
+              <p className="mt-2 text-xs leading-relaxed text-muted">
                 {t("graceNote", { c: ticket.counter, t: formatCountdown(status.grace) })}
               </p>
             </div>
           ) : (
             <QueueRing progress={status.progress} label={t("aheadOfYou", { n: status.ahead })}>
-              <p className="flex items-center gap-1.5 text-[14px] font-medium text-muted">
+              <p className="flex items-center gap-1.5 text-sm font-medium text-muted">
                 <User className="size-4" aria-hidden />
                 <span className="tabular">{t("aheadOfYou", { n: status.ahead })}</span>
               </p>
-              <p className="mt-1 font-display text-[34px] leading-none font-bold text-navy-900 tabular" aria-live="off">
+              <p className="mt-1 font-display text-2xl leading-none font-bold text-navy-900 tabular" aria-live="off">
                 {formatCountdown(status.remaining)}
               </p>
-              <p className="mt-1 text-[12px] font-medium text-muted">{t("timeLeft")}</p>
+              <p className="mt-1 text-xs font-medium text-muted">{t("timeLeft")}</p>
             </QueueRing>
           )}
         </div>
-        <p className="mt-4 text-[13px] text-muted tabular">
+        <p className="mt-4 text-xs text-muted tabular">
           {t("nowServing", { n: serving })} · {t("counterLabel", { n: ticket.counter })}
         </p>
 
         <div className="mt-6 border-t-[1.5px] border-dashed border-line" />
 
         <div className="mt-6 flex items-center gap-4 text-left">
-          <QrCode value={`DASHHOUR:${ticket.id}:${ticket.number}`} className="size-24 shrink-0 rounded-lg ring-1 ring-line" />
+          <QrCode value={`DASHHOUR:${ticket.id}:${ticket.number}`} className="size-24 shrink-0 rounded-sm ring-1 ring-line" />
           <div className="min-w-0">
-            <p className="text-[13.5px] leading-snug font-medium text-ink">{t("checkIn")}</p>
-            <p className="mt-1 font-mono text-[11px] tracking-wider text-muted uppercase">{ticket.id}</p>
+            <p className="text-xs leading-snug font-medium text-ink">{t("checkIn")}</p>
+            <p className="mt-1 font-mono text-2xs tracking-wider text-muted uppercase">{ticket.id}</p>
           </div>
         </div>
 
@@ -157,8 +157,8 @@ export function TicketTimeline({ className }: { className?: string }) {
   ];
   const current = steps.findIndex((s) => s.at > sim);
   return (
-    <section className={cx("rounded-[22px] bg-white p-5 shadow-card ring-1 ring-line/70", className)}>
-      <h2 className="text-[15px] font-bold text-ink">{t("timeline")}</h2>
+    <section className={cx("rounded-lg bg-white p-5 shadow-card ring-1 ring-line/70", className)}>
+      <h2 className="text-sm font-bold text-ink">{t("timeline")}</h2>
       <ol className="mt-4">
         {steps.map((s, i) => {
           const done = current === -1 || i < current;
@@ -179,10 +179,10 @@ export function TicketTimeline({ className }: { className?: string }) {
               </span>
               <div className="flex min-w-0 flex-1 items-baseline justify-between gap-3">
                 <div>
-                  <p className={cx("text-[14.5px] font-semibold", done || next ? "text-ink" : "text-muted")}>{s.label}</p>
-                  {s.note && <p className="text-[12.5px] text-muted">{s.note}</p>}
+                  <p className={cx("text-sm font-semibold", done || next ? "text-ink" : "text-muted")}>{s.label}</p>
+                  {s.note && <p className="text-xs text-muted">{s.note}</p>}
                 </div>
-                <span className="text-[13px] font-medium text-muted tabular">{formatClock(s.at)}</span>
+                <span className="text-xs font-medium text-muted tabular">{formatClock(s.at)}</span>
               </div>
             </li>
           );
@@ -196,14 +196,14 @@ export function BringList({ className }: { className?: string }) {
   const { ticket, t, lang } = useStore();
   if (!ticket) return null;
   return (
-    <section className={cx("rounded-[22px] bg-white p-5 shadow-card ring-1 ring-line/70", className)}>
-      <h2 className="flex items-center gap-2 text-[15px] font-bold text-ink">
+    <section className={cx("rounded-lg bg-white p-5 shadow-card ring-1 ring-line/70", className)}>
+      <h2 className="flex items-center gap-2 text-sm font-bold text-ink">
         <ListChecks className="size-4" aria-hidden />
         {t("whatToBring")}
       </h2>
       <ul className="mt-3 flex flex-col gap-2">
         {SERVICES[ticket.service].bring.map((item) => (
-          <li key={item.en} className="flex items-center gap-2.5 text-[14px] text-ink/85">
+          <li key={item.en} className="flex items-center gap-2.5 text-sm text-ink/85">
             <span className="flex size-5 items-center justify-center rounded-full bg-emerald-50 text-emerald-700">
               <Check className="size-3" strokeWidth={3} aria-hidden />
             </span>
@@ -221,14 +221,14 @@ export function TicketBranchCard({ className }: { className?: string }) {
   return (
     <Link
       href={`/branch/${ticketBranch.id}`}
-      className={cx("flex overflow-hidden rounded-[22px] bg-white shadow-card ring-1 ring-line/70 transition-shadow hover:shadow-float", focusRing, className)}
+      className={cx("flex overflow-hidden rounded-lg bg-white shadow-card ring-1 ring-line/70 transition-shadow hover:shadow-float", focusRing, className)}
     >
       <img src={`/images/${ticketBranch.photo}-sm.webp`} alt="" className="w-28 shrink-0 object-cover" />
       <div className="min-w-0 p-4">
-        <p className="text-[12.5px] text-muted">{ticketBranch.bankName}</p>
-        <p className="truncate text-[16px] font-bold text-ink">{ticketBranch.branchName}</p>
-        <p className="mt-1 truncate text-[12.5px] text-muted">{ticketBranch.address[lang]}</p>
-        <p className="mt-0.5 flex items-center gap-1 text-[12.5px] text-muted">
+        <p className="text-xs text-muted">{ticketBranch.bankName}</p>
+        <p className="truncate text-base font-bold text-ink">{ticketBranch.branchName}</p>
+        <p className="mt-1 truncate text-xs text-muted">{ticketBranch.address[lang]}</p>
+        <p className="mt-0.5 flex items-center gap-1 text-xs text-muted">
           <Clock className="size-3" aria-hidden />
           {t("hoursValue")}
         </p>
@@ -242,8 +242,8 @@ export function EmptyTicket() {
   return (
     <div className="flex flex-col items-center justify-center px-8 py-14 text-center">
       <img src="/images/empty-ticket.webp" alt="" className="size-44 object-contain" />
-      <p className="mt-4 text-[20px] font-bold text-ink">{t("noTicket")}</p>
-      <p className="mt-2 max-w-xs text-[14px] leading-relaxed text-muted">{t("noTicketBody")}</p>
+      <p className="mt-4 text-lg font-bold text-ink">{t("noTicket")}</p>
+      <p className="mt-2 max-w-xs text-sm leading-relaxed text-muted">{t("noTicketBody")}</p>
       <Link href="/" className={cx(primaryButton, "mt-6")}>
         {t("findBranch")}
       </Link>
@@ -259,15 +259,15 @@ export function CancelTicketDialog() {
         <AlertDialog.Backdrop className={backdropClass} />
         <AlertDialog.Popup
           className={cx(
-            "fixed top-1/2 left-1/2 w-[22rem] max-w-[calc(100vw-2rem)] -translate-x-1/2 -translate-y-1/2 rounded-3xl bg-white p-6 text-ink shadow-2xl outline-none",
+            "fixed top-1/2 left-1/2 w-[22rem] max-w-[calc(100vw-2rem)] -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white p-6 text-ink shadow-2xl outline-none",
             popupAnimation,
           )}
         >
-          <AlertDialog.Title className="text-[18px] font-bold text-ink">{t("cancelTitle", { num: ticket?.number ?? "" })}</AlertDialog.Title>
-          <AlertDialog.Description className="mt-2 text-[14px] leading-relaxed text-muted">{t("cancelBody")}</AlertDialog.Description>
+          <AlertDialog.Title className="text-base font-bold text-ink">{t("cancelTitle", { num: ticket?.number ?? "" })}</AlertDialog.Title>
+          <AlertDialog.Description className="mt-2 text-sm leading-relaxed text-muted">{t("cancelBody")}</AlertDialog.Description>
           <div className="mt-6 grid grid-cols-2 gap-3">
             <AlertDialog.Close className={secondaryButton}>{t("keepTicket")}</AlertDialog.Close>
-            <button type="button" onClick={cancelTicket} className={cx(primaryButton, "bg-rose-700 text-[15px] hover:bg-rose-800 active:bg-rose-900")}>
+            <button type="button" onClick={cancelTicket} className={dangerButton}>
               {t("cancelTicket")}
             </button>
           </div>
