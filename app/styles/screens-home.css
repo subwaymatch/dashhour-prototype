@@ -307,7 +307,8 @@
     gap: 0.75rem;
     overflow-y: auto;
     padding-inline: 1rem;
-    padding-top: var(--spacing);
+    /* Keep the first ticket's navy glow inside the scroll container. */
+    padding-top: 2rem;
     padding-bottom: 1.5rem;
     & > * {
       flex-shrink: 0;
@@ -404,6 +405,9 @@
     gap: 0.75rem;
     padding-block: 1.25rem;
   }
+  .branch-panel-content > .branch-panel-services {
+    border-bottom: 0;
+  }
   .branch-panel-wait {
     color: var(--color-navy-900);
     font-variant-numeric: tabular-nums;
@@ -499,17 +503,17 @@
     width: 100%;
     min-height: 3.5rem;
     margin: 0;
-    border-top: 1px solid var(--color-line);
-    background: white;
+    margin-top: auto;
+    background: #e8edf9;
     font-size: var(--text-sm);
     font-weight: 600;
     color: var(--color-navy-900);
     transition: background-color 150ms ease;
   }
   .branch-panel-details:hover {
-    background-color: var(--color-navy-100);
+    background-color: #dfe6f7;
   }
   .branch-panel-details:active {
-    background-color: var(--color-navy-200, #c9cce6);
+    background-color: #d4def3;
   }
 }

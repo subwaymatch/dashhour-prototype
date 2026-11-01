@@ -8,20 +8,24 @@ import {
   Accessibility,
   Banknote,
   ChevronRight,
+  ChevronDown,
+  Clock,
   CircleParking,
   Languages,
   Star,
   Ticket,
   Timer,
+  Users,
   X,
   Zap,
 } from "lucide-react";
-import { AMENITIES, SERVICES } from "@/lib/data";
+import { AMENITIES, BANKS, SERVICES, type BankKey } from "@/lib/data";
 import { formatCountdown, formatDistance } from "@/lib/sim";
 import { BankBadge } from "./bank-badge";
 import {
   useStore,
   type BranchView,
+  type BankFilterKey,
   type FilterKey,
   type SortKey,
 } from "./store";
@@ -141,7 +145,7 @@ export function TakeTicketButton({
 
 /**
  * A card torn in two along a dashed line, like a ticket stub. The notches are cut out of
- * both halves. The card shadow and selection outline follow the notched shape.
+ * both halves. The card shadow and selection glow follow the notched shape.
  */
 function StubCard({
   top,
@@ -202,19 +206,23 @@ function CardFooter({ view }: { view: BranchView }) {
     <div className="card-footer">
       <div className="card-content">
         <p className="card-wait">
+          <Clock className="card-queue-icon" aria-hidden />
           {view.wait > 0 ? (
             <>
+              <span className="card-wait-prefix">
+                {t("waitEstimatePrefix")}
+              </span>{" "}
               <span className="card-wait-number minute-number">
                 {view.wait}
               </span>
-              <span className="card-wait-unit">{t("minWait")}</span>
+              <span className="card-wait-unit">{t("min")}</span>
             </>
           ) : (
-            <span className="card-no-wait">{t("noWait")}</span>
+            <span className="card-no-wait">{t("availableNow")}</span>
           )}
         </p>
         <p className="card-queue">
-          <CrowdBars level={view.crowd} />
+          <Users className="card-queue-icon" aria-hidden />
           {t("waitingCount", { n: view.waiting })}
         </p>
       </div>
@@ -398,6 +406,33 @@ const FILTERS = [
   { key: "english", icon: Languages },
 ] satisfies { key: FilterKey; icon: typeof Banknote }[];
 
+export function BankFilter() {
+  const { bankFilter, setBankFilter, lang, t } = useStore();
+  return (
+    <label className="bank-filter">
+      <span>{t("filterBank")}</span>
+      <span className="bank-filter-control">
+        <select
+          aria-label={t("filterBank")}
+          value={bankFilter}
+          onChange={(event) =>
+            setBankFilter(event.target.value as BankFilterKey)
+          }
+          className={cx("bank-filter-select", focusRing)}
+        >
+          <option value="all">{t("allBanks")}</option>
+          {(Object.keys(BANKS) as BankKey[]).map((bank) => (
+            <option key={bank} value={bank}>
+              {BANKS[bank].name[lang]}
+            </option>
+          ))}
+        </select>
+        <ChevronDown className="bank-filter-chevron" aria-hidden />
+      </span>
+    </label>
+  );
+}
+
 export function FilterChips({
   className,
   tone = "light",
@@ -405,7 +440,8 @@ export function FilterChips({
   className?: string;
   tone?: "light" | "dark";
 }) {
-  const { filters, setFilters, lang, t } = useStore();
+  const { filters, setFilters, bankFilter, setBankFilter, lang, t } =
+    useStore();
   const chip = cx(
     "filter-chip",
     tone === "light" ? "filter-chip-light" : "filter-chip-dark",
@@ -425,10 +461,13 @@ export function FilterChips({
           {f === "fx" ? SERVICES.fx.name[lang] : AMENITIES[f][lang]}
         </Toggle>
       ))}
-      {filters.length > 0 && (
+      {(filters.length > 0 || bankFilter !== "all") && (
         <button
           type="button"
-          onClick={() => setFilters([])}
+          onClick={() => {
+            setFilters([]);
+            setBankFilter("all");
+          }}
           className={cx(
             chip,
             "filter-chips-button-clear-filters",
@@ -466,13 +505,16 @@ export function SortToggle({ className }: { className?: string }) {
 }
 
 export function EmptyFilters() {
-  const { t, setFilters } = useStore();
+  const { t, setFilters, setBankFilter } = useStore();
   return (
     <div className="empty-filters-div-no-matches">
       <p className="empty-filters-p-no-matches">{t("noMatches")}</p>
       <button
         type="button"
-        onClick={() => setFilters([])}
+        onClick={() => {
+          setFilters([]);
+          setBankFilter("all");
+        }}
         className={cx("empty-filters-button-clear-filters", focusRing)}
       >
         {t("clearFilters")}
