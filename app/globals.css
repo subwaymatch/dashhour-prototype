@@ -1,223 +1,65 @@
-@import "tailwindcss";
+@layer theme, base, components;
+@import "./styles/base.css";
+@import "./styles/ui.css";
+@import "./styles/story-page.css";
+@import "./styles/bank-badge.css";
+@import "./styles/branch-card.css";
+@import "./styles/city-map.css";
+@import "./styles/crowd-chart.css";
+@import "./styles/logo.css";
+@import "./styles/onboarding.css";
+@import "./styles/shell.css";
+@import "./styles/sketch-card.css";
+@import "./styles/take-ticket.css";
+@import "./styles/ticket.css";
+@import "./styles/toasts.css";
+@import "./styles/screens-branch.css";
+@import "./styles/screens-home.css";
+@import "./styles/screens-map.css";
+@import "./styles/screens-me.css";
+@import "./styles/screens-ticket.css";
 
-@theme {
-  --color-navy-950: #0d1137;
-  --color-navy-900: #151a4f;
-  --color-navy-800: #1d2468;
-  --color-navy-700: #2c3484;
-  --color-navy-200: #c9cce6;
-  --color-navy-100: #e6e8f4;
-  --color-gold-800: #6e6139;
-  --color-gold-700: #7d6e42;
-  --color-gold-600: #8a7a4b;
-  --color-gold-500: #b4a67a;
-  --color-gold-300: #d8cfae;
-  --color-gold-100: #f3efe3;
-  --color-paper: #f3f2ee;
-  --color-line: #e7e4dc;
-  --color-ink: #1d1f2e;
-  --color-muted: #6b6b76;
-  --color-map-land: #f3f0e8;
-  --color-map-block: #e8e3d6;
-  --color-map-park: #dbe5cc;
-  --color-subway-2: #3b9f4a;
-  --color-subway-sb: #c3283a;
-
-  --font-sans: var(--font-inter), var(--font-noto-kr), ui-sans-serif, system-ui, -apple-system, "Apple SD Gothic Neo", sans-serif;
-  --font-display: var(--font-inter), var(--font-noto-kr), ui-sans-serif, system-ui, sans-serif;
-
-  /* One type scale for the whole app. Line height comes from `leading-*` or the parent. */
-  --text-*: initial;
-  --text-2xs: 0.6875rem; /* 11px: tab labels, tags, overlines */
-  --text-xs: 0.8125rem; /* 13px: captions and secondary lines */
-  --text-sm: 0.9375rem; /* 15px: body, buttons, list titles */
-  --text-base: 1.0625rem; /* 17px: card titles, inputs */
-  --text-lg: 1.25rem; /* 20px: screen titles, inline numbers */
-  --text-xl: 1.625rem; /* 26px: page titles, card numbers */
-  --text-2xl: 2rem; /* 32px: large numbers */
-  --text-3xl: 2.5rem; /* 40px */
-  --text-4xl: 3.75rem; /* 60px: story headline */
-  --text-5xl: 5.75rem; /* 92px: ticket number */
-
-  --shadow-card: 0 1px 2px rgb(13 17 55 / 0.04), 0 8px 24px -12px rgb(13 17 55 / 0.14);
-  --shadow-float: 0 2px 6px rgb(13 17 55 / 0.08), 0 18px 40px -12px rgb(13 17 55 / 0.28);
-
-  --animate-spin-once: spin-once 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-  --animate-pulse-ring: pulse-ring 2.4s ease-out infinite;
-  --animate-ticket-out: ticket-out 2.1s cubic-bezier(0.3, 0.7, 0.2, 1) forwards;
-  --animate-kiosk-blink: kiosk-blink 0.6s steps(2) infinite;
-  --animate-shimmer: shimmer 1.4s ease-in-out infinite;
-  --animate-rise: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
-
-  @keyframes shimmer {
-    0% {
-      background-position: -200% 0;
-    }
-    100% {
-      background-position: 200% 0;
-    }
-  }
-  @keyframes rise {
-    from {
-      opacity: 0;
-      transform: translateY(8px);
-    }
-    to {
-      opacity: 1;
-      transform: none;
-    }
-  }
-
-  @keyframes spin-once {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-  @keyframes pulse-ring {
-    0% {
-      transform: scale(0.6);
-      opacity: 0.55;
-    }
-    100% {
-      transform: scale(2.4);
-      opacity: 0;
-    }
-  }
-  @keyframes ticket-out {
-    0% {
-      transform: translateY(-34px);
-    }
-    55% {
-      transform: translateY(0);
-    }
-    75% {
-      transform: translateY(0) rotate(0deg);
-      opacity: 1;
-    }
-    100% {
-      transform: translateY(26px) rotate(-6deg);
-      opacity: 0;
-    }
-  }
-  @keyframes kiosk-blink {
-    to {
-      opacity: 0.25;
-    }
-  }
-}
-
-:root {
-  color-scheme: light;
-  -webkit-tap-highlight-color: transparent;
-}
-
-html,
-body {
-  background: var(--color-paper);
-  color: var(--color-ink);
-}
-
-body {
-  margin: 0;
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-}
-
-/* Inter reads best slightly tightened; Korean text keeps its natural spacing.
-   In the base layer so tracking utilities still win. */
 @layer base {
-  body {
-    letter-spacing: -0.012em;
+  :where(
+    a[href],
+    button,
+    summary,
+    label[for],
+    label:has(input, button, [role="switch"]),
+    [role="button"],
+    [role="link"],
+    [role="switch"],
+    [role="radio"],
+    [role="checkbox"],
+    [role="tab"],
+    [role="menuitem"],
+    [role="menuitemradio"],
+    [role="menuitemcheckbox"],
+    input[type="button"],
+    input[type="submit"],
+    input[type="reset"],
+    input[type="checkbox"],
+    input[type="radio"]
+  ) {
+    cursor: pointer;
   }
-  :lang(ko) {
-    letter-spacing: 0;
-  }
-}
-
-/* Base UI portals render into the body; give them their own stacking context. */
-.root {
-  isolation: isolate;
-}
-
-@utility tabular {
-  font-variant-numeric: tabular-nums;
-}
-
-/* Torn-paper edge used on the ticket, after the zig-zag in the original design. */
-@utility ticket-edges {
-  --tooth: 14px;
-  mask:
-    conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / var(--tooth) 51% repeat-x,
-    conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top / var(--tooth) 51% repeat-x;
-}
-
-/* Ticket-stub cards are built from two halves. Each half loses a quarter circle at the seam,
-   so the notches are real holes instead of paper-coloured dots painted on top. */
-@utility notch-bottom {
-  --notch: 7px;
-  mask:
-    radial-gradient(circle at 0 100%, #0000 var(--notch), #000 calc(var(--notch) + 0.5px)) left / 51% 100% no-repeat,
-    radial-gradient(circle at 100% 100%, #0000 var(--notch), #000 calc(var(--notch) + 0.5px)) right / 51% 100% no-repeat;
-}
-@utility notch-top {
-  --notch: 7px;
-  mask:
-    radial-gradient(circle at 0 0, #0000 var(--notch), #000 calc(var(--notch) + 0.5px)) left / 51% 100% no-repeat,
-    radial-gradient(circle at 100% 0, #0000 var(--notch), #000 calc(var(--notch) + 0.5px)) right / 51% 100% no-repeat;
-}
-
-/* Shadows that follow what is painted (notches included). A box-shadow traces the rectangle.
-   The first drop-shadow stands in for the hairline ring the other cards use. */
-@utility shape-shadow {
-  filter: drop-shadow(0 0 0.5px rgb(13 17 55 / 0.28)) drop-shadow(0 6px 10px rgb(13 17 55 / 0.07));
-}
-@utility shape-shadow-float {
-  filter: drop-shadow(0 0 0.5px rgb(13 17 55 / 0.28)) drop-shadow(0 10px 16px rgb(13 17 55 / 0.14));
-}
-/* A soft hairline and gentle lift distinguish the selected ticket. */
-@utility shape-outline {
-  filter: drop-shadow(0 0 0.75px rgb(13 17 55 / 0.35)) drop-shadow(0 6px 10px rgb(13 17 55 / 0.09));
-}
-
-/* Perforation between a card and its tear-off button. */
-@utility perforated {
-  background-image: radial-gradient(circle at center, currentColor 1.2px, transparent 1.6px);
-  background-size: 2px 7px;
-  background-repeat: repeat-y;
-}
-
-/* Ruled notepad paper for the sketch gallery. */
-@utility notepad {
-  background-color: #fbf6dc;
-  background-image:
-    linear-gradient(90deg, transparent 2.4rem, #e8a3a3 2.4rem, #e8a3a3 calc(2.4rem + 1px), transparent calc(2.4rem + 1px)),
-    repeating-linear-gradient(180deg, transparent 0 27px, #c7d6e6 27px 28px);
-}
-
-@utility skeleton {
-  background: linear-gradient(90deg, #ebe8e1 25%, #f5f3ee 50%, #ebe8e1 75%) 0 0 / 200% 100%;
-  animation: var(--animate-shimmer);
-}
-
-@utility no-scrollbar {
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
+  :where(
+    button:disabled,
+    input:disabled,
+    [aria-disabled="true"],
+    [data-disabled]
+  ) {
+    cursor: not-allowed;
   }
 }
-
-@utility scrollbar-thin {
-  scrollbar-width: thin;
-  scrollbar-color: color-mix(in srgb, var(--color-navy-900) 25%, transparent) transparent;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+@layer components {
+  .minute-number {
+    font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+    font-variant-numeric: tabular-nums;
+  }
+  .minute-value {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0;
   }
 }

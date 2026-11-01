@@ -1,0 +1,156 @@
+/* components/onboarding.tsx */
+@layer components {
+  .onboarding-dialog-backdrop {
+    position: fixed;
+    inset: 0px;
+    background-color: color-mix(in srgb, #0d1137 60%, transparent);
+    -webkit-backdrop-filter: blur(var(--blur-sm));
+    backdrop-filter: blur(var(--blur-sm));
+    transition-property: opacity;
+    transition-timing-function: var(--default-transition-timing-function);
+    transition-duration: 300ms;
+    &[data-ending-style] {
+      opacity: 0%;
+    }
+    &[data-starting-style] {
+      opacity: 0%;
+    }
+  }
+  .onboarding-dialog-popup-skip {
+    position: fixed;
+    inset: 0px;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-paper);
+    transition-property: opacity, transform;
+    transition-timing-function: var(--default-transition-timing-function);
+    transition-duration: 300ms;
+    outline-style: none;
+    &[data-ending-style] {
+      opacity: 0%;
+    }
+    &[data-starting-style] {
+      opacity: 0%;
+    }
+  }
+  @media (width >= 40rem) {
+    .onboarding-dialog-popup-skip-2 {
+      inset: auto;
+      top: calc(1 / 2 * 100%);
+      left: calc(1 / 2 * 100%);
+      height: auto;
+      width: 26rem;
+      translate: calc(calc(1 / 2 * 100%) * -1) calc(calc(1 / 2 * 100%) * -1);
+      overflow: hidden;
+      border-radius: var(--radius-lg);
+      --surface-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+      box-shadow:
+        var(--surface-inset-ring), var(--surface-ring), var(--surface-shadow);
+    }
+  }
+  .onboarding-div-skip {
+    display: flex;
+    justify-content: flex-end;
+    padding-inline: 1rem;
+    padding-top: calc(0.75rem + env(safe-area-inset-top));
+    @media (width >= 40rem) {
+      padding-top: 1rem;
+    }
+  }
+  .onboarding-dialog-close-skip {
+    border-radius: var(--radius-md);
+    padding-inline: 0.75rem;
+    padding-block: 0.375rem;
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-muted);
+    &:hover {
+      @media (hover: hover) {
+        background-color: color-mix(in srgb, #000 5%, transparent);
+      }
+    }
+  }
+  .onboarding-div {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-inline: 2rem;
+    text-align: center;
+  }
+  .onboarding-div-2 {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    max-width: 280px;
+  }
+  .onboarding-div-3 {
+    position: absolute;
+    inset: 8%;
+    border-radius: 9999px;
+    background-color: var(--color-gold-100);
+  }
+  .onboarding-img {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    animation: var(--animate-rise);
+    object-fit: contain;
+  }
+  .onboarding-dialog-title {
+    margin-top: 1.5rem;
+    animation: var(--animate-rise);
+    font-size: var(--text-xl);
+    line-height: var(--leading-tight);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: var(--tracking-tight);
+    color: var(--color-ink);
+  }
+  .onboarding-dialog-description {
+    margin-top: 0.75rem;
+    max-width: var(--container-xs);
+    animation: var(--animate-rise);
+    font-size: var(--text-sm);
+    line-height: var(--leading-relaxed);
+    color: var(--color-muted);
+  }
+  .onboarding-div-get-started {
+    padding-inline: 1.5rem;
+    padding-top: 2rem;
+    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+    @media (width >= 40rem) {
+      padding-bottom: 1.5rem;
+    }
+  }
+  .onboarding-div-4 {
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  .onboarding-button {
+    height: 0.5rem;
+    border-radius: 9999px;
+    transition-property: all;
+    transition-timing-function: var(--default-transition-timing-function);
+    transition-duration: var(--default-transition-duration);
+  }
+  .onboarding-button-2 {
+    width: 1.5rem;
+    background-color: var(--color-navy-900);
+  }
+  .onboarding-button-3 {
+    width: 0.5rem;
+    background-color: var(--color-line);
+    &:hover {
+      @media (hover: hover) {
+        background-color: color-mix(in srgb, #6b6b76 40%, transparent);
+      }
+    }
+  }
+  .onboarding-button-get-started {
+    height: 3.5rem;
+    width: 100%;
+  }
+}

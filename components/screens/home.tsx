@@ -19,17 +19,28 @@ import {
 } from "../branch-card";
 import { CityMap } from "../city-map";
 import { LogoMark } from "../logo";
-import { OptionsMenu, RefreshButton, SearchDialog, darkIconButton } from "../shell";
+import {
+  OptionsMenu,
+  RefreshButton,
+  SearchDialog,
+  darkIconButton,
+} from "../shell";
 import { useStore, type BranchView } from "../store";
 import { CrowdSection, ServiceQueues, Section } from "./branch";
 import { cx, focusRing } from "../ui";
 
 const LIST_LIMIT = 5;
 
-function SectionHeader({ title, children }: { title: string; children?: React.ReactNode }) {
+function SectionHeader({
+  title,
+  children,
+}: {
+  title: string;
+  children?: React.ReactNode;
+}) {
   return (
-    <div className="flex items-center justify-between gap-3 pt-2">
-      <h2 className="text-base font-bold text-ink">{title}</h2>
+    <div className="section-header-div">
+      <h2 className="section-header-h2">{title}</h2>
       {children}
     </div>
   );
@@ -39,23 +50,26 @@ function SectionHeader({ title, children }: { title: string; children?: React.Re
 function Recommendation({ view }: { view: BranchView }) {
   const { t } = useStore();
   return (
-    <div className="overflow-hidden rounded-lg bg-white shadow-float ring-1 ring-line/70">
-      <Link href={`/branch/${view.id}`} className="flex items-center gap-3 px-4 pt-4 pb-3 outline-none focus-visible:bg-paper">
-        <BankBadge bank={view.bank} className="size-11" />
-        <div className="min-w-0 flex-1">
-          <p className="flex items-center gap-1 text-xs font-semibold text-emerald-700">
-            <Zap className="size-3.5" aria-hidden />
+    <div className="recommendation-div-sort-wait">
+      <Link
+        href={`/branch/${view.id}`}
+        className="recommendation-link-sort-wait"
+      >
+        <BankBadge bank={view.bank} className="recommendation-bank-badge" />
+        <div className="recommendation-div-sort-wait-2">
+          <p className="recommendation-p-sort-wait">
+            <Zap className="recommendation-zap" aria-hidden />
             {t("sortWait")}
           </p>
-          <p className="truncate text-base font-bold text-ink">{view.fullName}</p>
+          <p className="recommendation-p">{view.fullName}</p>
         </div>
-        <ChevronRight className="size-5 shrink-0 text-muted" aria-hidden />
+        <ChevronRight className="recommendation-chevron-right" aria-hidden />
       </Link>
-      <div className="flex items-center gap-3 border-t border-line px-4 py-3">
-        <p className="min-w-0 flex-1 text-xs text-muted">
-          <span className="text-sm font-semibold text-navy-900 tabular">{view.wait}</span>{" "}
-          <span className="text-sm font-semibold text-navy-900">{t("minWait")}</span>
-          <span className="mx-1.5" aria-hidden>
+      <div className="recommendation-div-min-wait">
+        <p className="recommendation-p-min-wait">
+          <span className="recommendation-span minute-number">{view.wait}</span>
+          <span className="recommendation-span-min-wait">{t("minWait")}</span>
+          <span className="recommendation-span-2" aria-hidden>
             ·
           </span>
           {formatDistance(view.distance)}
@@ -74,33 +88,44 @@ function MobileHome() {
   const empty = favorites.length + others.length === 0;
 
   return (
-    <div className="lg:hidden">
-      <header className="relative overflow-hidden bg-navy-950 pt-[env(safe-area-inset-top)] pb-16 text-white">
-        <div aria-hidden className="pointer-events-none absolute -top-24 -right-20 size-72 rounded-full bg-[radial-gradient(circle,rgb(180_166_122/0.35),transparent_65%)]" />
-        <div className="relative mx-auto max-w-xl px-4">
-          <div className="flex h-14 items-center gap-2.5">
-            <Link href="/" aria-label="Dash Hour" className={cx("rounded-sm", focusRing)}>
-              <LogoMark className="h-7 w-auto text-white" />
+    <div className="mobile-home-div-home-title">
+      <header className="mobile-home-header-home-title">
+        <div aria-hidden className="mobile-home-div" />
+        <div className="mobile-home-div-home-title-2">
+          <div className="mobile-home-div-2">
+            <Link
+              href="/"
+              aria-label="Dash Hour"
+              className={cx("mobile-home-link", focusRing)}
+            >
+              <LogoMark className="mobile-home-logo-mark" />
             </Link>
-            <div className="flex-1" />
+            <div className="mobile-home-div-3" />
             <RefreshButton className={darkIconButton} />
-            <OptionsMenu className={cx(darkIconButton, "-mr-2")} />
+            <OptionsMenu
+              className={cx(darkIconButton, "mobile-home-options-menu")}
+            />
           </div>
-          <p className="mt-4 flex items-center gap-1 text-xs text-white/60">
-            <MapPin className="size-3.5" aria-hidden />
+          <p className="mobile-home-p">
+            <MapPin className="recommendation-zap" aria-hidden />
             {USER_AREA[lang]}
           </p>
-          <h1 className="mt-1.5 text-xl leading-[1.15] font-bold tracking-tight">
+          <h1 className="mobile-home-h1-home-title">
             {greeting}
-            <span className="mt-1 block text-base font-medium tracking-normal text-white/75">{t("homeTitle")}</span>
+            <span className="mobile-home-span-home-title">
+              {t("homeTitle")}
+            </span>
           </h1>
           <SearchDialog
             trigger={
               <button
                 type="button"
-                className={cx("mt-5 flex h-12 w-full items-center gap-3 rounded-md bg-white/10 px-4 text-left text-sm text-white/70 ring-1 ring-white/15 transition-colors hover:bg-white/15", focusRing)}
+                className={cx(
+                  "mobile-home-button-search-placeholder",
+                  focusRing,
+                )}
               >
-                <Search className="size-5" aria-hidden />
+                <Search className="mobile-home-search" aria-hidden />
                 {t("searchPlaceholder")}
               </button>
             }
@@ -108,12 +133,19 @@ function MobileHome() {
         </div>
       </header>
 
-      <div className="relative mx-auto -mt-10 flex max-w-xl flex-col gap-3 px-4 pb-8">
-        {ticket ? <ActiveTicketCard /> : others[0] ? <Recommendation view={others[0]} /> : null}
-        <FilterChips className="-mx-4 mt-2 px-4 py-1" />
+      <div className="mobile-home-div-favorites">
+        {ticket ? (
+          <ActiveTicketCard />
+        ) : others[0] ? (
+          <Recommendation view={others[0]} />
+        ) : null}
+        <FilterChips className="mobile-home-filter-chips" />
         {empty && <EmptyFilters />}
         {favorites.length > 0 && (
-          <section aria-label={t("favorites")} className="flex flex-col gap-3">
+          <section
+            aria-label={t("favorites")}
+            className="mobile-home-section-favorites"
+          >
             <SectionHeader title={t("favorites")} />
             {favorites.map((v) => (
               <BranchCard key={v.id} view={v} />
@@ -121,12 +153,19 @@ function MobileHome() {
           </section>
         )}
         {others.length > 0 && (
-          <section aria-label={t("nearby")} className="flex flex-col gap-3">
+          <section
+            aria-label={t("nearby")}
+            className="mobile-home-section-favorites"
+          >
             <SectionHeader title={t("nearby")}>
               <SortToggle />
             </SectionHeader>
             {visible.map((v) => (
-              <BranchCard key={v.id} view={v} className="animate-rise" />
+              <BranchCard
+                key={v.id}
+                view={v}
+                className="mobile-home-branch-card"
+              />
             ))}
           </section>
         )}
@@ -135,10 +174,18 @@ function MobileHome() {
             type="button"
             onClick={() => setShowAll((s) => !s)}
             aria-expanded={showAll}
-            className={cx("mx-auto mt-1 flex h-11 items-center gap-1.5 rounded-md bg-white px-5 text-sm font-semibold text-ink ring-1 ring-line hover:bg-paper", focusRing)}
+            className={cx("mobile-home-button-show-less", focusRing)}
           >
-            {showAll ? t("showLess") : t("showMore", { n: others.length - LIST_LIMIT })}
-            <ChevronDown className={cx("size-4 transition-transform", showAll && "rotate-180")} aria-hidden />
+            {showAll
+              ? t("showLess")
+              : t("showMore", { n: others.length - LIST_LIMIT })}
+            <ChevronDown
+              className={cx(
+                "mobile-home-chevron-down",
+                showAll && "mobile-home-chevron-down-2",
+              )}
+              aria-hidden
+            />
           </button>
         )}
       </div>
@@ -152,21 +199,30 @@ function MobileHome() {
 
 function DesktopList() {
   const { favorites, others, selected, select, t } = useStore();
-  const card = (v: BranchView) => <SelectableBranchCard key={v.id} view={v} selected={v.id === selected.id} onSelect={() => select(v.id)} />;
+  const card = (v: BranchView) => (
+    <SelectableBranchCard
+      key={v.id}
+      view={v}
+      selected={v.id === selected.id}
+      onSelect={() => select(v.id)}
+    />
+  );
   return (
-    <aside className="flex min-h-0 flex-col border-r border-line">
-      <div className="flex shrink-0 flex-col gap-3 px-4 pt-5 pb-3">
-        <div className="flex items-center justify-between gap-2">
-          <h1 className="text-lg font-bold text-ink">{t("nearby")}</h1>
+    <aside className="desktop-list">
+      <div className="desktop-list-header">
+        <div className="desktop-list-heading">
+          <h1 className="desktop-list-title">{t("nearby")}</h1>
           <SortToggle />
         </div>
-        <FilterChips className="flex-wrap overflow-visible" />
+        <FilterChips className="desktop-list-filter-chips" />
       </div>
-      <div className="scrollbar-thin flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-4 pt-1 pb-6 [&>*]:shrink-0">
+      <div className="desktop-list-cards">
         <ActiveTicketCard />
         {favorites.length + others.length === 0 && <EmptyFilters />}
         {favorites.map(card)}
-        {favorites.length > 0 && others.length > 0 && <hr className="my-1 border-line" />}
+        {favorites.length > 0 && others.length > 0 && (
+          <hr className="desktop-list-hr" />
+        )}
         {others.map(card)}
       </div>
     </aside>
@@ -176,28 +232,39 @@ function DesktopList() {
 function BranchPanel({ view }: { view: BranchView }) {
   const { t } = useStore();
   return (
-    <aside className="scrollbar-thin flex min-h-0 flex-col overflow-y-auto border-l border-line bg-white">
-      <div className="relative h-44 shrink-0">
-        <img key={view.photo} src={`/images/${view.photo}.webp`} alt="" className="absolute inset-0 size-full animate-rise object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-t from-navy-950/70 via-transparent" />
-        <FavoriteButton view={view} tone="dark" className="absolute top-3 right-3" />
-        <div className="absolute inset-x-4 bottom-3 flex items-end gap-3 text-white">
-          <BankBadge bank={view.bank} className="size-10 ring-2 ring-white/80" />
-          <div className="min-w-0">
-            <p className="text-xs text-white/75">{view.bankName}</p>
-            <h2 className="truncate text-lg leading-tight font-bold">{view.branchName}</h2>
+    <aside className="branch-panel">
+      <div className="branch-panel-photo">
+        <img
+          key={view.photo}
+          src={`/images/${view.photo}.webp`}
+          alt=""
+          className="branch-panel-img"
+        />
+        <div className="branch-panel-photo-shade" />
+        <FavoriteButton
+          view={view}
+          tone="dark"
+          className="branch-panel-favorite-button"
+        />
+        <div className="branch-panel-heading">
+          <BankBadge bank={view.bank} className="branch-panel-bank-badge" />
+          <div className="branch-panel-name">
+            <p className="branch-panel-bank">{view.bankName}</p>
+            <h2 className="branch-panel-title">{view.branchName}</h2>
           </div>
         </div>
       </div>
-      <div className="flex flex-col divide-y divide-line/70 px-5">
-        <div className="flex items-center gap-3 py-5">
-          <div className="min-w-0 flex-1">
-            <p className="text-sm font-semibold text-navy-900 tabular">
-              {view.wait}
-              <span className="ml-1 text-sm font-semibold">{t("minWait")}</span>
+      <div className="branch-panel-content">
+        <div className="branch-panel-summary">
+          <div className="recommendation-div-sort-wait-2">
+            <p className="branch-panel-wait">
+              <span className="minute-number">{view.wait}</span>
+              <span className="branch-panel-wait-unit">{t("minWait")}</span>
             </p>
-            <p className="mt-1.5 text-xs text-muted">
-              {t("waitingCount", { n: view.waiting })} · {formatDistance(view.distance)} · {t("walkMin", { n: view.travel.walk })}
+            <p className="branch-panel-queue">
+              {t("waitingCount", { n: view.waiting })} ·{" "}
+              {formatDistance(view.distance)} ·{" "}
+              {t("walkMin", { n: view.travel.walk })}
             </p>
           </div>
           <TakeTicketButton view={view} />
@@ -206,14 +273,15 @@ function BranchPanel({ view }: { view: BranchView }) {
           <ServiceQueues view={view} compact />
         </Section>
         <CrowdSection view={view} plain />
-        <Link
-          href={`/branch/${view.id}`}
-          className={cx("flex min-h-14 items-center justify-center gap-1.5 text-sm font-semibold text-navy-900 hover:bg-paper", focusRing)}
-        >
-          {t("viewDetails")}
-          <ChevronRight className="size-4" aria-hidden />
-        </Link>
       </div>
+
+      <Link
+        href={`/branch/${view.id}`}
+        className={cx("branch-panel-details", focusRing)}
+      >
+        {t("viewDetails")}
+        <ChevronRight className="branch-panel-chevron-right" aria-hidden />
+      </Link>
     </aside>
   );
 }
@@ -221,15 +289,15 @@ function BranchPanel({ view }: { view: BranchView }) {
 function MapLegend() {
   const { t } = useStore();
   return (
-    <div className="pointer-events-none absolute top-3 left-3 flex flex-col gap-1.5 rounded-lg bg-white/92 px-3 py-2.5 text-xs font-medium text-ink shadow-card backdrop-blur">
-      <span className="flex items-center gap-2">
-        <span className="size-2.5 rounded-full bg-subway-2" aria-hidden /> {t("line2")}
+    <div className="map-legend-div-sinbundang">
+      <span className="map-legend-span">
+        <span className="map-legend-span-2" aria-hidden /> {t("line2")}
       </span>
-      <span className="flex items-center gap-2">
-        <span className="size-2.5 rounded-full bg-subway-sb" aria-hidden /> {t("sinbundang")}
+      <span className="map-legend-span">
+        <span className="map-legend-span-3" aria-hidden /> {t("sinbundang")}
       </span>
-      <span className="flex items-center gap-2">
-        <span className="size-3 rounded-full border-2 border-white bg-sky-500 shadow" aria-hidden /> {t("you")}
+      <span className="map-legend-span">
+        <span className="map-legend-span-4" aria-hidden /> {t("you")}
       </span>
     </div>
   );
@@ -238,9 +306,9 @@ function MapLegend() {
 export function DesktopExplorer() {
   const { selected } = useStore();
   return (
-    <div className="hidden h-[calc(100dvh-4rem)] grid-cols-[minmax(340px,390px)_minmax(0,1fr)_minmax(340px,400px)] lg:grid">
+    <div className="desktop-explorer">
       <DesktopList />
-      <main className="relative min-h-0">
+      <main className="desktop-map">
         <CityMap />
         <MapLegend />
       </main>

@@ -1,0 +1,25 @@
+/* components/bank-badge.tsx */
+@layer components {
+  .bank-badge-span {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 9999px;
+    background-color: var(--color-white);
+    --surface-inset-ring: inset 0 0 0 1px
+      var(--surface-inset-ring-color, currentcolor);
+    box-shadow:
+      var(--surface-inset-ring), var(--surface-ring), var(--surface-shadow);
+    --surface-inset-ring-color: color-mix(in srgb, #151a4f 10%, transparent);
+  }
+  .bank-badge-svg {
+    width: 100%;
+    height: 100%;
+  }
+  .bank-badge-img {
+    width: 64%;
+    height: 64%;
+  }
+}

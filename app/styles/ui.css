@@ -1,0 +1,191 @@
+/* components/ui.ts */
+@layer components {
+  .focus-ring {
+    outline-style: none;
+    &:focus-visible {
+      outline-style: none;
+      outline-width: 2px;
+      outline-offset: 2px;
+      outline-color: var(--color-navy-700);
+    }
+  }
+  .header-icon-button {
+    display: inline-flex;
+    width: 2.5rem;
+    height: 2.5rem;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    color: color-mix(in srgb, #fff 90%, transparent);
+    transition-property:
+      color, background-color, border-color, outline-color,
+      text-decoration-color, fill, stroke;
+    transition-timing-function: var(--default-transition-timing-function);
+    transition-duration: var(--default-transition-duration);
+  }
+  @media (hover: hover) {
+    .header-icon-button:hover {
+      background-color: color-mix(in srgb, #fff 10%, transparent);
+    }
+  }
+  .header-icon-button:active {
+    background-color: color-mix(in srgb, #fff 20%, transparent);
+  }
+  .header-icon-button[data-popup-open] {
+    background-color: color-mix(in srgb, #fff 15%, transparent);
+  }
+  .header-icon-button {
+    outline-style: none;
+    &:focus-visible {
+      outline-style: none;
+      outline-width: 2px;
+      outline-offset: 1px;
+      outline-color: var(--color-gold-300);
+    }
+  }
+  .primary-button {
+    display: inline-flex;
+    height: 3rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: var(--radius-md);
+    background-color: var(--color-gold-600);
+    padding-inline: 1.25rem;
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-white);
+    transition-property:
+      color, background-color, border-color, outline-color,
+      text-decoration-color, fill, stroke;
+    transition-timing-function: var(--default-transition-timing-function);
+    transition-duration: var(--default-transition-duration);
+  }
+  @media (hover: hover) {
+    .primary-button:hover {
+      background-color: var(--color-gold-700);
+    }
+  }
+  .primary-button:active {
+    background-color: var(--color-gold-800);
+  }
+  .primary-button:disabled {
+    opacity: 50%;
+  }
+  .secondary-button {
+    display: inline-flex;
+    height: 3rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: var(--radius-md);
+    border-style: solid;
+    border-width: 1px;
+    border-color: color-mix(in srgb, #151a4f 15%, transparent);
+    background-color: var(--color-white);
+    padding-inline: 1.25rem;
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-navy-900);
+    transition-property:
+      color, background-color, border-color, outline-color,
+      text-decoration-color, fill, stroke;
+    transition-timing-function: var(--default-transition-timing-function);
+    transition-duration: var(--default-transition-duration);
+  }
+  @media (hover: hover) {
+    .secondary-button:hover {
+      background-color: color-mix(in srgb, #e6e8f4 60%, transparent);
+    }
+  }
+  .secondary-button:active {
+    background-color: var(--color-navy-100);
+  }
+  .navy-button {
+    display: inline-flex;
+    height: 3rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: var(--radius-md);
+    background-color: var(--color-navy-900);
+    padding-inline: 1.25rem;
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-white);
+    transition-property:
+      color, background-color, border-color, outline-color,
+      text-decoration-color, fill, stroke;
+    transition-timing-function: var(--default-transition-timing-function);
+    transition-duration: var(--default-transition-duration);
+  }
+  @media (hover: hover) {
+    .navy-button:hover {
+      background-color: var(--color-navy-800);
+    }
+  }
+  .navy-button:active {
+    background-color: var(--color-navy-950);
+  }
+  .danger-button {
+    display: inline-flex;
+    height: 3rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: var(--radius-md);
+    background-color: var(--color-rose-700);
+    padding-inline: 1.25rem;
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-white);
+    transition-property:
+      color, background-color, border-color, outline-color,
+      text-decoration-color, fill, stroke;
+    transition-timing-function: var(--default-transition-timing-function);
+    transition-duration: var(--default-transition-duration);
+  }
+  @media (hover: hover) {
+    .danger-button:hover {
+      background-color: var(--color-rose-800);
+    }
+  }
+  .danger-button:active {
+    background-color: var(--color-rose-900);
+  }
+  .popup-animation {
+    transition-property: scale, opacity;
+    transition-timing-function: var(--ease-out);
+    transition-duration: 150ms;
+    transition-timing-function: var(--ease-out);
+    &[data-ending-style] {
+      scale: 95% 95%;
+      opacity: 0%;
+    }
+    &[data-starting-style] {
+      scale: 95% 95%;
+      opacity: 0%;
+    }
+  }
+  .backdrop-class {
+    position: fixed;
+    inset: 0px;
+    min-height: 100dvh;
+    background-color: color-mix(in srgb, #0d1137 45%, transparent);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    transition-property: opacity;
+    transition-timing-function: var(--default-transition-timing-function);
+    transition-duration: 200ms;
+    &[data-ending-style] {
+      opacity: 0%;
+    }
+    &[data-starting-style] {
+      opacity: 0%;
+    }
+    @supports (-webkit-touch-callout: none) {
+      position: absolute;
+    }
+  }
+}

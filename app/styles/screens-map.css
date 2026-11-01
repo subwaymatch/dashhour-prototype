@@ -1,0 +1,75 @@
+/* components/screens/map.tsx */
+@layer components {
+  .mobile-map-div-search-placeholder {
+    position: fixed;
+    inset-inline: 0px;
+    top: 0px;
+    bottom: calc(4rem + env(safe-area-inset-bottom));
+    @media (width >= 64rem) {
+      display: none;
+    }
+  }
+  .mobile-map-city-map {
+    right: 0.75rem;
+    bottom: 10.5rem;
+  }
+  .mobile-map-city-map-2 .maplibregl-ctrl-bottom-left {
+    bottom: 10.5rem !important;
+  }
+  .mobile-map-div-search-placeholder-2 {
+    pointer-events: none;
+    position: absolute;
+    inset-inline: 0px;
+    top: 0px;
+    background-image: linear-gradient(
+      to bottom in oklab,
+      color-mix(in srgb, #f3f0e8 90%, transparent) 0%,
+      color-mix(in srgb, #f3f0e8 50%, transparent) 50%,
+      transparent 100%
+    );
+    padding-inline: 0.75rem;
+    padding-top: calc(0.75rem + env(safe-area-inset-top));
+    padding-bottom: 1.5rem;
+  }
+  .mobile-map-div-search-placeholder-3 {
+    pointer-events: auto;
+    margin-inline: auto;
+    max-width: var(--container-xl);
+  }
+  .mobile-map-button-search-placeholder {
+    display: flex;
+    height: 3rem;
+    width: 100%;
+    align-items: center;
+    gap: 0.75rem;
+    border-radius: var(--radius-md);
+    background-color: var(--color-white);
+    padding-inline: 1rem;
+    text-align: left;
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+    --surface-shadow:
+      0 2px 6px rgb(13 17 55 / 0.08), 0 18px 40px -12px rgb(13 17 55 / 0.28);
+    box-shadow:
+      var(--surface-inset-ring), var(--surface-ring), var(--surface-shadow);
+  }
+  .mobile-map-search {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--color-ink);
+  }
+  .mobile-map-filter-chips {
+    margin-inline: calc(var(--spacing) * -3);
+    margin-top: 0.5rem;
+    padding-inline: 0.75rem;
+    padding-block: var(--spacing);
+  }
+  .mobile-map-div {
+    pointer-events: none;
+    position: absolute;
+    inset-inline: 0px;
+    bottom: 0px;
+    padding-inline: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+}

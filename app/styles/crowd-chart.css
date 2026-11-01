@@ -1,0 +1,12 @@
+/* components/crowd-chart.tsx */
+@layer components {
+  .crowd-chart-svg {
+    display: block;
+    height: auto;
+    width: 100%;
+    overflow: visible;
+  }
+  .crowd-chart-text {
+    font-variant-numeric: tabular-nums;
+  }
+}

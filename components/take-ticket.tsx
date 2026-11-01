@@ -6,12 +6,28 @@ import { Drawer } from "@base-ui/react/drawer";
 import { Radio } from "@base-ui/react/radio";
 import { RadioGroup } from "@base-ui/react/radio-group";
 import { Switch } from "@base-ui/react/switch";
-import { BellRing, BriefcaseBusiness, Footprints, Globe, HandCoins, Banknote, CircleAlert, Clock3, X } from "lucide-react";
+import {
+  BellRing,
+  BriefcaseBusiness,
+  Footprints,
+  Globe,
+  HandCoins,
+  Banknote,
+  CircleAlert,
+  Clock3,
+  X,
+} from "lucide-react";
 import { SERVICES, type ServiceKey } from "@/lib/data";
 import { formatClock } from "@/lib/sim";
 import { BankBadge } from "./bank-badge";
 import { useStore, type BranchView } from "./store";
-import { cx, focusRing, navyButton, primaryButton, secondaryButton } from "./ui";
+import {
+  cx,
+  focusRing,
+  navyButton,
+  primaryButton,
+  secondaryButton,
+} from "./ui";
 
 export const SERVICE_ICONS: Record<ServiceKey, typeof Banknote> = {
   general: Banknote,
@@ -22,7 +38,13 @@ export const SERVICE_ICONS: Record<ServiceKey, typeof Banknote> = {
 
 const ALL_SERVICES: ServiceKey[] = ["general", "loan", "fx", "business"];
 
-function ServiceOption({ view, service }: { view: BranchView; service: ServiceKey }) {
+function ServiceOption({
+  view,
+  service,
+}: {
+  view: BranchView;
+  service: ServiceKey;
+}) {
   const { lang, t } = useStore();
   const queue = view.queues[service];
   const Icon = SERVICE_ICONS[service];
@@ -30,51 +52,70 @@ function ServiceOption({ view, service }: { view: BranchView; service: ServiceKe
     <Radio.Root
       value={service}
       disabled={!queue}
-      className={cx(
-        "group flex w-full cursor-pointer items-center gap-3 rounded-md px-3.5 py-3 text-left ring-1 ring-line transition-colors outline-none",
-        "hover:bg-paper/70 data-checked:bg-gold-100/70 data-checked:ring-2 data-checked:ring-gold-600",
-        "data-disabled:cursor-not-allowed data-disabled:opacity-45 data-disabled:hover:bg-transparent",
-        "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-700",
-      )}
+      className="interaction-group service-option"
     >
-      <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-paper text-navy-900 group-data-checked:bg-white">
-        <Icon className="size-5" aria-hidden />
+      <span className="service-option-span">
+        <Icon className="service-option-icon" aria-hidden />
       </span>
-      <span className="min-w-0 flex-1">
-        <span className="block text-sm font-semibold text-ink">{SERVICES[service].name[lang]}</span>
-        <span className="block truncate text-xs text-muted">{queue ? SERVICES[service].desc[lang] : t("notOffered")}</span>
+      <span className="service-option-span-not-offered">
+        <span className="service-option-span-2">
+          {SERVICES[service].name[lang]}
+        </span>
+        <span className="service-option-span-not-offered-2">
+          {queue ? SERVICES[service].desc[lang] : t("notOffered")}
+        </span>
       </span>
       {queue && (
-        <span className="shrink-0 text-right">
-          <span className="block font-display text-base font-bold text-navy-900 tabular">
-            {queue.wait}
-            <span className="ml-0.5 text-xs font-semibold">{t("min")}</span>
+        <span className="service-option-span-min">
+          <span className="service-option-span-min-2">
+            <span className="minute-number">{queue.wait}</span>
+            <span className="service-option-span-min-3">{t("min")}</span>
           </span>
-          <span className="block text-xs text-muted">{t("waitingCount", { n: queue.waiting })}</span>
+          <span className="service-option-span-waiting-count">
+            {t("waitingCount", { n: queue.waiting })}
+          </span>
         </span>
       )}
-      <span className="flex size-5 shrink-0 items-center justify-center rounded-full ring-2 ring-line group-data-checked:ring-gold-600">
-        <Radio.Indicator className="size-2.5 rounded-full bg-gold-600" />
+      <span className="service-option-span-3">
+        <Radio.Indicator className="service-option-radio-indicator" />
       </span>
     </Radio.Root>
   );
 }
 
 function SheetBody({ view }: { view: BranchView }) {
-  const { t, lang, sim, ticket, ticketBranch, noShows, settings, takeTicket, closeSheet, goToTicket } = useStore();
+  const {
+    t,
+    lang,
+    sim,
+    ticket,
+    ticketBranch,
+    noShows,
+    settings,
+    takeTicket,
+    closeSheet,
+    goToTicket,
+  } = useStore();
   const [service, setService] = React.useState<ServiceKey>("general");
   const [alert, setAlert] = React.useState(settings.aheadAlerts);
   const queue = view.queues[service];
 
   const header = (
-    <div className="flex items-start gap-3">
-      <BankBadge bank={view.bank} className="size-11" />
-      <div className="min-w-0 flex-1">
-        <Drawer.Title className="text-lg leading-tight font-bold text-ink">{view.fullName}</Drawer.Title>
-        <Drawer.Description className="mt-0.5 truncate text-xs text-muted">{view.address[lang]}</Drawer.Description>
+    <div className="header-div-close">
+      <BankBadge bank={view.bank} className="header-bank-badge" />
+      <div className="service-option-span-not-offered">
+        <Drawer.Title className="header-drawer-title">
+          {view.fullName}
+        </Drawer.Title>
+        <Drawer.Description className="header-drawer-description">
+          {view.address[lang]}
+        </Drawer.Description>
       </div>
-      <Drawer.Close aria-label={t("close")} className={cx("-mt-1 -mr-1 inline-flex size-9 items-center justify-center rounded-full text-muted hover:bg-paper", focusRing)}>
-        <X className="size-5" />
+      <Drawer.Close
+        aria-label={t("close")}
+        className={cx("header-drawer-close", focusRing)}
+      >
+        <X className="service-option-icon" />
       </Drawer.Close>
     </div>
   );
@@ -84,18 +125,23 @@ function SheetBody({ view }: { view: BranchView }) {
     return (
       <>
         {header}
-        <div className="mt-5 flex gap-3 rounded-md bg-paper p-4">
-          <CircleAlert className="mt-0.5 size-5 shrink-0 text-gold-700" aria-hidden />
+        <div className="sheet-body-div-restricted-body">
+          <CircleAlert className="sheet-body-circle-alert" aria-hidden />
           <div>
-            <p className="text-sm font-semibold text-ink">{t(restricted ? "restrictedTitle" : "oneTicketTitle")}</p>
-            <p className="mt-1 text-xs leading-relaxed text-muted">
+            <p className="sheet-body-p">
+              {t(restricted ? "restrictedTitle" : "oneTicketTitle")}
+            </p>
+            <p className="sheet-body-p-restricted-body">
               {restricted
                 ? t("restrictedBody")
-                : t("oneTicketBody", { num: ticket!.number, branch: ticketBranch?.fullName ?? "" })}
+                : t("oneTicketBody", {
+                    num: ticket!.number,
+                    branch: ticketBranch?.fullName ?? "",
+                  })}
             </p>
           </div>
         </div>
-        <div className="mt-5 grid grid-cols-2 gap-3">
+        <div className="sheet-body-div-close">
           <Drawer.Close className={secondaryButton}>{t("close")}</Drawer.Close>
           {!restricted && (
             <button
@@ -120,47 +166,59 @@ function SheetBody({ view }: { view: BranchView }) {
   return (
     <>
       {header}
-      <h3 className="mt-6 mb-3 text-sm font-semibold text-ink">{t("chooseService")}</h3>
-      <RadioGroup value={service} onValueChange={(v) => setService(v as ServiceKey)} aria-label={t("chooseService")} className="flex flex-col gap-2">
+      <h3 className="sheet-body-h3-choose-service">{t("chooseService")}</h3>
+      <RadioGroup
+        value={service}
+        onValueChange={(v) => setService(v as ServiceKey)}
+        aria-label={t("chooseService")}
+        className="sheet-body-radio-group"
+      >
         {ALL_SERVICES.map((s) => (
           <ServiceOption key={s} view={view} service={s} />
         ))}
       </RadioGroup>
 
-      <div className="mt-4 grid grid-cols-2 gap-2 rounded-md bg-navy-900 p-4 text-white">
+      <div className="sheet-body-div-eta-label">
         <div>
-          <p className="flex items-center gap-1.5 text-xs text-white/60">
-            <Clock3 className="size-3.5" aria-hidden />
+          <p className="sheet-body-p-eta-label">
+            <Clock3 className="sheet-body-clock3" aria-hidden />
             {queue && queue.wait > 0 ? t("etaLabel") : t("turnNow")}
           </p>
-          <p className="mt-0.5 font-display text-xl font-bold tabular">{formatClock(turnAt)}</p>
+          <p className="sheet-body-p-2">{formatClock(turnAt)}</p>
         </div>
         <div>
-          <p className="flex items-center gap-1.5 text-xs text-white/60">
-            <Footprints className="size-3.5" aria-hidden />
+          <p className="sheet-body-p-eta-label">
+            <Footprints className="sheet-body-clock3" aria-hidden />
             {t("walkMin", { n: view.travel.walk })}
           </p>
-          <p className="mt-0.5 text-sm leading-tight font-semibold text-gold-300">
-            {leaveAt <= sim ? t("leaveNowShort") : t("leaveByShort", { t: formatClock(leaveAt) })}
+          <p className="sheet-body-p-leave-now-short">
+            {leaveAt <= sim
+              ? t("leaveNowShort")
+              : t("leaveByShort", { t: formatClock(leaveAt) })}
           </p>
         </div>
       </div>
 
-      <label className="mt-4 flex cursor-pointer items-center gap-3 rounded-md px-1 py-1">
-        <BellRing className="size-5 text-navy-900" aria-hidden />
-        <span className="flex-1 text-sm text-ink">{t("alertMe")}</span>
+      <label className="sheet-body-label-alert-me">
+        <BellRing className="sheet-body-bell-ring" aria-hidden />
+        <span className="sheet-body-span-alert-me">{t("alertMe")}</span>
         <Switch.Root
           checked={alert}
           onCheckedChange={setAlert}
-          className={cx("relative flex h-7 w-12 shrink-0 rounded-full bg-line p-0.5 transition-colors data-checked:bg-navy-900", focusRing)}
+          className={cx("sheet-body-switch-root", focusRing)}
         >
-          <Switch.Thumb className="size-6 rounded-full bg-white shadow transition-transform data-checked:translate-x-5" />
+          <Switch.Thumb className="sheet-body-switch-thumb" />
         </Switch.Root>
       </label>
 
-      <p className="mt-3 text-xs leading-relaxed text-muted">{t("policy")}</p>
+      <p className="sheet-body-p-policy">{t("policy")}</p>
 
-      <button type="button" disabled={!queue} onClick={() => takeTicket(service, alert)} className={cx(primaryButton, "mt-5 h-14 w-full")}>
+      <button
+        type="button"
+        disabled={!queue}
+        onClick={() => takeTicket(service, alert)}
+        className={cx(primaryButton, "sheet-body-button-confirm")}
+      >
         {t("confirm")}
       </button>
     </>
@@ -176,22 +234,25 @@ export function TakeTicketSheet() {
   const view = sheetBranch ?? last.current;
 
   return (
-    <Drawer.Root open={sheetBranch !== null} onOpenChange={(open) => !open && closeSheet()}>
+    <Drawer.Root
+      open={sheetBranch !== null}
+      onOpenChange={(open) => !open && closeSheet()}
+    >
       <Drawer.Portal>
-        <Drawer.Backdrop className="fixed inset-0 min-h-dvh bg-navy-950 opacity-[calc(0.5*(1-var(--drawer-swipe-progress)))] transition-opacity duration-[400ms] data-ending-style:opacity-0 data-starting-style:opacity-0 data-swiping:duration-0" />
-        <Drawer.Viewport className="fixed inset-0 flex items-end justify-center lg:items-center lg:p-6">
+        <Drawer.Backdrop className="take-ticket-sheet-drawer-backdrop" />
+        <Drawer.Viewport className="take-ticket-sheet-drawer-viewport">
           <Drawer.Popup
             className={cx(
-              "flex max-h-[92dvh] w-full max-w-lg flex-col overflow-hidden rounded-t-lg bg-white shadow-2xl outline-none lg:rounded-lg",
-              "[transform:translateY(var(--drawer-swipe-movement-y))] transition-transform duration-[400ms] ease-[cubic-bezier(0.32,0.72,0,1)]",
-              "data-starting-style:[transform:translateY(100%)] data-ending-style:[transform:translateY(100%)] data-swiping:duration-0",
-              "lg:data-starting-style:[transform:translateY(24px)] lg:data-ending-style:[transform:translateY(24px)] lg:data-starting-style:opacity-0 lg:data-ending-style:opacity-0",
+              "take-ticket-sheet-drawer-popup",
+              "take-ticket-sheet-drawer-popup-2",
+              "take-ticket-sheet-drawer-popup-3",
+              "take-ticket-sheet-drawer-popup-4",
             )}
           >
-            <div className="flex shrink-0 justify-center pt-2.5 pb-1 lg:hidden" aria-hidden>
-              <span className="h-1.5 w-10 rounded-full bg-line" />
+            <div className="take-ticket-sheet-div" aria-hidden>
+              <span className="take-ticket-sheet-span" />
             </div>
-            <Drawer.Content className="overflow-y-auto overscroll-contain px-5 pt-3 pb-[calc(1.25rem+env(safe-area-inset-bottom))] lg:p-6">
+            <Drawer.Content className="take-ticket-sheet-drawer-content">
               {view && <SheetBody key={view.id} view={view} />}
             </Drawer.Content>
           </Drawer.Popup>
@@ -204,25 +265,56 @@ export function TakeTicketSheet() {
 /** The ticket machine animation shown while a ticket is printing (the loading screen in sketch ②). */
 function Kiosk() {
   return (
-    <svg viewBox="0 0 120 170" className="h-44 w-auto overflow-visible text-white" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinejoin="round" aria-hidden>
+    <svg
+      viewBox="0 0 120 170"
+      className="kiosk-svg"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="3.5"
+      strokeLinejoin="round"
+      aria-hidden
+    >
       <rect x="22" y="6" width="76" height="24" rx="3" />
-      <text x="60" y="24.5" textAnchor="middle" fontSize="15" fontWeight="900" letterSpacing="4" fill="currentColor" stroke="none">
+      <text
+        x="60"
+        y="24.5"
+        textAnchor="middle"
+        fontSize="15"
+        fontWeight="900"
+        letterSpacing="4"
+        fill="currentColor"
+        stroke="none"
+      >
         BANK
       </text>
       <rect x="10" y="34" width="100" height="94" rx="5" />
       <path d="M26 50h68M26 60h68M26 70h40" strokeLinecap="round" />
       <rect x="24" y="82" width="34" height="22" rx="2.5" />
-      <g className="animate-kiosk-blink">
-        <path d="M31 93h20" strokeLinecap="round" strokeWidth="4" strokeDasharray="4 4" />
+      <g className="kiosk-g">
+        <path
+          d="M31 93h20"
+          strokeLinecap="round"
+          strokeWidth="4"
+          strokeDasharray="4 4"
+        />
       </g>
       <ellipse cx="80" cy="93" rx="14" ry="10" />
       <path d="M30 118h60" strokeWidth="5" strokeLinecap="round" />
       <path d="M22 128v10M98 128v10" />
       {/* Ticket feeding out of the slot. */}
-      <svg x="30" y="118" width="60" height="70" overflow="hidden">
-        <g className="animate-ticket-out" style={{ transformOrigin: "30px 10px" }}>
-          <path d="M8 0h44v34l-5.5 5-5.5-5-5.5 5-5.5-5-5.5 5-5.5-5-5.5 5L8 34Z" fill="white" stroke="none" />
-          <path d="M18 12h24M22 22h16" stroke="var(--color-navy-900)" strokeWidth="3.5" strokeLinecap="round" />
+      <svg x="30" y="118" width="60" height="70" overflow="kiosk-svg-2">
+        <g className="kiosk-g-2" style={{ transformOrigin: "30px 10px" }}>
+          <path
+            d="M8 0h44v34l-5.5 5-5.5-5-5.5 5-5.5-5-5.5 5-5.5-5-5.5 5L8 34Z"
+            fill="white"
+            stroke="none"
+          />
+          <path
+            d="M18 12h24M22 22h16"
+            stroke="var(--color-navy-900)"
+            strokeWidth="3.5"
+            strokeLinecap="round"
+          />
         </g>
       </svg>
     </svg>
@@ -234,12 +326,14 @@ export function IssuingOverlay() {
   return (
     <Dialog.Root open={issuing} disablePointerDismissal>
       <Dialog.Portal>
-        <Dialog.Backdrop className="fixed inset-0 bg-navy-950/90 backdrop-blur-sm transition-opacity duration-200 data-ending-style:opacity-0 data-starting-style:opacity-0" />
+        <Dialog.Backdrop className="issuing-overlay-dialog-backdrop" />
         <Dialog.Popup
-          className="fixed inset-0 flex flex-col items-center justify-center gap-8 outline-none transition-opacity duration-200 data-ending-style:opacity-0 data-starting-style:opacity-0"
+          className="issuing-overlay-dialog-popup-issuing"
           aria-busy
         >
-          <Dialog.Title className="text-lg font-bold text-gold-300">{t("issuing")}</Dialog.Title>
+          <Dialog.Title className="issuing-overlay-dialog-title-issuing">
+            {t("issuing")}
+          </Dialog.Title>
           <Kiosk />
         </Dialog.Popup>
       </Dialog.Portal>

@@ -81,7 +81,10 @@ const PAINT: Record<string, Record<string, unknown>> = {
 };
 
 /** Side-street names only once you zoom in, so the branch pins stay readable. */
-const MIN_ZOOMS: Record<string, number> = { "highway-name-minor": 16, "highway-name-path": 16.5 };
+const MIN_ZOOMS: Record<string, number> = {
+  "highway-name-minor": 16,
+  "highway-name-path": 16.5,
+};
 
 function nameField(lang: Lang): ExpressionSpecification {
   return lang === "ko"
@@ -90,7 +93,10 @@ function nameField(lang: Lang): ExpressionSpecification {
 }
 
 function isNameLayer(layer: LayerSpecification) {
-  return layer.type === "symbol" && JSON.stringify(layer.layout?.["text-field"] ?? "").includes('"name');
+  return (
+    layer.type === "symbol" &&
+    JSON.stringify(layer.layout?.["text-field"] ?? "").includes('"name')
+  );
 }
 
 function brandStyle(base: StyleSpecification, lang: Lang): StyleSpecification {
@@ -98,7 +104,10 @@ function brandStyle(base: StyleSpecification, lang: Lang): StyleSpecification {
     // Route-number shields add clutter and nothing a pedestrian needs.
     .filter((l) => !l.id.includes("shield"))
     .map((l) => {
-      const layer = { ...l, paint: { ...("paint" in l ? l.paint : {}), ...PAINT[l.id] } } as LayerSpecification;
+      const layer = {
+        ...l,
+        paint: { ...("paint" in l ? l.paint : {}), ...PAINT[l.id] },
+      } as LayerSpecification;
       if (MIN_ZOOMS[l.id]) layer.minzoom = MIN_ZOOMS[l.id];
       if (layer.type === "symbol" && isNameLayer(layer)) {
         layer.layout = { ...layer.layout, "text-field": nameField(lang) };
@@ -119,7 +128,8 @@ let stylePromise: Promise<StyleSpecification> | null = null;
 
 /** MapLibre is large, so it only loads once a map is actually on screen, and never on the server. */
 function loadMapLibre() {
-  if (import.meta.env.SSR) return Promise.reject(new Error("MapLibre runs in the browser only"));
+  if (import.meta.env.SSR)
+    return Promise.reject(new Error("MapLibre runs in the browser only"));
   libPromise ??= Promise.all([
     import("maplibre-gl"),
     import("maplibre-gl/dist/maplibre-gl-worker.mjs?url"),
@@ -151,7 +161,9 @@ function loadStyle() {
 
 /** Korean labels are drawn in the browser, in the app's own Korean font. */
 function koreanFont() {
-  const family = getComputedStyle(document.documentElement).getPropertyValue("--font-noto-kr").trim();
+  const family = getComputedStyle(document.documentElement)
+    .getPropertyValue("--font-noto-kr")
+    .trim();
   return family ? `${family}, sans-serif` : "sans-serif";
 }
 
@@ -159,7 +171,10 @@ function koreanFont() {
  * Creates a map in `container` once it has a size, so layouts hidden at this breakpoint
  * never load MapLibre. `options` is read once, when the map is created.
  */
-function useMapLibre(container: React.RefObject<HTMLDivElement | null>, options: () => Omit<MapOptions, "container" | "style">) {
+function useMapLibre(
+  container: React.RefObject<HTMLDivElement | null>,
+  options: () => Omit<MapOptions, "container" | "style">,
+) {
   const { lang } = useStore();
   const [handle, setHandle] = React.useState<MapHandle | null>(null);
   const [failed, setFailed] = React.useState(false);
@@ -203,7 +218,8 @@ function useMapLibre(container: React.RefObject<HTMLDivElement | null>, options:
   React.useEffect(() => {
     if (!handle) return;
     for (const layer of handle.map.getStyle().layers) {
-      if (isNameLayer(layer)) handle.map.setLayoutProperty(layer.id, "text-field", nameField(lang));
+      if (isNameLayer(layer))
+        handle.map.setLayoutProperty(layer.id, "text-field", nameField(lang));
     }
   }, [handle, lang]);
 
@@ -227,7 +243,9 @@ function MapMarker({
   const [el] = React.useState(() => document.createElement("div"));
   const [lng, lat] = at;
   React.useEffect(() => {
-    const marker = new handle.lib.Marker({ element: el, anchor }).setLngLat([lng, lat]).addTo(handle.map);
+    const marker = new handle.lib.Marker({ element: el, anchor })
+      .setLngLat([lng, lat])
+      .addTo(handle.map);
     return () => void marker.remove();
   }, [handle, el, anchor, lng, lat]);
   React.useEffect(() => {
@@ -242,11 +260,19 @@ function MapMarker({
 
 /** The OpenStreetMap walking route from the user to a branch (see scripts/fetch-routes.mjs). */
 function routeTo(b: Pick<Branch, "id" | "lat" | "lng">): LngLat[] {
-  return [[USER.lng, USER.lat], ...(WALKING_ROUTES[b.id]?.path ?? []), [b.lng, b.lat]];
+  return [
+    [USER.lng, USER.lat],
+    ...(WALKING_ROUTES[b.id]?.path ?? []),
+    [b.lng, b.lat],
+  ];
 }
 
 function routeData(coordinates: LngLat[]) {
-  return { type: "Feature" as const, properties: {}, geometry: { type: "LineString" as const, coordinates } };
+  return {
+    type: "Feature" as const,
+    properties: {},
+    geometry: { type: "LineString" as const, coordinates },
+  };
 }
 
 function boundsOf(points: LngLat[]): [LngLat, LngLat] {
@@ -260,55 +286,120 @@ function boundsOf(points: LngLat[]): [LngLat, LngLat] {
 
 /** A dotted navy line on a white casing, under the place labels. */
 function addRouteLayer(map: MapLibreMap) {
-  const beforeLabels = map.getStyle().layers.find((l) => l.type === "symbol")?.id;
+  const beforeLabels = map
+    .getStyle()
+    .layers.find((l) => l.type === "symbol")?.id;
   map.addSource("route", { type: "geojson", data: routeData([]) });
   const layout = { "line-cap": "round", "line-join": "round" } as const;
-  map.addLayer({ id: "route-casing", type: "line", source: "route", layout, paint: { "line-color": "#ffffff", "line-width": 10 } }, beforeLabels);
   map.addLayer(
-    { id: "route", type: "line", source: "route", layout, paint: { "line-color": "#1d2468", "line-width": 4.5, "line-dasharray": [0, 2] } },
+    {
+      id: "route-casing",
+      type: "line",
+      source: "route",
+      layout,
+      paint: { "line-color": "#ffffff", "line-width": 10 },
+    },
+    beforeLabels,
+  );
+  map.addLayer(
+    {
+      id: "route",
+      type: "line",
+      source: "route",
+      layout,
+      paint: {
+        "line-color": "#1d2468",
+        "line-width": 4.5,
+        "line-dasharray": [0, 2],
+      },
+    },
     beforeLabels,
   );
 }
 
 function setRoute(map: MapLibreMap, coordinates: LngLat[]) {
-  (map.getSource("route") as GeoJSONSource | undefined)?.setData(routeData(coordinates));
+  (map.getSource("route") as GeoJSONSource | undefined)?.setData(
+    routeData(coordinates),
+  );
 }
 
 /* ------------------------------------------------------------------ */
 /* Markers                                                             */
 /* ------------------------------------------------------------------ */
 
-const STATIONS: Array<{ at: LngLat; name: Localized; lines: Array<"2" | "sb"> }> = [
-  { at: [127.027621, 37.497942], name: { en: "Gangnam", ko: "강남" }, lines: ["2", "sb"] },
-  { at: [127.036456, 37.500622], name: { en: "Yeoksam", ko: "역삼" }, lines: ["2"] },
-  { at: [127.02506, 37.504598], name: { en: "Sinnonhyeon", ko: "신논현" }, lines: ["sb"] },
-  { at: [127.049008, 37.504503], name: { en: "Seolleung", ko: "선릉" }, lines: ["2"] },
-  { at: [127.01408, 37.493415], name: { en: "Gyodae", ko: "교대" }, lines: ["2"] },
+const STATIONS: Array<{
+  at: LngLat;
+  name: Localized;
+  lines: Array<"2" | "sb">;
+}> = [
+  {
+    at: [127.027621, 37.497942],
+    name: { en: "Gangnam", ko: "강남" },
+    lines: ["2", "sb"],
+  },
+  {
+    at: [127.036456, 37.500622],
+    name: { en: "Yeoksam", ko: "역삼" },
+    lines: ["2"],
+  },
+  {
+    at: [127.02506, 37.504598],
+    name: { en: "Sinnonhyeon", ko: "신논현" },
+    lines: ["sb"],
+  },
+  {
+    at: [127.049008, 37.504503],
+    name: { en: "Seolleung", ko: "선릉" },
+    lines: ["2"],
+  },
+  {
+    at: [127.01408, 37.493415],
+    name: { en: "Gyodae", ko: "교대" },
+    lines: ["2"],
+  },
 ];
 
-function StationMarker({ station, lang }: { station: (typeof STATIONS)[number]; lang: Lang }) {
+function StationMarker({
+  station,
+  lang,
+}: {
+  station: (typeof STATIONS)[number];
+  lang: Lang;
+}) {
   return (
-    <span aria-hidden className="pointer-events-none relative flex size-5 items-center justify-center gap-px rounded-full border-2 border-ink bg-white">
+    <span aria-hidden className="station-marker-span">
       {station.lines.map((l) => (
-        <span key={l} className={cx("size-[7px] rounded-full", l === "2" ? "bg-subway-2" : "bg-subway-sb")} />
+        <span
+          key={l}
+          className={cx(
+            "station-marker-span-2",
+            l === "2" ? "station-marker-span-3" : "station-marker-span-4",
+          )}
+        />
       ))}
-      <span className="absolute top-1/2 left-full ml-1.5 -translate-y-1/2 text-xs font-extrabold whitespace-nowrap text-ink [text-shadow:0_0_2px_var(--color-map-land),0_0_2px_var(--color-map-land),0_0_4px_var(--color-map-land)]">
-        {station.name[lang]}
-      </span>
+      <span className="station-marker-span-5">{station.name[lang]}</span>
     </span>
   );
 }
 
 function UserDot({ label }: { label: string }) {
   return (
-    <span role="img" aria-label={label} className="relative block size-4">
-      <span className="absolute inset-0 animate-pulse-ring rounded-full bg-sky-500" />
-      <span className="relative block size-4 rounded-full border-[3px] border-white bg-sky-500 shadow-md" />
+    <span role="img" aria-label={label} className="user-dot-span">
+      <span className="user-dot-span-2" />
+      <span className="user-dot-span-3" />
     </span>
   );
 }
 
-function Pin({ view, selected, onSelect }: { view: BranchView; selected: boolean; onSelect: () => void }) {
+function Pin({
+  view,
+  selected,
+  onSelect,
+}: {
+  view: BranchView;
+  selected: boolean;
+  onSelect: () => void;
+}) {
   const { t } = useStore();
   return (
     <button
@@ -316,50 +407,51 @@ function Pin({ view, selected, onSelect }: { view: BranchView; selected: boolean
       onClick={onSelect}
       aria-pressed={selected}
       aria-label={`${view.fullName}, ${view.wait} ${t("min")}, ${t("waitingCount", { n: view.waiting })}`}
-      className="group block cursor-pointer outline-none"
+      className="interaction-group pin-button-min"
     >
       <span
         className={cx(
-          "flex origin-bottom flex-col items-center transition-transform duration-200",
-          selected ? "scale-110" : "group-hover:scale-105",
+          "pin-span-min",
+          selected ? "pin-span-min-2" : "pin-span-min-3",
         )}
       >
         <span
           className={cx(
-            "flex items-center gap-1 rounded-md py-1 pr-2.5 pl-1 text-xs font-bold whitespace-nowrap shadow-float ring-1 transition-colors tabular",
-            selected ? "bg-navy-900 text-white ring-navy-900" : "bg-white text-ink ring-black/5",
-            "group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-navy-700",
+            "pin-span-min-4",
+            selected ? "pin-span-min-5" : "pin-span-min-6",
+            "pin-span-min-7",
           )}
         >
-          <BankBadge bank={view.bank} className="size-5" />
-          {view.favorite && <Star className="size-3 fill-gold-500 text-gold-500" aria-hidden />}
-          {view.wait}
-          <span className="-ml-0.5 text-2xs font-semibold opacity-70">{t("min")}</span>
+          <BankBadge bank={view.bank} className="pin-bank-badge" />
+          {view.favorite && <Star className="pin-star" aria-hidden />}
+          <span className="minute-value">
+            <span className="minute-number">{view.wait}</span>
+            <span className="pin-span-min-8">{t("min")}</span>
+          </span>
         </span>
-        <span className={cx("-mt-1 size-2.5 rotate-45 rounded-[2px]", selected ? "bg-navy-900" : "bg-white")} />
+        <span
+          className={cx("pin-span", selected ? "pin-span-2" : "pin-span-3")}
+        />
       </span>
     </button>
   );
 }
 
 function MapStatus({ failed, label }: { failed: boolean; label: string }) {
-  if (!failed) return <div aria-hidden className="skeleton pointer-events-none absolute inset-0 opacity-40" />;
-  return <p className="absolute inset-x-6 top-1/2 -translate-y-1/2 text-center text-sm text-muted">{label}</p>;
+  if (!failed) return <div aria-hidden className="map-status-div" />;
+  return <p className="map-status-p">{label}</p>;
 }
 
 /* ------------------------------------------------------------------ */
 /* Full map                                                            */
 /* ------------------------------------------------------------------ */
 
-const controlButton = cx(
-  "inline-flex size-11 items-center justify-center bg-white text-ink transition-colors hover:bg-paper disabled:text-muted/50",
-  "outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-navy-700",
-);
+const controlButton = cx("control-button");
 
 export function CityMap({
   className,
   zoom = DEFAULT_ZOOM,
-  controlsClassName = "right-3 bottom-3",
+  controlsClassName = "city-map",
   focusTop = 0.42,
 }: {
   className?: string;
@@ -368,7 +460,8 @@ export function CityMap({
   /** Where to place the selected branch vertically, as a fraction of the viewport. */
   focusTop?: number;
 }) {
-  const { favorites, others, selected, select, lang, t, ticketBranch } = useStore();
+  const { favorites, others, selected, select, lang, t, ticketBranch } =
+    useStore();
   const container = React.useRef<HTMLDivElement>(null);
   const { handle, failed } = useMapLibre(container, () => ({
     center: [selected.lng, selected.lat],
@@ -392,7 +485,10 @@ export function CityMap({
     const attribution = new lib.AttributionControl({ compact: true });
     map.addControl(attribution, "bottom-left");
     // Start as the small (i) button; it opens on tap instead of covering the map.
-    map.getContainer().querySelector(".maplibregl-ctrl-attrib")?.classList.remove("maplibregl-compact-show");
+    map
+      .getContainer()
+      .querySelector(".maplibregl-ctrl-attrib")
+      ?.classList.remove("maplibregl-compact-show");
     addRouteLayer(map);
     const onZoom = () => setZoomLevel(map.getZoom());
     map.on("zoomend", onZoom);
@@ -405,7 +501,11 @@ export function CityMap({
     (at: LngLat, duration: number) => {
       const map = handle?.map;
       if (!map) return;
-      map.easeTo({ center: at, offset: [0, (focusTop - 0.5) * map.getContainer().clientHeight], duration });
+      map.easeTo({
+        center: at,
+        offset: [0, (focusTop - 0.5) * map.getContainer().clientHeight],
+        duration,
+      });
     },
     [handle, focusTop],
   );
@@ -422,8 +522,13 @@ export function CityMap({
   }, [handle, ticketBranch]);
 
   return (
-    <div className={cx("relative h-full w-full overflow-hidden bg-map-land", className)}>
-      <div ref={container} role="region" aria-label={t("mapLabel")} className="isolate size-full" />
+    <div className={cx("city-map-div-map-label", className)}>
+      <div
+        ref={container}
+        role="region"
+        aria-label={t("mapLabel")}
+        className="city-map-div"
+      />
       {!handle && <MapStatus failed={failed} label={t("mapError")} />}
       {handle && (
         <>
@@ -436,28 +541,52 @@ export function CityMap({
             <UserDot label={t("you")} />
           </MapMarker>
           {pins.map((v) => (
-            <MapMarker key={v.id} handle={handle} at={[v.lng, v.lat]} anchor="bottom" z={v.id === selected.id ? 30 : v.favorite ? 20 : 10}>
-              <Pin view={v} selected={v.id === selected.id} onSelect={() => select(v.id)} />
+            <MapMarker
+              key={v.id}
+              handle={handle}
+              at={[v.lng, v.lat]}
+              anchor="bottom"
+              z={v.id === selected.id ? 30 : v.favorite ? 20 : 10}
+            >
+              <Pin
+                view={v}
+                selected={v.id === selected.id}
+                onSelect={() => select(v.id)}
+              />
             </MapMarker>
           ))}
         </>
       )}
-      <div className={cx("absolute flex flex-col gap-2", controlsClassName)}>
+      <div className={cx("city-map-div-recenter", controlsClassName)}>
         <button
           type="button"
-          className={cx(controlButton, "rounded-md shadow-float")}
+          className={cx(controlButton, "city-map-button")}
           aria-label={t("recenter")}
-          onClick={() => handle?.map.easeTo({ center: [USER.lng, USER.lat], duration: 600 })}
+          onClick={() =>
+            handle?.map.easeTo({ center: [USER.lng, USER.lat], duration: 600 })
+          }
         >
-          <LocateFixed className="size-5" />
+          <LocateFixed className="pin-bank-badge" />
         </button>
-        <div className="flex flex-col overflow-hidden rounded-md shadow-float">
-          <button type="button" className={controlButton} aria-label={t("zoomIn")} disabled={zoomLevel >= MAX_ZOOM - 0.01} onClick={() => handle?.map.zoomIn()}>
-            <Plus className="size-5" />
+        <div className="city-map-div-zoom-in">
+          <button
+            type="button"
+            className={controlButton}
+            aria-label={t("zoomIn")}
+            disabled={zoomLevel >= MAX_ZOOM - 0.01}
+            onClick={() => handle?.map.zoomIn()}
+          >
+            <Plus className="pin-bank-badge" />
           </button>
-          <span className="h-px bg-line" aria-hidden />
-          <button type="button" className={controlButton} aria-label={t("zoomOut")} disabled={zoomLevel <= MIN_ZOOM + 0.01} onClick={() => handle?.map.zoomOut()}>
-            <Minus className="size-5" />
+          <span className="city-map-span" aria-hidden />
+          <button
+            type="button"
+            className={controlButton}
+            aria-label={t("zoomOut")}
+            disabled={zoomLevel <= MIN_ZOOM + 0.01}
+            onClick={() => handle?.map.zoomOut()}
+          >
+            <Minus className="pin-bank-badge" />
           </button>
         </div>
       </div>
@@ -470,7 +599,13 @@ export function CityMap({
 /* ------------------------------------------------------------------ */
 
 /** A small, non-interactive map of the walk from the user to one branch (sketch ④). */
-export function MiniMap({ branch, className }: { branch: BranchView; className?: string }) {
+export function MiniMap({
+  branch,
+  className,
+}: {
+  branch: BranchView;
+  className?: string;
+}) {
   const { t } = useStore();
   const container = React.useRef<HTMLDivElement>(null);
   const route = routeTo(branch);
@@ -488,27 +623,39 @@ export function MiniMap({ branch, className }: { branch: BranchView; className?:
     if (!handle) return;
     const path = routeTo(branch);
     setRoute(handle.map, path);
-    handle.map.fitBounds(boundsOf(path), { padding: { top: 44, bottom: 20, left: 28, right: 28 }, duration: 0 });
+    handle.map.fitBounds(boundsOf(path), {
+      padding: { top: 44, bottom: 20, left: 28, right: 28 },
+      duration: 0,
+    });
   }, [handle, branch]);
 
   return (
-    <div className={cx("relative w-full overflow-hidden bg-map-land", className)}>
-      <div ref={container} aria-hidden className="isolate size-full" />
+    <div className={cx("mini-map-div-map-error", className)}>
+      <div ref={container} aria-hidden className="city-map-div" />
       {!handle && <MapStatus failed={failed} label={t("mapError")} />}
       {handle && (
         <>
           <MapMarker handle={handle} at={[USER.lng, USER.lat]}>
             <UserDot label={t("you")} />
           </MapMarker>
-          <MapMarker handle={handle} at={[branch.lng, branch.lat]} anchor="bottom">
-            <svg viewBox="0 0 28 36" className="block h-9 w-7 drop-shadow" aria-hidden>
-              <path d="M14 35s12-11.6 12-21A12 12 0 0 0 2 14c0 9.4 12 21 12 21Z" fill="var(--color-navy-900)" stroke="white" strokeWidth="2" />
+          <MapMarker
+            handle={handle}
+            at={[branch.lng, branch.lat]}
+            anchor="bottom"
+          >
+            <svg viewBox="0 0 28 36" className="mini-map-svg" aria-hidden>
+              <path
+                d="M14 35s12-11.6 12-21A12 12 0 0 0 2 14c0 9.4 12 21 12 21Z"
+                fill="var(--color-navy-900)"
+                stroke="white"
+                strokeWidth="2"
+              />
               <circle cx="14" cy="14" r="4.5" fill="var(--color-gold-500)" />
             </svg>
           </MapMarker>
         </>
       )}
-      <span className="pointer-events-none absolute right-0 bottom-0 rounded-tl-sm bg-white/80 px-1.5 text-2xs text-muted">© OpenStreetMap</span>
+      <span className="mini-map-span">© OpenStreetMap</span>
     </div>
   );
 }

@@ -22,10 +22,22 @@ import {
   TrendingUp,
   Users,
 } from "lucide-react";
-import { AMENITIES, CLOSE_MIN, SERVICES, servingAt, type AmenityKey, type ServiceKey } from "@/lib/data";
+import {
+  AMENITIES,
+  CLOSE_MIN,
+  SERVICES,
+  servingAt,
+  type AmenityKey,
+  type ServiceKey,
+} from "@/lib/data";
 import { dayMinute, formatClock, formatDistance } from "@/lib/sim";
 import { BankBadge } from "../bank-badge";
-import { CrowdBars, FavoriteButton, TakeTicketButton, crowdLabelKey } from "../branch-card";
+import {
+  CrowdBars,
+  FavoriteButton,
+  TakeTicketButton,
+  crowdLabelKey,
+} from "../branch-card";
 import { MiniMap } from "../city-map";
 import { CrowdChart } from "../crowd-chart";
 import { useStore, type BranchView } from "../store";
@@ -41,59 +53,105 @@ const AMENITY_ICONS: Record<AmenityKey, typeof CircleParking> = {
 
 const ALL_SERVICES: ServiceKey[] = ["general", "loan", "fx", "business"];
 
-export function Section({ title, icon: Icon, aside, children, className, plain = false }: { title: string; icon?: typeof MapPin; aside?: React.ReactNode; children: React.ReactNode; className?: string; plain?: boolean }) {
+export function Section({
+  title,
+  icon: Icon,
+  aside,
+  children,
+  className,
+  plain = false,
+}: {
+  plain?: boolean;
+  title: string;
+  icon?: typeof MapPin;
+  aside?: React.ReactNode;
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <section className={cx(plain ? "py-5" : "rounded-lg bg-white p-5 shadow-card ring-1 ring-line/70", className)}>
-      <div className="flex items-start justify-between gap-3">
-        <h2 className="flex items-center gap-2 text-sm font-bold text-ink">
-          {Icon && <Icon className="size-4 text-navy-900" aria-hidden />}
+    <section
+      className={cx(plain ? "section-plain" : "section-section", className)}
+    >
+      <div className="section-div">
+        <h2 className="section-h2">
+          {Icon && <Icon className="section-icon" aria-hidden />}
           {title}
         </h2>
         {aside}
       </div>
-      <div className="mt-4">{children}</div>
+      <div className="section-div-2">{children}</div>
     </section>
   );
 }
 
 function CrowdNote({ view }: { view: BranchView }) {
   const { t } = useStore();
-  if (Math.abs(view.quieterBy) < 5) return <span className="text-xs text-muted">{t("usual")}</span>;
+  if (Math.abs(view.quieterBy) < 5)
+    return <span className="crowd-note-span-usual">{t("usual")}</span>;
   const quieter = view.quieterBy > 0;
   const Icon = quieter ? TrendingDown : TrendingUp;
   return (
-    <span className={cx("flex items-center gap-1 text-right text-xs font-semibold", quieter ? "text-emerald-700" : "text-rose-700")}>
-      <Icon className="size-3.5 shrink-0" aria-hidden />
+    <span
+      className={cx(
+        "crowd-note-span",
+        quieter ? "crowd-note-span-2" : "crowd-note-span-3",
+      )}
+    >
+      <Icon className="crowd-note-icon" aria-hidden />
       {t(quieter ? "quieter" : "busier", { n: Math.abs(view.quieterBy) })}
     </span>
   );
 }
 
-export function ServiceQueues({ view, compact = false }: { view: BranchView; compact?: boolean }) {
+export function ServiceQueues({
+  view,
+  compact = false,
+}: {
+  view: BranchView;
+  compact?: boolean;
+}) {
   const { t, lang, sim } = useStore();
   return (
-    <ul className="-my-1 divide-y divide-line">
+    <ul className="service-queues-ul-now-serving">
       {ALL_SERVICES.map((s) => {
         const q = view.queues[s];
         const Icon = SERVICE_ICONS[s];
         return (
-          <li key={s} className={cx("flex items-center gap-3 py-3", !q && "opacity-45")}>
-            <span className="flex size-9 shrink-0 items-center justify-center rounded-md bg-paper text-navy-900">
-              <Icon className="size-[18px]" aria-hidden />
+          <li
+            key={s}
+            className={cx(
+              "service-queues-li-now-serving",
+              !q && "service-queues-li-now-serving-2",
+            )}
+          >
+            <span className="service-queues-span">
+              <Icon className="service-queues-icon" aria-hidden />
             </span>
-            <div className="min-w-0 flex-1">
-              <p className="text-sm font-semibold text-ink">{SERVICES[s].name[lang]}</p>
-              <p className="truncate text-xs text-muted">
-                {q ? t("nowServing", { n: servingAt(view, s, Math.floor(dayMinute(sim))) }) : t("notOffered")}
+            <div className="service-queues-div-now-serving">
+              <p className="service-queues-p">{SERVICES[s].name[lang]}</p>
+              <p className="service-queues-p-now-serving">
+                {q
+                  ? t("nowServing", {
+                      n: servingAt(view, s, Math.floor(dayMinute(sim))),
+                    })
+                  : t("notOffered")}
               </p>
             </div>
             {q && (
-              <div className="text-right">
-                <p className={cx("text-navy-900 tabular", compact ? "text-sm font-semibold" : "font-display text-base font-bold")}>
-                  {q.wait}
-                  <span className="ml-0.5 text-xs font-semibold">{t("min")}</span>
+              <div className="service-queues-div-min">
+                <p
+                  className={
+                    compact
+                      ? "service-queue-wait-compact"
+                      : "service-queues-p-min"
+                  }
+                >
+                  <span className="minute-number">{q.wait}</span>
+                  <span className="service-queues-span-min">{t("min")}</span>
                 </p>
-                <p className="text-xs text-muted">{t("waitingCount", { n: q.waiting })}</p>
+                <p className="crowd-note-span-usual">
+                  {t("waitingCount", { n: q.waiting })}
+                </p>
               </div>
             )}
           </li>
@@ -103,20 +161,42 @@ export function ServiceQueues({ view, compact = false }: { view: BranchView; com
   );
 }
 
-export function CrowdSection({ view, className, plain = false }: { view: BranchView; className?: string; plain?: boolean }) {
+export function CrowdSection({
+  view,
+  className,
+  plain = false,
+}: {
+  view: BranchView;
+  className?: string;
+  plain?: boolean;
+}) {
   const { t } = useStore();
   return (
-    <Section title={t("crowd")} icon={ChartSpline} aside={<CrowdNote view={view} />} className={className} plain={plain}>
+    <Section
+      title={t("crowd")}
+      icon={ChartSpline}
+      aside={<CrowdNote view={view} />}
+      className={className}
+      plain={plain}
+    >
       <CrowdChart branch={view} best={view.bestTime} />
-      <p className="mt-3 flex items-center gap-2 rounded-md bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-800">
-        <Clock className="size-4 shrink-0" aria-hidden />
-        {t("bestTime", { t: `${formatClock(view.bestTime)}–${formatClock(view.bestTime + 30)}` })}
+      <p className="crowd-section-p-best-time">
+        <Clock className="crowd-section-clock" aria-hidden />
+        {t("bestTime", {
+          t: `${formatClock(view.bestTime)}–${formatClock(view.bestTime + 30)}`,
+        })}
       </p>
     </Section>
   );
 }
 
-export function RouteSection({ view, className }: { view: BranchView; className?: string }) {
+export function RouteSection({
+  view,
+  className,
+}: {
+  view: BranchView;
+  className?: string;
+}) {
   const { t, lang, showOnMap } = useStore();
   const modes = [
     { icon: Footprints, label: t("walk"), min: view.travel.walk },
@@ -124,23 +204,28 @@ export function RouteSection({ view, className }: { view: BranchView; className?
     { icon: CarTaxiFront, label: t("taxi"), min: view.travel.taxi },
   ];
   return (
-    <Section title={t("route")} icon={MapPin} aside={<span className="text-right text-xs font-semibold text-navy-900">{view.via[lang]}</span>} className={className}>
+    <Section
+      title={t("route")}
+      icon={MapPin}
+      aside={<span className="route-section-span">{view.via[lang]}</span>}
+      className={className}
+    >
       <button
         type="button"
         onClick={() => showOnMap(view.id)}
         aria-label={t("map")}
-        className="block w-full overflow-hidden rounded-md ring-1 ring-line outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-700"
+        className="route-section-button"
       >
-        <MiniMap branch={view} className="h-36" />
+        <MiniMap branch={view} className="route-section-mini-map" />
       </button>
-      <ul className="mt-3 grid grid-cols-3 divide-x divide-line/70">
+      <ul className="route-section-ul-min">
         {modes.map(({ icon: Icon, label, min }) => (
-          <li key={label} className="flex flex-col items-center py-2.5">
-            <Icon className="size-[18px] text-navy-900" aria-hidden />
-            <span className="mt-1 text-xs text-muted">{label}</span>
-            <span className="text-sm font-bold text-ink tabular">
-              {min}
-              <span className="ml-0.5 text-2xs font-semibold text-muted">{t("min")}</span>
+          <li key={label} className="route-section-li-min">
+            <Icon className="route-section-icon" aria-hidden />
+            <span className="route-section-span-2">{label}</span>
+            <span className="route-section-span-min">
+              <span className="minute-number">{min}</span>
+              <span className="route-section-span-min-2">{t("min")}</span>
             </span>
           </li>
         ))}
@@ -149,30 +234,64 @@ export function RouteSection({ view, className }: { view: BranchView; className?
   );
 }
 
-function InfoSection({ view, className }: { view: BranchView; className?: string }) {
+function InfoSection({
+  view,
+  className,
+}: {
+  view: BranchView;
+  className?: string;
+}) {
   const { t, lang, notify } = useStore();
   const rows = [
-    { icon: MapPin, label: t("address"), value: view.address[lang], action: { label: t("copyAddress"), icon: Copy, run: () => {
-      void navigator.clipboard?.writeText(view.address[lang]).catch(() => {});
-      notify(t("addressCopied"));
-    } } },
+    {
+      icon: MapPin,
+      label: t("address"),
+      value: view.address[lang],
+      action: {
+        label: t("copyAddress"),
+        icon: Copy,
+        run: () => {
+          void navigator.clipboard
+            ?.writeText(view.address[lang])
+            .catch(() => {});
+          notify(t("addressCopied"));
+        },
+      },
+    },
     { icon: Clock, label: t("hours"), value: t("hoursValue") },
-    { icon: Phone, label: t("phone"), value: view.phone, action: { label: t("call"), icon: Phone, run: () => notify(t("callDisabled")) } },
-    { icon: Users, label: t("counters"), value: t("countersValue", { n: view.counters }) },
+    {
+      icon: Phone,
+      label: t("phone"),
+      value: view.phone,
+      action: {
+        label: t("call"),
+        icon: Phone,
+        run: () => notify(t("callDisabled")),
+      },
+    },
+    {
+      icon: Users,
+      label: t("counters"),
+      value: t("countersValue", { n: view.counters }),
+    },
   ];
   return (
     <Section title={t("branchInfo")} className={className}>
-      <dl className="-my-1 divide-y divide-line">
+      <dl className="service-queues-ul-now-serving">
         {rows.map(({ icon: Icon, label, value, action }) => (
-          <div key={label} className="flex items-center gap-3 py-3">
-            <Icon className="size-[18px] shrink-0 text-muted" aria-hidden />
-            <div className="min-w-0 flex-1">
-              <dt className="text-xs text-muted">{label}</dt>
-              <dd className="text-sm font-medium text-ink">{value}</dd>
+          <div key={label} className="service-queues-li-now-serving">
+            <Icon className="info-section-icon" aria-hidden />
+            <div className="service-queues-div-now-serving">
+              <dt className="crowd-note-span-usual">{label}</dt>
+              <dd className="info-section-dd">{value}</dd>
             </div>
             {action && (
-              <button type="button" onClick={action.run} className={cx("inline-flex h-8 items-center gap-1.5 rounded-md bg-paper px-3 text-xs font-semibold text-navy-900 hover:bg-line", focusRing)}>
-                <action.icon className="size-3.5" aria-hidden />
+              <button
+                type="button"
+                onClick={action.run}
+                className={cx("info-section-button", focusRing)}
+              >
+                <action.icon className="info-section-action-icon" aria-hidden />
                 {action.label}
               </button>
             )}
@@ -183,16 +302,22 @@ function InfoSection({ view, className }: { view: BranchView; className?: string
   );
 }
 
-function Facilities({ view, className }: { view: BranchView; className?: string }) {
+function Facilities({
+  view,
+  className,
+}: {
+  view: BranchView;
+  className?: string;
+}) {
   const { t, lang } = useStore();
   return (
     <Section title={t("facilities")} className={className}>
-      <ul className="flex flex-wrap gap-2">
+      <ul className="facilities-ul">
         {view.amenities.map((a) => {
           const Icon = AMENITY_ICONS[a];
           return (
-            <li key={a} className="inline-flex items-center gap-1.5 rounded-md bg-navy-100/70 px-3 py-1.5 text-xs font-medium text-navy-900">
-              <Icon className="size-3.5" aria-hidden />
+            <li key={a} className="facilities-li">
+              <Icon className="info-section-action-icon" aria-hidden />
               {AMENITIES[a][lang]}
             </li>
           );
@@ -217,23 +342,30 @@ function Hero({ view }: { view: BranchView }) {
       // Share sheet dismissed.
     }
   };
-  const glass = "inline-flex size-10 items-center justify-center rounded-full bg-black/25 text-white backdrop-blur-md transition-colors hover:bg-black/35 " + focusRing;
+  const glass = cx("hero-icon-button", focusRing);
   return (
-    <div className="relative h-[300px] overflow-hidden lg:h-[360px] lg:rounded-lg">
-      <img src={`/images/${view.photo}.webp`} alt="" className="absolute inset-0 size-full object-cover" />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-black/55" />
-      <div className="absolute inset-x-0 top-0 flex items-center gap-2 px-3 pt-[calc(0.75rem+env(safe-area-inset-top))] lg:px-4 lg:pt-4">
+    <div className="hero-div-back">
+      <img src={`/images/${view.photo}.webp`} alt="" className="hero-img" />
+      <div className="hero-div" />
+      <div className="hero-div-back-2">
         <button
           type="button"
-          onClick={() => (window.history.length > 1 ? router.back() : router.push("/"))}
+          onClick={() =>
+            window.history.length > 1 ? router.back() : router.push("/")
+          }
           aria-label={t("back")}
           className={glass}
         >
-          <ArrowLeft className="size-5" />
+          <ArrowLeft className="hero-arrow-left" />
         </button>
-        <div className="flex-1" />
-        <button type="button" onClick={share} aria-label={t("share")} className={glass}>
-          <Share2 className="size-[18px]" />
+        <div className="hero-div-2" />
+        <button
+          type="button"
+          onClick={share}
+          aria-label={t("share")}
+          className={glass}
+        >
+          <Share2 className="service-queues-icon" />
         </button>
         <FavoriteButton view={view} tone="dark" />
       </div>
@@ -245,25 +377,25 @@ function TitleBlock({ view }: { view: BranchView }) {
   const { t, lang } = useStore();
   const level = crowdLabelKey(view.crowd);
   return (
-    <div className="flex items-start gap-3">
-      <BankBadge bank={view.bank} className="size-12 ring-4 ring-white" />
-      <div className="min-w-0 flex-1">
-        <p className="text-sm font-medium text-muted">{view.bankName}</p>
-        <h1 className="text-xl leading-tight font-bold tracking-tight text-ink lg:text-2xl">{view.branchName}</h1>
-        <p className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted">
-          <span className="inline-flex items-center gap-1.5 font-semibold text-emerald-700">
-            <span className="size-2 rounded-full bg-emerald-500" />
+    <div className="title-block-div-open-until">
+      <BankBadge bank={view.bank} className="title-block-bank-badge" />
+      <div className="service-queues-div-now-serving">
+        <p className="title-block-p">{view.bankName}</p>
+        <h1 className="title-block-h1">{view.branchName}</h1>
+        <p className="title-block-p-open-until">
+          <span className="title-block-span-open-until">
+            <span className="title-block-span" />
             {t("openUntil", { t: `${CLOSE_MIN / 60}:00` })}
           </span>
           <span aria-hidden>·</span>
           <span>{formatDistance(view.distance)}</span>
           <span aria-hidden>·</span>
-          <span className="inline-flex items-center gap-1">
+          <span className="title-block-span-2">
             <CrowdBars level={view.crowd} />
             {t(level)}
           </span>
         </p>
-        <p className="mt-1 truncate text-xs text-muted">{view.address[lang]}</p>
+        <p className="title-block-p-2">{view.address[lang]}</p>
       </div>
     </div>
   );
@@ -273,15 +405,15 @@ function Stats({ view }: { view: BranchView }) {
   const { t } = useStore();
   const level = Math.round(view.crowd * 100);
   return (
-    <div className="grid grid-cols-3 divide-x divide-line rounded-lg bg-white py-4 shadow-card ring-1 ring-line/70">
+    <div className="stats-div-min-wait">
       {[
         { label: t("minWait"), value: view.wait },
         { label: t("inQueue"), value: view.waiting },
         { label: t("crowdNow"), value: `${level}%` },
       ].map((s) => (
-        <div key={s.label} className="px-2 text-center">
-          <p className="font-display text-xl leading-none font-bold text-navy-900 tabular">{s.value}</p>
-          <p className="mt-1.5 text-xs text-muted">{s.label}</p>
+        <div key={s.label} className="stats-div">
+          <p className="stats-p">{s.value}</p>
+          <p className="stats-p-2">{s.label}</p>
         </div>
       ))}
     </div>
@@ -294,56 +426,71 @@ export function BranchScreen({ id }: { id: string }) {
   const view = viewById(id);
   if (!view) return null;
   return (
-    <div className="mx-auto max-w-6xl lg:px-6 lg:py-6">
-      <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start lg:gap-6">
+    <div className="branch-screen-div-services-title">
+      <div className="branch-screen-div-services-title-2">
         <div>
           <Hero view={view} />
-          <div className="relative -mt-8 rounded-t-lg bg-paper px-4 pt-5 lg:mt-6 lg:rounded-none lg:px-0 lg:pt-0">
+          <div className="branch-screen-div-services-title-3">
             <TitleBlock view={view} />
-            <div className="mt-5 flex flex-col gap-4 pb-28 lg:pb-0">
+            <div className="branch-screen-div-services-title-4">
               <Stats view={view} />
-              <Section title={t("servicesTitle")} className="lg:hidden">
+              <Section
+                title={t("servicesTitle")}
+                className="branch-screen-section"
+              >
                 <ServiceQueues view={view} />
               </Section>
-              <div className="flex flex-col gap-4 xl:grid xl:grid-cols-2 xl:items-start">
+              <div className="branch-screen-div">
                 <CrowdSection view={view} />
                 <RouteSection view={view} />
               </div>
-              <div className="flex flex-col gap-4 xl:grid xl:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] xl:items-start">
+              <div className="branch-screen-div-2">
                 <Facilities view={view} />
                 <InfoSection view={view} />
               </div>
             </div>
           </div>
         </div>
-        <aside className="sticky top-22 hidden flex-col gap-4 lg:flex">
+        <aside className="branch-screen-aside-services-title">
           <Section title={t("servicesTitle")}>
             <ServiceQueues view={view} />
           </Section>
-          <div className="rounded-lg bg-navy-900 p-5 text-white shadow-float">
-            <p className="text-xs text-white/65">{SERVICES.general.name[lang]}</p>
-            <p className="font-display text-3xl leading-none font-bold tabular">
-              {view.wait}
-              <span className="ml-1 text-base font-semibold text-white/70">{t("min")}</span>
+          <div className="branch-screen-div-min">
+            <p className="branch-screen-p">{SERVICES.general.name[lang]}</p>
+            <p className="branch-screen-p-min">
+              <span className="minute-number">{view.wait}</span>
+              <span className="branch-screen-span-min">{t("min")}</span>
             </p>
-            <Meter.Root value={Math.round(view.crowd * 100)} className="mt-4" aria-label={t("crowdNow")}>
-              <Meter.Track className="block h-1.5 overflow-hidden rounded-full bg-white/15">
-                <Meter.Indicator className="block h-full rounded-full bg-gold-500" />
+            <Meter.Root
+              value={Math.round(view.crowd * 100)}
+              className="section-div-2"
+              aria-label={t("crowdNow")}
+            >
+              <Meter.Track className="branch-screen-meter-track">
+                <Meter.Indicator className="branch-screen-meter-indicator" />
               </Meter.Track>
             </Meter.Root>
-            <TakeTicketButton view={view} size="lg" className="mt-5 w-full justify-center" />
+            <TakeTicketButton
+              view={view}
+              size="lg"
+              className="branch-screen-take-ticket-button"
+            />
           </div>
         </aside>
       </div>
       {/* Mobile sticky action bar */}
-      <div className="fixed inset-x-0 bottom-[calc(4rem+env(safe-area-inset-bottom))] z-20 border-t border-line bg-white/95 px-4 py-3 backdrop-blur-xl lg:hidden">
-        <div className="mx-auto flex max-w-xl items-center gap-3">
-          <div className="min-w-0 flex-1">
-            <p className="font-display text-lg leading-none font-bold text-navy-900 tabular">
-              {view.wait}
-              <span className="ml-1 text-xs font-semibold">{t("minWait")}</span>
+      <div className="branch-screen-div-min-wait">
+        <div className="branch-screen-div-min-wait-2">
+          <div className="service-queues-div-now-serving">
+            <p className="branch-screen-p-min-wait">
+              <span className="minute-number">{view.wait}</span>
+              <span className="branch-screen-span-min-wait">
+                {t("minWait")}
+              </span>
             </p>
-            <p className="mt-1 text-xs text-muted">{t("waitingCount", { n: view.waiting })}</p>
+            <p className="route-section-span-2">
+              {t("waitingCount", { n: view.waiting })}
+            </p>
           </div>
           <TakeTicketButton view={view} size="lg" />
         </div>
@@ -351,4 +498,3 @@ export function BranchScreen({ id }: { id: string }) {
     </div>
   );
 }
-

@@ -1,0 +1,204 @@
+/* components/sketch-card.tsx */
+@layer components {
+  .sketch-card-article {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    background-color: var(--color-white);
+    --surface-shadow:
+      0 1px 2px rgba(13, 17, 55, 0.06), 0 12px 32px rgba(13, 17, 55, 0.07);
+    box-shadow:
+      var(--surface-inset-ring), var(--surface-ring), var(--surface-shadow);
+  }
+  @media (width >= 48rem) {
+    .sketch-card-article-2 {
+      grid-column: span 2 / span 2;
+    }
+  }
+  .sketch-card-div {
+    position: relative;
+    overflow: hidden;
+  }
+  .sketch-card-div-2 {
+    background-color: var(--color-ink);
+  }
+  .sketch-card-div-3 {
+    background-color: #fbf6dc;
+    background-image:
+      linear-gradient(
+        90deg,
+        transparent 2.4rem,
+        #e8a3a3 2.4rem,
+        #e8a3a3 calc(2.4rem + 1px),
+        transparent calc(2.4rem + 1px)
+      ),
+      repeating-linear-gradient(180deg, transparent 0 27px, #c7d6e6 27px 28px);
+  }
+  .sketch-card-div-4 {
+    position: relative;
+    margin-inline: auto;
+  }
+  .sketch-card-div-5 {
+    aspect-ratio: 3/2;
+    max-width: var(--container-2xl);
+  }
+  .sketch-card-div-6 {
+    aspect-ratio: 3/4;
+    max-width: var(--container-md);
+  }
+  .sketch-card-img {
+    position: absolute;
+    inset: 0px;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 1.5rem;
+    transition-property: opacity;
+    transition-timing-function: var(--default-transition-timing-function);
+    transition-duration: 300ms;
+  }
+  .sketch-card-img-2 {
+    opacity: 0%;
+  }
+  .sketch-card-img-3 {
+    position: absolute;
+    inset: 0px;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition-property: opacity;
+    transition-timing-function: var(--default-transition-timing-function);
+    transition-duration: 300ms;
+  }
+  .sketch-card-span {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    display: flex;
+    width: 2.25rem;
+    height: 2.25rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background-color: var(--color-navy-950);
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-black);
+    color: var(--color-white);
+  }
+  .sketch-card-div-7 {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.5rem;
+  }
+  .sketch-card-div-8 {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .sketch-card-h3 {
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-extrabold);
+    color: var(--color-navy-900);
+  }
+  .sketch-card-p {
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-gold-700);
+  }
+  .sketch-card-label {
+    display: flex;
+    flex-shrink: 0;
+    cursor: pointer;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-muted);
+  }
+  .sketch-card-switch-root {
+    position: relative;
+    display: flex;
+    height: 1.5rem;
+    width: 2.5rem;
+    border-radius: 9999px;
+    background-color: color-mix(in srgb, #151a4f 15%, transparent);
+    padding: 0.125rem;
+    transition-property:
+      color, background-color, border-color, outline-color,
+      text-decoration-color, fill, stroke;
+    transition-timing-function: var(--default-transition-timing-function);
+    transition-duration: var(--default-transition-duration);
+    outline-style: none;
+    &:focus-visible {
+      outline-style: none;
+      outline-width: 2px;
+      outline-offset: 2px;
+      outline-color: var(--color-navy-700);
+    }
+    &[data-checked] {
+      background-color: var(--color-navy-900);
+    }
+  }
+  .sketch-card-switch-thumb {
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 9999px;
+    background-color: var(--color-white);
+    --surface-shadow:
+      0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    box-shadow:
+      var(--surface-inset-ring), var(--surface-ring), var(--surface-shadow);
+    transition-property: transform, translate, scale, rotate;
+    transition-timing-function: var(--default-transition-timing-function);
+    transition-duration: var(--default-transition-duration);
+    &[data-checked] {
+      translate: 1rem 0;
+    }
+  }
+  .sketch-card-ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    font-size: var(--text-sm);
+    line-height: var(--leading-relaxed);
+    color: color-mix(in srgb, #1d1f2e 80%, transparent);
+  }
+  .sketch-card-li {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .sketch-card-span-2 {
+    margin-top: 9px;
+    width: 0.375rem;
+    height: 0.375rem;
+    flex-shrink: 0;
+    border-radius: 9999px;
+    background-color: var(--color-gold-500);
+  }
+  .sketch-card-link {
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    align-self: flex-start;
+    padding-top: 0.5rem;
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-gold-700);
+    &:hover {
+      @media (hover: hover) {
+        color: var(--color-gold-800);
+        text-decoration-line: underline;
+      }
+    }
+  }
+  .sketch-card-arrow-right {
+    width: 1rem;
+    height: 1rem;
+  }
+}
