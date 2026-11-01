@@ -53,8 +53,8 @@ function Recommendation({ view }: { view: BranchView }) {
       </Link>
       <div className="flex items-center gap-3 border-t border-line px-4 py-3">
         <p className="min-w-0 flex-1 text-xs text-muted">
-          <span className="font-display text-lg font-bold text-navy-900 tabular">{view.wait}</span>{" "}
-          <span className="font-semibold text-navy-900">{t("minWait")}</span>
+          <span className="text-sm font-semibold text-navy-900 tabular">{view.wait}</span>{" "}
+          <span className="text-sm font-semibold text-navy-900">{t("minWait")}</span>
           <span className="mx-1.5" aria-hidden>
             ·
           </span>
@@ -176,7 +176,7 @@ function DesktopList() {
 function BranchPanel({ view }: { view: BranchView }) {
   const { t } = useStore();
   return (
-    <aside className="scrollbar-thin flex min-h-0 flex-col overflow-y-auto border-l border-line bg-paper">
+    <aside className="scrollbar-thin flex min-h-0 flex-col overflow-y-auto border-l border-line bg-white">
       <div className="relative h-44 shrink-0">
         <img key={view.photo} src={`/images/${view.photo}.webp`} alt="" className="absolute inset-0 size-full animate-rise object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-navy-950/70 via-transparent" />
@@ -189,10 +189,10 @@ function BranchPanel({ view }: { view: BranchView }) {
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-4 p-4">
-        <div className="flex items-center gap-3 rounded-lg bg-white p-4 shadow-card ring-1 ring-line/70">
+      <div className="flex flex-col divide-y divide-line/70 px-5">
+        <div className="flex items-center gap-3 py-5">
           <div className="min-w-0 flex-1">
-            <p className="font-display text-2xl leading-none font-bold text-navy-900 tabular">
+            <p className="text-sm font-semibold text-navy-900 tabular">
               {view.wait}
               <span className="ml-1 text-sm font-semibold">{t("minWait")}</span>
             </p>
@@ -202,13 +202,13 @@ function BranchPanel({ view }: { view: BranchView }) {
           </div>
           <TakeTicketButton view={view} />
         </div>
-        <Section title={t("servicesTitle")}>
-          <ServiceQueues view={view} />
+        <Section title={t("servicesTitle")} plain>
+          <ServiceQueues view={view} compact />
         </Section>
-        <CrowdSection view={view} />
+        <CrowdSection view={view} plain />
         <Link
           href={`/branch/${view.id}`}
-          className={cx("flex h-12 items-center justify-center gap-1.5 rounded-md bg-white text-sm font-semibold text-navy-900 ring-1 ring-line hover:bg-white/70", focusRing)}
+          className={cx("flex min-h-14 items-center justify-center gap-1.5 text-sm font-semibold text-navy-900 hover:bg-paper", focusRing)}
         >
           {t("viewDetails")}
           <ChevronRight className="size-4" aria-hidden />

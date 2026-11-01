@@ -13,10 +13,10 @@ import {
   EllipsisVertical,
   House,
   Map as MapIcon,
+  CirclePlay,
   RotateCcw,
   RotateCw,
   Search,
-  Sparkles,
   Ticket,
   X,
 } from "lucide-react";
@@ -190,7 +190,7 @@ export function OptionsMenu({ className }: { className?: string }) {
             </Menu.RadioGroup>
             <Menu.Separator className="mx-2 my-1.5 h-px bg-line" />
             <Menu.Item className={itemClass} onClick={() => setShowOnboarding(true)}>
-              <Sparkles className="size-4 text-muted" aria-hidden />
+              <CirclePlay className="size-4 text-muted" aria-hidden />
               {t("replayIntro")}
             </Menu.Item>
             <Menu.Item className={itemClass} onClick={resetDemo}>
