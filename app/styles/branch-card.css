@@ -618,8 +618,11 @@
   .stub-card {
     position: relative;
     cursor: pointer;
+    --ticket-glow-blur: 0px;
+    --ticket-glow-color: transparent;
     filter: drop-shadow(0 0 0.5px rgb(13 17 55 / 0.28))
-      drop-shadow(0 6px 10px rgb(13 17 55 / 0.07));
+      drop-shadow(0 6px 10px rgb(13 17 55 / 0.07))
+      drop-shadow(0 0 var(--ticket-glow-blur) var(--ticket-glow-color));
     transition: filter 160ms ease;
   }
   .stub-card-action {
@@ -632,7 +635,6 @@
   .stub-card-top,
   .stub-card-bottom {
     pointer-events: none;
-    transition: background-color 160ms ease;
   }
   .stub-card-heading {
     padding: 1rem 1rem 0.75rem;
@@ -648,38 +650,23 @@
   }
   @media (hover: hover) {
     .stub-card:hover {
-      filter: drop-shadow(0 0 1px rgb(13 17 55 / 0.4))
-        drop-shadow(0 8px 14px rgb(13 17 55 / 0.16));
+      --ticket-glow-blur: 8px;
+      --ticket-glow-color: rgb(21 26 79 / 0.14);
     }
-    .stub-card:hover > .stub-card-top,
-    .stub-card:hover > .stub-card-bottom {
-      background-color: #f5f5fb;
-    }
-  }
-  .stub-card:active > .stub-card-top,
-  .stub-card:active > .stub-card-bottom {
-    background-color: #e6e8f4;
   }
   .stub-card[data-selected] {
-    --selection-color: var(--color-navy-700);
-    filter: drop-shadow(1px 0 0 var(--selection-color))
-      drop-shadow(-1px 0 0 var(--selection-color))
-      drop-shadow(0 1px 0 var(--selection-color))
-      drop-shadow(0 -1px 0 var(--selection-color))
-      drop-shadow(0 6px 11px rgb(13 17 55 / 0.16));
-  }
-  .stub-card[data-selected] > .stub-card-top,
-  .stub-card[data-selected] > .stub-card-bottom {
-    background-color: #eceef9;
+    --ticket-glow-blur: 10px;
+    --ticket-glow-color: rgb(21 26 79 / 0.22);
   }
   @media (hover: hover) {
-    .stub-card[data-selected]:hover > .stub-card-top,
-    .stub-card[data-selected]:hover > .stub-card-bottom {
-      background-color: #e2e5f5;
+    .stub-card[data-selected]:hover {
+      --ticket-glow-blur: 12px;
+      --ticket-glow-color: rgb(21 26 79 / 0.26);
     }
   }
-  .stub-card[data-selected]:active > .stub-card-top,
-  .stub-card[data-selected]:active > .stub-card-bottom {
-    background-color: #d8ddef;
+  .stub-card:active,
+  .stub-card[data-selected]:active {
+    --ticket-glow-blur: 10px;
+    --ticket-glow-color: rgb(21 26 79 / 0.3);
   }
 }

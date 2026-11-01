@@ -93,25 +93,36 @@ test("hover, pressed, selected and keyboard focus states remain distinct", async
 }) => {
   await open(page, "/");
   const card = page.locator(".desktop-list .stub-card").nth(1);
-  const top = card.locator(".stub-card-top");
-  const initial = await top.evaluate(
-    (e) => getComputedStyle(e).backgroundColor,
-  );
+  const surfaces = () =>
+    card.locator(".stub-card-top, .stub-card-bottom").evaluateAll((elements) =>
+      elements.map((element) => {
+        const style = getComputedStyle(element);
+        return { background: style.backgroundColor, border: style.borderColor };
+      }),
+    );
+  const initialSurfaces = await surfaces();
+  const initial = await card.evaluate((e) => getComputedStyle(e).filter);
   await card.hover();
+  await expect(card).toHaveCSS("--ticket-glow-blur", "8px");
   await expect
-    .poll(() => top.evaluate((e) => getComputedStyle(e).backgroundColor))
+    .poll(() => card.evaluate((e) => getComputedStyle(e).filter))
     .not.toBe(initial);
-  const hover = await top.evaluate((e) => getComputedStyle(e).backgroundColor);
+  expect(await surfaces()).toEqual(initialSurfaces);
+  const hover = await card.evaluate((e) => getComputedStyle(e).filter);
   await page.mouse.down();
+  await expect(card).toHaveCSS("--ticket-glow-color", "rgb(21 26 79 / 0.3)");
   await expect
-    .poll(() => top.evaluate((e) => getComputedStyle(e).backgroundColor))
+    .poll(() => card.evaluate((e) => getComputedStyle(e).filter))
     .not.toBe(hover);
+  expect(await surfaces()).toEqual(initialSurfaces);
   await page.mouse.up();
   await page.mouse.move(900, 30);
   await expect(card).toHaveAttribute("data-selected", "true");
+  await expect(card).toHaveCSS("--ticket-glow-blur", "10px");
   await expect
-    .poll(() => top.evaluate((e) => getComputedStyle(e).backgroundColor))
+    .poll(() => card.evaluate((e) => getComputedStyle(e).filter))
     .not.toBe(initial);
+  expect(await surfaces()).toEqual(initialSurfaces);
   await page.keyboard.press("Tab");
   await card.locator(".stub-card-action").focus();
   await expect(card.locator(".stub-card-action")).toHaveCSS(
@@ -133,7 +144,24 @@ test("sidebar details link spans the panel and minute labels are compact", async
   expect(
     Math.abs(linkBox.x + linkBox.width - panelBox.x - panelBox.width),
   ).toBeLessThanOrEqual(1);
+  expect(
+    Math.abs(linkBox.y + linkBox.height - panelBox.y - panelBox.height),
+  ).toBeLessThanOrEqual(1);
+  await expect(details).toHaveCSS("border-top-width", "0px");
+  const defaultBackground = await details.evaluate(
+    (e) => getComputedStyle(e).backgroundColor,
+  );
+  expect(defaultBackground).not.toBe("rgb(255, 255, 255)");
+  const time = panel.locator(".crowd-chart-text");
+  await expect(time).toHaveCSS("font-size", "11px");
+  await expect(time.locator("..").locator("rect")).toHaveAttribute(
+    "height",
+    "16",
+  );
   await details.hover();
+  await expect
+    .poll(() => details.evaluate((e) => getComputedStyle(e).backgroundColor))
+    .not.toBe(defaultBackground);
   await expect(details).toHaveCSS("cursor", "pointer");
   const wait = page.locator(".desktop-list .card-wait").first();
   await expect(wait).toHaveCSS("gap", "0px");
