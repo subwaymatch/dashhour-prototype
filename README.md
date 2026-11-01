@@ -31,7 +31,7 @@ Each of the original sketches maps to these screens; `/story` links from each sk
 - [Base UI](https://base-ui.com) 1.9: Drawer, Dialog, Alert Dialog, Menu, Toast, Radio Group, Toggle Group, Switch, Meter, Progress, Input.
 - [MapLibre GL JS](https://maplibre.org) with [OpenFreeMap](https://openfreemap.org) vector tiles (OpenStreetMap data, no API key), recoloured to the app's palette. MapLibre loads only when a map is on screen.
 - Walking routes come from OpenStreetMap via the OSRM foot profile at [routing.openstreetmap.de](https://routing.openstreetmap.de). They are fetched once by `scripts/fetch-routes.mjs` and stored in `lib/routes.ts`, so the app makes no routing calls.
-- Tailwind CSS 4, [Lucide](https://lucide.dev) icons, Inter and Noto Sans KR, and [uqr](https://github.com/unjs/uqr) for the check-in QR code.
+- Regular CSS organized by component in `app/styles/`, [Lucide](https://lucide.dev) icons, Inter and Noto Sans KR, and [uqr](https://github.com/unjs/uqr) for the check-in QR code.
 
 ## Develop
 
@@ -41,6 +41,8 @@ pnpm dev          # dev server
 pnpm build        # production build + prerender
 pnpm start        # preview the built Worker locally
 pnpm typecheck
+pnpm exec playwright install chromium  # once, for browser checks
+pnpm test:ui
 node scripts/fetch-routes.mjs   # refresh walking routes after moving a branch
 ```
 
@@ -86,6 +88,7 @@ MG Saemaeul Geumgo has no freely licensed logo file on Commons, so its badge sho
 app/(app)/           home, map, ticket, account and branch routes sharing one app shell
 app/story/           the sketch-to-prototype case study
 components/          shell, cards, map, ticket, sheets, onboarding, store
+app/styles/          design tokens, reset, component styles and responsive states
 components/screens/  one file per screen
 lib/                 branches, services and crowd model, demo clock, EN/KO strings, walking routes
 public/banks/        bank logos (see Bank names and logos)

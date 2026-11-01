@@ -5,22 +5,59 @@ import Link from "next/link";
 import { AlertDialog } from "@base-ui/react/alert-dialog";
 import { Progress } from "@base-ui/react/progress";
 import { encode } from "uqr";
-import { Check, CircleCheck, Clock, ListChecks, Navigation, Undo2, User, X } from "lucide-react";
+import {
+  Check,
+  CircleCheck,
+  Clock,
+  ListChecks,
+  Navigation,
+  Undo2,
+  User,
+  X,
+} from "lucide-react";
 import { SERVICES } from "@/lib/data";
 import { formatClock, formatCountdown, formatDistance } from "@/lib/sim";
 import { SERVICE_ICONS } from "./take-ticket";
 import { useStore } from "./store";
-import { backdropClass, cx, dangerButton, focusRing, navyButton, popupAnimation, primaryButton, secondaryButton } from "./ui";
+import {
+  backdropClass,
+  cx,
+  dangerButton,
+  focusRing,
+  navyButton,
+  popupAnimation,
+  primaryButton,
+  secondaryButton,
+} from "./ui";
 
 const R = 84;
 const CIRC = 2 * Math.PI * R;
 
 /** Ring that empties as the queue moves, after sketch ③ ("a shrinking graph"). */
-function QueueRing({ progress, children, label }: { progress: number; children: React.ReactNode; label: string }) {
+function QueueRing({
+  progress,
+  children,
+  label,
+}: {
+  progress: number;
+  children: React.ReactNode;
+  label: string;
+}) {
   return (
-    <Progress.Root value={Math.round(progress * 100)} aria-label={label} className="relative mx-auto size-[188px]">
-      <svg viewBox="0 0 200 200" className="absolute inset-0 -rotate-90" aria-hidden>
-        <circle cx="100" cy="100" r={R} fill="none" stroke="var(--color-gold-100)" strokeWidth="12" />
+    <Progress.Root
+      value={Math.round(progress * 100)}
+      aria-label={label}
+      className="queue-ring-progress-root"
+    >
+      <svg viewBox="0 0 200 200" className="queue-ring-svg" aria-hidden>
+        <circle
+          cx="100"
+          cy="100"
+          r={R}
+          fill="none"
+          stroke="var(--color-gold-100)"
+          strokeWidth="12"
+        />
         <circle
           cx="100"
           cy="100"
@@ -30,20 +67,31 @@ function QueueRing({ progress, children, label }: { progress: number; children: 
           strokeWidth="12"
           strokeLinecap="round"
           strokeDasharray={`${CIRC * (1 - progress)} ${CIRC}`}
-          className="transition-[stroke-dasharray] duration-500 ease-linear"
+          className="queue-ring-circle"
         />
       </svg>
-      <div className="absolute inset-0 flex flex-col items-center justify-center">{children}</div>
+      <div className="queue-ring-div">{children}</div>
     </Progress.Root>
   );
 }
 
 function QrCode({ value, className }: { value: string; className?: string }) {
-  const { data, size } = React.useMemo(() => encode(value, { ecc: "M" }), [value]);
+  const { data, size } = React.useMemo(
+    () => encode(value, { ecc: "M" }),
+    [value],
+  );
   let d = "";
-  data.forEach((row, y) => row.forEach((on, x) => on && (d += `M${x} ${y}h1v1h-1z`)));
+  data.forEach((row, y) =>
+    row.forEach((on, x) => on && (d += `M${x} ${y}h1v1h-1z`)),
+  );
   return (
-    <svg viewBox={`-2 -2 ${size + 4} ${size + 4}`} className={className} role="img" aria-label="Check-in QR code" shapeRendering="crispEdges">
+    <svg
+      viewBox={`-2 -2 ${size + 4} ${size + 4}`}
+      className={className}
+      role="img"
+      aria-label="Check-in QR code"
+      shapeRendering="crispEdges"
+    >
       <rect x="-2" y="-2" width={size + 4} height={size + 4} fill="white" />
       <path d={d} fill="var(--color-navy-950)" />
     </svg>
@@ -51,90 +99,141 @@ function QrCode({ value, className }: { value: string; className?: string }) {
 }
 
 export function TicketStub({ className }: { className?: string }) {
-  const { ticket, ticketBranch, status, t, lang, showOnMap, setCancelOpen, finishTicket, delayTurn } = useStore();
+  const {
+    ticket,
+    ticketBranch,
+    status,
+    t,
+    lang,
+    showOnMap,
+    setCancelOpen,
+    finishTicket,
+    delayTurn,
+  } = useStore();
   if (!ticket || !ticketBranch || !status) return null;
 
-  const serving = status.called ? ticket.number : ticket.number - 1 - status.ahead;
+  const serving = status.called
+    ? ticket.number
+    : ticket.number - 1 - status.ahead;
   const ServiceIcon = SERVICE_ICONS[ticket.service];
 
   return (
-    <div className={cx("mx-auto w-full max-w-[400px] drop-shadow-[0_16px_32px_rgba(13,17,55,0.16)]", className)}>
-      <div className="ticket-edges relative bg-white px-6 pt-9 pb-7 text-center">
-        <div className="flex items-center justify-between">
-          <span className="inline-flex items-center gap-1.5 rounded-md bg-paper px-3 py-1.5 text-xs font-semibold text-navy-900">
-            <ServiceIcon className="size-3.5" aria-hidden />
+    <div className={cx("ticket-stub-div-cancel-ticket", className)}>
+      <div className="ticket-stub-div-cancel-ticket-2">
+        <div className="ticket-stub-div-cancel-ticket-3">
+          <span className="ticket-stub-span">
+            <ServiceIcon className="ticket-stub-service-icon" aria-hidden />
             {SERVICES[ticket.service].name[lang]}
           </span>
           <button
             type="button"
             onClick={() => setCancelOpen(true)}
             aria-label={t("cancelTicket")}
-            className={cx("-mr-2 inline-flex size-10 items-center justify-center rounded-full text-muted hover:bg-paper hover:text-ink", focusRing)}
+            className={cx("ticket-stub-button", focusRing)}
           >
-            <X className="size-5" />
+            <X className="ticket-stub-x" />
           </button>
         </div>
 
-        <p className={cx("mt-5 text-sm font-semibold", status.called ? "text-rose-700" : "text-navy-900")}>
-          {status.called ? t("goToCounter", { n: ticket.counter }) : t("beThereBy", { t: formatClock(status.calledAt) })}
+        <p
+          className={cx(
+            "ticket-stub-p-go-to-counter",
+            status.called
+              ? "ticket-stub-p-go-to-counter-2"
+              : "ticket-stub-p-go-to-counter-3",
+          )}
+        >
+          {status.called
+            ? t("goToCounter", { n: ticket.counter })
+            : t("beThereBy", { t: formatClock(status.calledAt) })}
         </p>
-        <p className="mt-1 font-display text-5xl leading-[0.95] font-extrabold tracking-[-0.04em] text-navy-900 tabular">{ticket.number}</p>
-        <p className="mt-3 text-base leading-tight">
-          <span className="font-bold text-gold-700">{ticketBranch.bankName}</span>{" "}
-          <span className="font-medium text-gold-700">{ticketBranch.branchName}</span>
+        <p className="ticket-stub-p">{ticket.number}</p>
+        <p className="ticket-stub-p-2">
+          <span className="ticket-stub-span-2">{ticketBranch.bankName}</span>{" "}
+          <span className="ticket-stub-span-3">{ticketBranch.branchName}</span>
         </p>
-        <p className="mt-1 text-xs text-muted">
-          {formatDistance(ticketBranch.distance)} · {t("walkMin", { n: ticketBranch.travel.walk })}
+        <p className="ticket-stub-p-walk-min">
+          {formatDistance(ticketBranch.distance)} ·{" "}
+          {t("walkMin", { n: ticketBranch.travel.walk })}
         </p>
 
-        <div className="mt-6">
+        <div className="ticket-stub-div-grace-note">
           {status.called ? (
-            <div className="mx-auto flex max-w-[260px] flex-col items-center">
-              <img src="/images/your-turn.webp" alt="" className="size-40 object-contain" />
-              <p className="mt-2 text-xs leading-relaxed text-muted">
-                {t("graceNote", { c: ticket.counter, t: formatCountdown(status.grace) })}
+            <div className="ticket-stub-div-grace-note-2">
+              <img
+                src="/images/your-turn.webp"
+                alt=""
+                className="ticket-stub-img"
+              />
+              <p className="ticket-stub-p-grace-note">
+                {t("graceNote", {
+                  c: ticket.counter,
+                  t: formatCountdown(status.grace),
+                })}
               </p>
             </div>
           ) : (
-            <QueueRing progress={status.progress} label={t("aheadOfYou", { n: status.ahead })}>
-              <p className="flex items-center gap-1.5 text-sm font-medium text-muted">
-                <User className="size-4" aria-hidden />
-                <span className="tabular">{t("aheadOfYou", { n: status.ahead })}</span>
+            <QueueRing
+              progress={status.progress}
+              label={t("aheadOfYou", { n: status.ahead })}
+            >
+              <p className="ticket-stub-p-ahead-of-you">
+                <User className="ticket-stub-user" aria-hidden />
+                <span className="ticket-stub-span-ahead-of-you">
+                  {t("aheadOfYou", { n: status.ahead })}
+                </span>
               </p>
-              <p className="mt-1 font-display text-2xl leading-none font-bold text-navy-900 tabular" aria-live="off">
+              <p className="ticket-stub-p-3" aria-live="off">
                 {formatCountdown(status.remaining)}
               </p>
-              <p className="mt-1 text-xs font-medium text-muted">{t("timeLeft")}</p>
+              <p className="ticket-stub-p-time-left">{t("timeLeft")}</p>
             </QueueRing>
           )}
         </div>
-        <p className="mt-4 text-xs text-muted tabular">
-          {t("nowServing", { n: serving })} · {t("counterLabel", { n: ticket.counter })}
+        <p className="ticket-stub-p-now-serving">
+          {t("nowServing", { n: serving })} ·{" "}
+          {t("counterLabel", { n: ticket.counter })}
         </p>
 
-        <div className="mt-6 border-t-[1.5px] border-dashed border-line" />
+        <div className="ticket-stub-div" />
 
-        <div className="mt-6 flex items-center gap-4 text-left">
-          <QrCode value={`DASHHOUR:${ticket.id}:${ticket.number}`} className="size-24 shrink-0 rounded-sm ring-1 ring-line" />
-          <div className="min-w-0">
-            <p className="text-xs leading-snug font-medium text-ink">{t("checkIn")}</p>
-            <p className="mt-1 font-mono text-2xs tracking-wider text-muted uppercase">{ticket.id}</p>
+        <div className="ticket-stub-div-check-in">
+          <QrCode
+            value={`DASHHOUR:${ticket.id}:${ticket.number}`}
+            className="ticket-stub-qr-code"
+          />
+          <div className="ticket-stub-div-check-in-2">
+            <p className="ticket-stub-p-check-in">{t("checkIn")}</p>
+            <p className="ticket-stub-p-4">{ticket.id}</p>
           </div>
         </div>
 
         {status.called ? (
-          <button type="button" className={cx(navyButton, "mt-6 w-full")} onClick={finishTicket}>
-            <CircleCheck className="size-5" aria-hidden />
+          <button
+            type="button"
+            className={cx(navyButton, "ticket-stub-button-finish")}
+            onClick={finishTicket}
+          >
+            <CircleCheck className="ticket-stub-x" aria-hidden />
             {t("finish")}
           </button>
         ) : (
-          <div className="mt-6 grid grid-cols-2 gap-2">
-            <button type="button" onClick={() => showOnMap(ticketBranch.id)} className={secondaryButton}>
-              <Navigation className="size-4" aria-hidden />
+          <div className="ticket-stub-div-directions">
+            <button
+              type="button"
+              onClick={() => showOnMap(ticketBranch.id)}
+              className={secondaryButton}
+            >
+              <Navigation className="ticket-stub-user" aria-hidden />
               {t("directions")}
             </button>
-            <button type="button" onClick={delayTurn} disabled={ticket.delayed > 0} className={cx(secondaryButton, "disabled:opacity-45")}>
-              <Undo2 className="size-4" aria-hidden />
+            <button
+              type="button"
+              onClick={delayTurn}
+              disabled={ticket.delayed > 0}
+              className={cx(secondaryButton, "ticket-stub-button-delay-turn")}
+            >
+              <Undo2 className="ticket-stub-user" aria-hidden />
               {t("delayTurn")}
             </button>
           </div>
@@ -151,38 +250,71 @@ export function TicketTimeline({ className }: { className?: string }) {
   const almostAt = status.calledAt - 3 * ticket.rate;
   const steps = [
     { label: t("tlIssued"), at: ticket.issuedAt },
-    { label: t("tlLeave"), at: Math.max(ticket.issuedAt, leaveAt), note: t("walkMin", { n: ticketBranch.travel.walk }) },
-    ...(ticket.ahead + ticket.delayed > 3 ? [{ label: t("tlAlmost"), at: almostAt }] : []),
-    { label: t("tlCalled"), at: status.calledAt, note: t("counterLabel", { n: ticket.counter }) },
+    {
+      label: t("tlLeave"),
+      at: Math.max(ticket.issuedAt, leaveAt),
+      note: t("walkMin", { n: ticketBranch.travel.walk }),
+    },
+    ...(ticket.ahead + ticket.delayed > 3
+      ? [{ label: t("tlAlmost"), at: almostAt }]
+      : []),
+    {
+      label: t("tlCalled"),
+      at: status.calledAt,
+      note: t("counterLabel", { n: ticket.counter }),
+    },
   ];
   const current = steps.findIndex((s) => s.at > sim);
   return (
-    <section className={cx("rounded-lg bg-white p-5 shadow-card ring-1 ring-line/70", className)}>
-      <h2 className="text-sm font-bold text-ink">{t("timeline")}</h2>
-      <ol className="mt-4">
+    <section className={cx("ticket-timeline-section-timeline", className)}>
+      <h2 className="ticket-timeline-h2-timeline">{t("timeline")}</h2>
+      <ol className="ticket-timeline-ol">
         {steps.map((s, i) => {
           const done = current === -1 || i < current;
           const next = i === current;
           return (
-            <li key={s.label} className="relative flex gap-3 pb-5 last:pb-0">
+            <li key={s.label} className="ticket-timeline-li">
               {i < steps.length - 1 && (
-                <span aria-hidden className={cx("absolute top-6 bottom-0 left-[11px] w-0.5", done ? "bg-navy-900" : "bg-line")} />
+                <span
+                  aria-hidden
+                  className={cx(
+                    "ticket-timeline-span",
+                    done ? "ticket-timeline-span-2" : "ticket-timeline-span-3",
+                  )}
+                />
               )}
               <span
                 aria-hidden
                 className={cx(
-                  "relative z-10 flex size-6 shrink-0 items-center justify-center rounded-full",
-                  done ? "bg-navy-900 text-white" : next ? "bg-gold-500 ring-4 ring-gold-100" : "bg-white ring-2 ring-line",
+                  "ticket-timeline-span-4",
+                  done
+                    ? "ticket-timeline-span-5"
+                    : next
+                      ? "ticket-timeline-span-6"
+                      : "ticket-timeline-span-7",
                 )}
               >
-                {done && <Check className="size-3.5" strokeWidth={3} />}
+                {done && (
+                  <Check className="ticket-stub-service-icon" strokeWidth={3} />
+                )}
               </span>
-              <div className="flex min-w-0 flex-1 items-baseline justify-between gap-3">
+              <div className="ticket-timeline-div">
                 <div>
-                  <p className={cx("text-sm font-semibold", done || next ? "text-ink" : "text-muted")}>{s.label}</p>
-                  {s.note && <p className="text-xs text-muted">{s.note}</p>}
+                  <p
+                    className={cx(
+                      "ticket-timeline-p",
+                      done || next
+                        ? "ticket-timeline-p-2"
+                        : "ticket-timeline-p-3",
+                    )}
+                  >
+                    {s.label}
+                  </p>
+                  {s.note && <p className="ticket-timeline-p-4">{s.note}</p>}
                 </div>
-                <span className="text-xs font-medium text-muted tabular">{formatClock(s.at)}</span>
+                <span className="ticket-timeline-span-8">
+                  {formatClock(s.at)}
+                </span>
               </div>
             </li>
           );
@@ -196,16 +328,16 @@ export function BringList({ className }: { className?: string }) {
   const { ticket, t, lang } = useStore();
   if (!ticket) return null;
   return (
-    <section className={cx("rounded-lg bg-white p-5 shadow-card ring-1 ring-line/70", className)}>
-      <h2 className="flex items-center gap-2 text-sm font-bold text-ink">
-        <ListChecks className="size-4" aria-hidden />
+    <section className={cx("ticket-timeline-section-timeline", className)}>
+      <h2 className="bring-list-h2-what-to-bring">
+        <ListChecks className="ticket-stub-user" aria-hidden />
         {t("whatToBring")}
       </h2>
-      <ul className="mt-3 flex flex-col gap-2">
+      <ul className="bring-list-ul">
         {SERVICES[ticket.service].bring.map((item) => (
-          <li key={item.en} className="flex items-center gap-2.5 text-sm text-ink/85">
-            <span className="flex size-5 items-center justify-center rounded-full bg-emerald-50 text-emerald-700">
-              <Check className="size-3" strokeWidth={3} aria-hidden />
+          <li key={item.en} className="bring-list-li">
+            <span className="bring-list-span">
+              <Check className="bring-list-check" strokeWidth={3} aria-hidden />
             </span>
             {item[lang]}
           </li>
@@ -221,15 +353,23 @@ export function TicketBranchCard({ className }: { className?: string }) {
   return (
     <Link
       href={`/branch/${ticketBranch.id}`}
-      className={cx("flex overflow-hidden rounded-lg bg-white shadow-card ring-1 ring-line/70 transition-shadow hover:shadow-float", focusRing, className)}
+      className={cx(
+        "ticket-branch-card-link-hours-value",
+        focusRing,
+        className,
+      )}
     >
-      <img src={`/images/${ticketBranch.photo}-sm.webp`} alt="" className="w-28 shrink-0 object-cover" />
-      <div className="min-w-0 p-4">
-        <p className="text-xs text-muted">{ticketBranch.bankName}</p>
-        <p className="truncate text-base font-bold text-ink">{ticketBranch.branchName}</p>
-        <p className="mt-1 truncate text-xs text-muted">{ticketBranch.address[lang]}</p>
-        <p className="mt-0.5 flex items-center gap-1 text-xs text-muted">
-          <Clock className="size-3" aria-hidden />
+      <img
+        src={`/images/${ticketBranch.photo}-sm.webp`}
+        alt=""
+        className="ticket-branch-card-img"
+      />
+      <div className="ticket-branch-card-div-hours-value">
+        <p className="ticket-timeline-p-4">{ticketBranch.bankName}</p>
+        <p className="ticket-branch-card-p">{ticketBranch.branchName}</p>
+        <p className="ticket-branch-card-p-2">{ticketBranch.address[lang]}</p>
+        <p className="ticket-branch-card-p-hours-value">
+          <Clock className="bring-list-check" aria-hidden />
           {t("hoursValue")}
         </p>
       </div>
@@ -240,11 +380,18 @@ export function TicketBranchCard({ className }: { className?: string }) {
 export function EmptyTicket() {
   const { t } = useStore();
   return (
-    <div className="flex flex-col items-center justify-center px-8 py-14 text-center">
-      <img src="/images/empty-ticket.webp" alt="" className="size-44 object-contain" />
-      <p className="mt-4 text-lg font-bold text-ink">{t("noTicket")}</p>
-      <p className="mt-2 max-w-xs text-sm leading-relaxed text-muted">{t("noTicketBody")}</p>
-      <Link href="/" className={cx(primaryButton, "mt-6")}>
+    <div className="empty-ticket-div-no-ticket">
+      <img
+        src="/images/empty-ticket.webp"
+        alt=""
+        className="empty-ticket-img"
+      />
+      <p className="empty-ticket-p-no-ticket">{t("noTicket")}</p>
+      <p className="empty-ticket-p-no-ticket-body">{t("noTicketBody")}</p>
+      <Link
+        href="/"
+        className={cx(primaryButton, "ticket-stub-div-grace-note")}
+      >
         {t("findBranch")}
       </Link>
     </div>
@@ -259,15 +406,25 @@ export function CancelTicketDialog() {
         <AlertDialog.Backdrop className={backdropClass} />
         <AlertDialog.Popup
           className={cx(
-            "fixed top-1/2 left-1/2 w-[22rem] max-w-[calc(100vw-2rem)] -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white p-6 text-ink shadow-2xl outline-none",
+            "cancel-ticket-dialog-alert-dialog-popup-cancel-title",
             popupAnimation,
           )}
         >
-          <AlertDialog.Title className="text-base font-bold text-ink">{t("cancelTitle", { num: ticket?.number ?? "" })}</AlertDialog.Title>
-          <AlertDialog.Description className="mt-2 text-sm leading-relaxed text-muted">{t("cancelBody")}</AlertDialog.Description>
-          <div className="mt-6 grid grid-cols-2 gap-3">
-            <AlertDialog.Close className={secondaryButton}>{t("keepTicket")}</AlertDialog.Close>
-            <button type="button" onClick={cancelTicket} className={dangerButton}>
+          <AlertDialog.Title className="cancel-ticket-dialog-alert-dialog-title-cancel-title">
+            {t("cancelTitle", { num: ticket?.number ?? "" })}
+          </AlertDialog.Title>
+          <AlertDialog.Description className="cancel-ticket-dialog-alert-dialog-description-cancel-body">
+            {t("cancelBody")}
+          </AlertDialog.Description>
+          <div className="cancel-ticket-dialog-div-keep-ticket">
+            <AlertDialog.Close className={secondaryButton}>
+              {t("keepTicket")}
+            </AlertDialog.Close>
+            <button
+              type="button"
+              onClick={cancelTicket}
+              className={dangerButton}
+            >
               {t("cancelTicket")}
             </button>
           </div>

@@ -11,31 +11,34 @@ import { DesktopExplorer } from "./home";
 function MobileMap() {
   const { selected, t } = useStore();
   return (
-    <div className="fixed inset-x-0 top-0 bottom-[calc(4rem+env(safe-area-inset-bottom))] lg:hidden">
+    <div className="mobile-map-div-search-placeholder">
       <CityMap
-        controlsClassName="right-3 bottom-[10.5rem]"
+        controlsClassName="mobile-map-city-map"
         focusTop={0.45}
-        // MapLibre's stylesheet is unlayered, so this needs `!` to beat it.
-        className="[&_.maplibregl-ctrl-bottom-left]:bottom-[10.5rem]!"
+        // Keep the attribution above the mobile branch card.
+        className="mobile-map-city-map-2"
       />
-      <div className="pointer-events-none absolute inset-x-0 top-0 bg-gradient-to-b from-map-land/90 via-map-land/50 to-transparent px-3 pt-[calc(0.75rem+env(safe-area-inset-top))] pb-6">
-        <div className="pointer-events-auto mx-auto max-w-xl">
+      <div className="mobile-map-div-search-placeholder-2">
+        <div className="mobile-map-div-search-placeholder-3">
           <SearchDialog
             trigger={
               <button
                 type="button"
-                className={cx("flex h-12 w-full items-center gap-3 rounded-md bg-white px-4 text-left text-sm text-muted shadow-float", focusRing)}
+                className={cx(
+                  "mobile-map-button-search-placeholder",
+                  focusRing,
+                )}
               >
-                <Search className="size-5 text-ink" aria-hidden />
+                <Search className="mobile-map-search" aria-hidden />
                 {t("searchPlaceholder")}
               </button>
             }
           />
-          <FilterChips className="-mx-3 mt-2 px-3 py-1" />
+          <FilterChips className="mobile-map-filter-chips" />
         </div>
       </div>
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 px-3 pb-3">
-        <div className="pointer-events-auto mx-auto max-w-xl">
+      <div className="mobile-map-div">
+        <div className="mobile-map-div-search-placeholder-3">
           <MapBranchCard view={selected} />
         </div>
       </div>

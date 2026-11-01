@@ -6,3 +6,7 @@ next-env.d.ts
 .vinext/
 .cloudflare/
 *.tsbuildinfo
+
+/work/
+/test-results/
+/playwright-report/
