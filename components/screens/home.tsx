@@ -8,6 +8,7 @@ import { formatDistance } from "@/lib/sim";
 import { BankBadge } from "../bank-badge";
 import {
   ActiveTicketCard,
+  BankFilter,
   BranchCard,
   EmptyFilters,
   FavoriteButton,
@@ -214,6 +215,7 @@ function DesktopList() {
           <h1 className="desktop-list-title">{t("nearby")}</h1>
           <SortToggle />
         </div>
+        <BankFilter />
         <FilterChips className="desktop-list-filter-chips" />
       </div>
       <div className="desktop-list-cards">
@@ -269,7 +271,11 @@ function BranchPanel({ view }: { view: BranchView }) {
           </div>
           <TakeTicketButton view={view} />
         </div>
-        <Section title={t("servicesTitle")} plain>
+        <Section
+          title={t("servicesTitle")}
+          plain
+          className="branch-panel-services"
+        >
           <ServiceQueues view={view} compact />
         </Section>
         <CrowdSection view={view} plain />

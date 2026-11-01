@@ -18,6 +18,7 @@ import {
   servingAt,
   travelMinutes,
   type AmenityKey,
+  type BankKey,
   type Branch,
   type ServiceKey,
   type Visit,
@@ -39,6 +40,7 @@ import {
 
 export type SortKey = "wait" | "distance";
 export type FilterKey = "fx" | AmenityKey;
+export type BankFilterKey = BankKey | "all";
 export type Settings = { turnAlerts: boolean; aheadAlerts: boolean };
 
 type Queue = ReturnType<typeof queueFor>;
@@ -92,6 +94,8 @@ type Store = {
   setSort: (sort: SortKey) => void;
   filters: FilterKey[];
   setFilters: (filters: FilterKey[]) => void;
+  bankFilter: BankFilterKey;
+  setBankFilter: (bank: BankFilterKey) => void;
   selected: BranchView;
   select: (id: string) => void;
   toggleFavorite: (id: string) => void;
@@ -169,6 +173,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
   const [sort, setSort] = React.useState<SortKey>("wait");
   const [filters, setFilters] = React.useState<FilterKey[]>([]);
+  const [bankFilter, setBankFilter] = React.useState<BankFilterKey>("all");
   const [selectedId, setSelectedId] = React.useState<string | null>(null);
   const [sheetId, setSheetId] = React.useState<string | null>(null);
   const [issuing, setIssuing] = React.useState(false);
@@ -256,8 +261,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const sorted = React.useMemo(() => {
     const by = (a: BranchView, b: BranchView) =>
       sort === "wait" ? a.wait - b.wait || a.distance - b.distance : a.distance - b.distance;
-    return views.filter((v) => matchesFilters(v, filters)).sort(by);
-  }, [views, sort, filters]);
+    return views.filter((v) => (bankFilter === "all" || v.bank === bankFilter) && matchesFilters(v, filters)).sort(by);
+  }, [views, sort, filters, bankFilter]);
 
   const favorites = sorted.filter((v) => v.favorite);
   const others = sorted.filter((v) => !v.favorite);
@@ -265,7 +270,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const viewById = React.useCallback((id: string | null | undefined) => views.find((v) => v.id === id) ?? null, [views]);
 
   // Default selection from sketch ⑤: a favorite first, otherwise the shortest queue.
-  const selected = viewById(selectedId) ?? favorites[0] ?? others[0] ?? views[0];
+  const selected = sorted.find((v) => v.id === selectedId) ?? favorites[0] ?? others[0] ?? viewById(selectedId) ?? views[0];
   const ticketBranch = ticket ? viewById(ticket.branchId) : null;
   const status = ticket ? ticketStatus(ticket, sim) : null;
   const noShows = history.filter((v) => v.status === "missed" && Date.now() - v.at < 30 * 24 * 60 * 60 * 1000).length;
@@ -345,6 +350,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
   const showOnMap = React.useCallback(
     (id: string) => {
+      setFilters([]);
+      setBankFilter("all");
       setSelectedId(id);
       router.push("/map");
     },
@@ -436,6 +443,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     setHistory(seedHistory(Date.now()));
     setSettings(DEFAULT_SETTINGS);
     setFilters([]);
+    setBankFilter("all");
     setSelectedId(null);
     notify(translate(lang, "resetDone"));
     router.push("/");
@@ -458,6 +466,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     setSort,
     filters,
     setFilters,
+    bankFilter,
+    setBankFilter,
     selected,
     select,
     toggleFavorite,

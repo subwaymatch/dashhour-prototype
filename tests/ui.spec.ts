@@ -3,7 +3,7 @@ import { expect, test, type Page } from "@playwright/test";
 async function checkPointers(page: Page) {
   const failures = await page
     .locator(
-      'a[href], button, [role="radio"], [role="switch"], [role^="menuitem"], [role="tab"]',
+      'a[href], button, select, [role="radio"], [role="switch"], [role^="menuitem"], [role="tab"]',
     )
     .evaluateAll((elements) =>
       elements
@@ -190,7 +190,25 @@ test("ticket sheet controls and issuing, delay and cancellation flows work", asy
   await expect(dialog).toBeVisible();
   await checkPointers(page);
   const radios = dialog.getByRole("radio");
+  for (const [index, row] of (await radios.all()).entries()) {
+    await expect(row).toHaveCSS("padding-left", "0px");
+    await expect(row).toHaveCSS("padding-right", "0px");
+    await expect(row).toHaveCSS("box-shadow", "none");
+    await expect(row).toHaveCSS("border-left-width", "0px");
+    await expect(row).toHaveCSS(
+      "border-top-width",
+      index === 0 ? "0px" : "1px",
+    );
+  }
+  await expect(dialog.locator(".sheet-confirm-icon")).toBeVisible();
   await radios.nth(1).click();
+  await expect(radios.nth(1)).toHaveCSS("box-shadow", "none");
+  for (const value of await dialog.locator(".sheet-time-value").all()) {
+    await expect(value).toHaveCSS("font-size", "17px");
+    await expect(value).toHaveCSS("font-weight", "500");
+    for (const number of await value.locator(".minute-number").all())
+      await expect(number).toHaveCSS("font-family", /Inter/i);
+  }
   await expect(radios.nth(1)).toBeChecked();
   const toggle = dialog.getByRole("switch");
   await toggle.click();
@@ -363,4 +381,124 @@ test("first ticket has space for its glow above the scrollable list", async ({
   const cardBox = (await first.boundingBox())!;
   expect(cardBox.y - listBox.y).toBeGreaterThanOrEqual(32);
   await expect(list).toHaveCSS("overflow-y", "auto");
+});
+
+test("bank filtering combines with facilities, sorting and clear filters", async ({
+  page,
+}) => {
+  await open(page, "/");
+  const list = page.locator(".desktop-list");
+  const bank = list.getByRole("combobox", { name: "은행 선택" });
+  const cards = list.locator(".stub-card");
+  const total = await cards.count();
+  await expect(bank).toHaveCSS("cursor", "pointer");
+  await bank.selectOption("hana");
+  await expect(cards).toHaveCount(2);
+  for (const name of await cards.locator(".card-bank-name").all())
+    await expect(name).toContainText("하나은행");
+  await expect(page.locator(".branch-panel-bank")).toHaveText("하나은행");
+  await list.getByRole("button", { name: "가까운 순", exact: true }).click();
+  await expect(bank).toHaveValue("hana");
+  await expect(cards.first().locator(".card-branch-name")).toHaveText(
+    "역삼동점",
+  );
+  await list.getByRole("button", { name: "주차", exact: true }).click();
+  await expect(cards).toHaveCount(1);
+  await expect(cards.first().locator(".card-branch-name")).toHaveText(
+    "강남대로점",
+  );
+  await bank.selectOption("ibk");
+  await expect(cards).toHaveCount(0);
+  await expect(list.getByText("조건에 맞는 지점이 없습니다")).toBeVisible();
+  await list.locator(".empty-filters-button-clear-filters").click();
+  await expect(bank).toHaveValue("all");
+  await expect(cards).toHaveCount(total);
+  await expect(
+    list.getByRole("button", { name: "주차", exact: true }),
+  ).not.toHaveAttribute("data-pressed");
+  await bank.selectOption("hana");
+  await page
+    .getByRole("button", { name: "옵션" })
+    .filter({ visible: true })
+    .click();
+  await page
+    .getByRole("menuitemradio", { name: "English", exact: true })
+    .click();
+  await expect(list.getByRole("combobox", { name: "Choose bank" })).toHaveValue(
+    "hana",
+  );
+  await expect(cards).toHaveCount(2);
+  await expect(cards.first().locator(".card-wait")).toContainText("About");
+});
+
+test("sidebar typography, icons and chart divider match the refined design", async ({
+  page,
+}) => {
+  await open(page, "/");
+  const card = page.locator(".desktop-list .stub-card").first();
+  for (const selector of [
+    ".card-wait",
+    ".card-wait-number",
+    ".card-wait-unit",
+    ".card-queue",
+  ]) {
+    await expect(card.locator(selector)).toHaveCSS("font-size", "13px");
+    await expect(card.locator(selector)).toHaveCSS("font-weight", "400");
+  }
+  await expect(card.locator(".card-wait")).toContainText(/약\s*\d+분/);
+  await expect(card.locator(".card-wait .lucide-clock")).toBeVisible();
+  await expect(card.locator(".card-queue .lucide-users")).toBeVisible();
+  expect(
+    (await card.locator(".card-content").last().innerText()).match(/대기/g),
+  ).toHaveLength(1);
+  await expect(card.locator(".take-ticket-button")).toHaveCSS(
+    "font-weight",
+    "500",
+  );
+  await expect(card.locator(".favorite-icon")).toHaveCSS("width", "18px");
+  await expect(page.locator(".branch-panel .favorite-icon")).toHaveCSS(
+    "width",
+    "18px",
+  );
+  await expect(page.locator(".branch-panel .crowd-chart-text")).toHaveCSS(
+    "font-weight",
+    "400",
+  );
+  await expect(page.locator(".branch-panel-services")).toHaveCSS(
+    "border-bottom-width",
+    "0px",
+  );
+  await expect(page.locator(".branch-panel-details")).toHaveCSS(
+    "background-color",
+    "rgb(232, 237, 249)",
+  );
+});
+
+test("ticket service rows and timing text fit the mobile modal", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await open(page, "/");
+  await page.locator(".take-ticket-button:visible").first().click();
+  const dialog = page.getByRole("dialog");
+  await expect(dialog).toBeVisible();
+  const rows = dialog.getByRole("radio");
+  await rows.nth(1).click();
+  await expect(rows.nth(1)).toBeChecked();
+  const sizes = await dialog
+    .locator(".sheet-time-value")
+    .evaluateAll((elements) =>
+      elements.map((e) => getComputedStyle(e).fontSize),
+    );
+  expect(sizes).toEqual(["17px", "17px"]);
+  for (const value of await dialog.locator(".sheet-time-value").all())
+    expect(await value.evaluate((e) => e.scrollWidth <= e.clientWidth)).toBe(
+      true,
+    );
+  await expect(
+    dialog.getByRole("button", { name: "번호표 받기" }).locator("svg"),
+  ).toBeVisible();
+  expect(await dialog.evaluate((e) => e.scrollWidth <= e.clientWidth)).toBe(
+    true,
+  );
 });

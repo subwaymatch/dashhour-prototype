@@ -15,6 +15,7 @@ import {
   Banknote,
   CircleAlert,
   Clock3,
+  Ticket,
   X,
 } from "lucide-react";
 import { SERVICES, type ServiceKey } from "@/lib/data";
@@ -37,6 +38,18 @@ export const SERVICE_ICONS: Record<ServiceKey, typeof Banknote> = {
 };
 
 const ALL_SERVICES: ServiceKey[] = ["general", "loan", "fx", "business"];
+
+function NumericText({ text }: { text: string }) {
+  return text.split(/(\d+(?::\d+)*)/g).map((part, index) =>
+    /^\d/.test(part) ? (
+      <span key={index} className="minute-number">
+        {part}
+      </span>
+    ) : (
+      part
+    ),
+  );
+}
 
 function ServiceOption({
   view,
@@ -184,17 +197,23 @@ function SheetBody({ view }: { view: BranchView }) {
             <Clock3 className="sheet-body-clock3" aria-hidden />
             {queue && queue.wait > 0 ? t("etaLabel") : t("turnNow")}
           </p>
-          <p className="sheet-body-p-2">{formatClock(turnAt)}</p>
+          <p className="sheet-time-value">
+            <NumericText text={formatClock(turnAt)} />
+          </p>
         </div>
         <div>
           <p className="sheet-body-p-eta-label">
             <Footprints className="sheet-body-clock3" aria-hidden />
-            {t("walkMin", { n: view.travel.walk })}
+            <NumericText text={t("walkMin", { n: view.travel.walk })} />
           </p>
-          <p className="sheet-body-p-leave-now-short">
-            {leaveAt <= sim
-              ? t("leaveNowShort")
-              : t("leaveByShort", { t: formatClock(leaveAt) })}
+          <p className="sheet-time-value sheet-time-departure">
+            <NumericText
+              text={
+                leaveAt <= sim
+                  ? t("leaveNowShort")
+                  : t("leaveByShort", { t: formatClock(leaveAt) })
+              }
+            />
           </p>
         </div>
       </div>
@@ -219,6 +238,7 @@ function SheetBody({ view }: { view: BranchView }) {
         onClick={() => takeTicket(service, alert)}
         className={cx(primaryButton, "sheet-body-button-confirm")}
       >
+        <Ticket className="sheet-confirm-icon" aria-hidden />
         {t("confirm")}
       </button>
     </>
@@ -270,7 +290,7 @@ function Kiosk() {
       className="kiosk-svg"
       fill="none"
       stroke="currentColor"
-      strokeWidth="3.5"
+      strokeWidth="2"
       strokeLinejoin="round"
       aria-hidden
     >
@@ -294,15 +314,15 @@ function Kiosk() {
         <path
           d="M31 93h20"
           strokeLinecap="round"
-          strokeWidth="4"
+          strokeWidth="2.5"
           strokeDasharray="4 4"
         />
       </g>
       <ellipse cx="80" cy="93" rx="14" ry="10" />
-      <path d="M30 118h60" strokeWidth="5" strokeLinecap="round" />
+      <path d="M30 118h60" strokeWidth="3" strokeLinecap="round" />
       <path d="M22 128v10M98 128v10" />
       {/* Ticket feeding out of the slot. */}
-      <svg x="30" y="118" width="60" height="70" overflow="kiosk-svg-2">
+      <svg x="30" y="118" width="60" height="70" overflow="hidden">
         <g className="kiosk-g-2" style={{ transformOrigin: "30px 10px" }}>
           <path
             d="M8 0h44v34l-5.5 5-5.5-5-5.5 5-5.5-5-5.5 5-5.5-5-5.5 5L8 34Z"
@@ -312,7 +332,7 @@ function Kiosk() {
           <path
             d="M18 12h24M22 22h16"
             stroke="var(--color-navy-900)"
-            strokeWidth="3.5"
+            strokeWidth="2"
             strokeLinecap="round"
           />
         </g>

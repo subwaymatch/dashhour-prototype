@@ -145,7 +145,7 @@ export function CrowdChart({
         <text
           y="12"
           textAnchor="middle"
-          fontWeight="700"
+          fontWeight="400"
           fill="white"
           className="crowd-chart-text"
         >
