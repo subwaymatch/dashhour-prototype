@@ -47,7 +47,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${notoKr.variable}`}>
+    <html lang="ko" className={`${inter.variable} ${notoKr.variable}`}>
       <body>
         <div className="root">{children}</div>
       </body>

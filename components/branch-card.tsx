@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { Toggle } from "@base-ui/react/toggle";
 import { ToggleGroup } from "@base-ui/react/toggle-group";
-import { ChevronRight, Star, Ticket, Zap } from "lucide-react";
+import { Accessibility, Banknote, ChevronRight, CircleParking, Languages, Star, Ticket, Timer, X, Zap } from "lucide-react";
 import { AMENITIES, SERVICES } from "@/lib/data";
 import { formatCountdown, formatDistance } from "@/lib/sim";
 import { BankBadge } from "./bank-badge";
@@ -264,12 +264,18 @@ export function ActiveTicketCard({ className }: { className?: string }) {
 /* Filters                                                             */
 /* ------------------------------------------------------------------ */
 
-const FILTERS: FilterKey[] = ["fx", "parking", "accessible", "atm24", "english"];
+const FILTERS = [
+  { key: "fx", icon: Banknote },
+  { key: "parking", icon: CircleParking },
+  { key: "accessible", icon: Accessibility },
+  { key: "atm24", icon: Timer },
+  { key: "english", icon: Languages },
+] satisfies { key: FilterKey; icon: typeof Banknote }[];
 
 export function FilterChips({ className, tone = "light" }: { className?: string; tone?: "light" | "dark" }) {
   const { filters, setFilters, lang, t } = useStore();
   const chip = cx(
-    "inline-flex h-9 shrink-0 items-center rounded-md px-3.5 text-xs font-medium whitespace-nowrap transition-colors",
+    "inline-flex h-8 shrink-0 items-center gap-1.5 rounded-md px-2.5 text-xs font-medium whitespace-nowrap transition-colors",
     tone === "light"
       ? "bg-white text-ink shadow-[0_1px_2px_rgb(13_17_55/0.06)] ring-1 ring-line hover:bg-paper data-pressed:bg-navy-900 data-pressed:text-white data-pressed:ring-navy-900"
       : "bg-white/10 text-white/85 ring-1 ring-white/15 hover:bg-white/15 data-pressed:bg-white data-pressed:text-navy-950",
@@ -281,15 +287,17 @@ export function FilterChips({ className, tone = "light" }: { className?: string;
       value={filters}
       onValueChange={(v) => setFilters(v as FilterKey[])}
       aria-label="Filters"
-      className={cx("no-scrollbar flex gap-2 overflow-x-auto", className)}
+      className={cx("no-scrollbar flex gap-2 overflow-x-auto p-1", className)}
     >
-      {FILTERS.map((f) => (
+      {FILTERS.map(({ key: f, icon: Icon }) => (
         <Toggle key={f} value={f} className={chip}>
+          <Icon className="size-3.5 shrink-0" aria-hidden />
           {f === "fx" ? SERVICES.fx.name[lang] : AMENITIES[f][lang]}
         </Toggle>
       ))}
       {filters.length > 0 && (
         <button type="button" onClick={() => setFilters([])} className={cx(chip, "underline-offset-2 hover:underline", tone === "light" ? "bg-transparent shadow-none ring-0" : "bg-transparent ring-0")}>
+          <X className="size-3.5 shrink-0" aria-hidden />
           {t("clearFilters")}
         </button>
       )}

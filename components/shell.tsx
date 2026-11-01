@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import { SPEEDS, formatCountdown } from "@/lib/sim";
 import { BankBadge } from "./bank-badge";
-import { LogoMark, Wordmark } from "./logo";
+import { LogoMark } from "./logo";
 import { useStore } from "./store";
 import { backdropClass, cx, popupAnimation } from "./ui";
 
@@ -252,7 +252,7 @@ function TicketChip() {
 }
 
 export function DesktopHeader() {
-  const { t, clockLabel, speed } = useStore();
+  const { t } = useStore();
   const section = useSection();
   const nav = [
     { href: "/", label: t("branches"), active: section === "home" || section === "map" },
@@ -261,9 +261,8 @@ export function DesktopHeader() {
   ];
   return (
     <header className="sticky top-0 z-30 hidden h-16 shrink-0 items-center gap-6 bg-navy-950 px-5 text-white lg:flex">
-      <Link href="/" className="flex items-center gap-3 rounded-sm outline-none focus-visible:outline-2 focus-visible:outline-gold-300">
+      <Link href="/" aria-label="Dash Hour" className="flex items-center rounded-sm outline-none focus-visible:outline-2 focus-visible:outline-gold-300">
         <LogoMark className="h-8 w-auto text-white" />
-        <Wordmark className="text-lg" />
       </Link>
       <nav aria-label="Main" className="flex items-center gap-1">
         {nav.map((n) => (
@@ -293,14 +292,6 @@ export function DesktopHeader() {
           </button>
         }
       />
-      <span className="hidden items-center gap-2 rounded-md border border-white/15 px-3 py-1.5 text-xs text-white/75 xl:flex" title={t("simulated")}>
-        <span className="relative flex size-2">
-          <span className="absolute inset-0 animate-ping rounded-full bg-emerald-400 opacity-60" />
-          <span className="relative size-2 rounded-full bg-emerald-400" />
-        </span>
-        {t("demoClock")} <b className="font-semibold text-white tabular">{clockLabel}</b>
-        <span className="text-white/45">· {speed === 1 ? t("realtime") : `${speed}×`}</span>
-      </span>
       <TicketChip />
       <div className="-mr-2 flex items-center">
         <RefreshButton className={darkIconButton} />

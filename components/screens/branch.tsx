@@ -134,9 +134,9 @@ export function RouteSection({ view, className }: { view: BranchView; className?
       >
         <MiniMap branch={view} className="h-36" />
       </button>
-      <ul className="mt-3 grid grid-cols-3 gap-2">
+      <ul className="mt-3 grid grid-cols-3 divide-x divide-line/70">
         {modes.map(({ icon: Icon, label, min }) => (
-          <li key={label} className="flex flex-col items-center rounded-md bg-paper py-2.5">
+          <li key={label} className="flex flex-col items-center py-2.5">
             <Icon className="size-[18px] text-navy-900" aria-hidden />
             <span className="mt-1 text-xs text-muted">{label}</span>
             <span className="text-sm font-bold text-ink tabular">
