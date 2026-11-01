@@ -111,7 +111,6 @@ export function CrowdChart({
             x={xFor(h * 60)}
             y={H - 12}
             textAnchor="middle"
-            fontSize="9"
             fill="var(--color-muted)"
           >
             {`${h}:00`}
@@ -146,7 +145,6 @@ export function CrowdChart({
         <text
           y="12"
           textAnchor="middle"
-          fontSize="11"
           fontWeight="700"
           fill="white"
           className="crowd-chart-text"

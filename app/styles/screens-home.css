@@ -307,7 +307,8 @@
     gap: 0.75rem;
     overflow-y: auto;
     padding-inline: 1rem;
-    padding-top: var(--spacing);
+    /* Keep the first ticket's navy glow inside the scroll container. */
+    padding-top: 2rem;
     padding-bottom: 1.5rem;
     & > * {
       flex-shrink: 0;
@@ -500,20 +501,16 @@
     min-height: 3.5rem;
     margin: 0;
     margin-top: auto;
-    background: color-mix(in srgb, var(--color-paper) 65%, white);
+    background: color-mix(in srgb, var(--color-navy-900) 4%, white);
     font-size: var(--text-sm);
     font-weight: 600;
     color: var(--color-navy-900);
     transition: background-color 150ms ease;
   }
   .branch-panel-details:hover {
-    background-color: var(--color-paper);
+    background-color: color-mix(in srgb, var(--color-navy-900) 7%, white);
   }
   .branch-panel-details:active {
-    background-color: color-mix(
-      in srgb,
-      var(--color-paper) 80%,
-      var(--color-line)
-    );
+    background-color: color-mix(in srgb, var(--color-navy-900) 10%, white);
   }
 }

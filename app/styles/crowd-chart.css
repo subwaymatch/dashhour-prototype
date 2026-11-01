@@ -9,4 +9,7 @@
   .crowd-chart-text {
     font-variant-numeric: tabular-nums;
   }
+  .crowd-chart-svg text {
+    font-size: 10px;
+  }
 }

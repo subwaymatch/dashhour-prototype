@@ -153,7 +153,9 @@ test("sidebar details link spans the panel and minute labels are compact", async
   );
   expect(defaultBackground).not.toBe("rgb(255, 255, 255)");
   const time = panel.locator(".crowd-chart-text");
-  await expect(time).toHaveCSS("font-size", "11px");
+  for (const label of await panel.locator(".crowd-chart-svg text").all()) {
+    await expect(label).toHaveCSS("font-size", "10px");
+  }
   await expect(time.locator("..").locator("rect")).toHaveAttribute(
     "height",
     "16",
@@ -293,4 +295,72 @@ test("responsive layouts, intro and story toggles survive the CSS migration", as
       .first()
       .evaluate((e) => parseFloat(getComputedStyle(e).transitionDuration)),
   ).toBeLessThan(0.01);
+});
+
+for (const width of [1440, 390]) {
+  test(`stacked toasts stay readable and separated at ${width}px`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await open(page, "/");
+    await page.clock.install();
+    await page.clock.pauseAt(new Date(Date.now() + 100));
+    const favorite = page
+      .locator(
+        width >= 1024
+          ? ".desktop-list .card-favorite"
+          : ".card-favorite:visible",
+      )
+      .first();
+    for (let i = 0; i < 3; i++) await favorite.click();
+    const toasts = page.locator(
+      ".toast-card:not([data-ending-style]):not([data-limited])",
+    );
+    await expect(toasts).toHaveCount(3);
+    const checkStack = async () => {
+      const bounds = await toasts.evaluateAll((elements) =>
+        elements
+          .map((element) => {
+            const rect = element.getBoundingClientRect();
+            return {
+              top: rect.top,
+              bottom: rect.bottom,
+              left: rect.left,
+              right: rect.right,
+            };
+          })
+          .sort((a, b) => a.top - b.top),
+      );
+      for (let i = 1; i < bounds.length; i++)
+        expect(bounds[i].top - bounds[i - 1].bottom).toBeGreaterThanOrEqual(11);
+      for (const rect of bounds) {
+        expect(rect.left).toBeGreaterThanOrEqual(0);
+        expect(rect.right).toBeLessThanOrEqual(width);
+      }
+    };
+    await expect(async () => checkStack()).toPass();
+    for (const content of await toasts
+      .locator(".toast-list-toast-content")
+      .all())
+      await expect(content).toHaveCSS("opacity", "1");
+    await toasts.nth(1).hover();
+    await expect(async () => checkStack()).toPass();
+    await toasts.nth(1).getByRole("button", { name: "Close" }).click();
+    await page.clock.runFor(600);
+    await expect(toasts).toHaveCount(2);
+    await expect(async () => checkStack()).toPass();
+  });
+}
+
+test("first ticket has space for its glow above the scrollable list", async ({
+  page,
+}) => {
+  await open(page, "/");
+  const list = page.locator(".desktop-list-cards");
+  const first = list.locator(".stub-card").first();
+  await first.hover();
+  const listBox = (await list.boundingBox())!;
+  const cardBox = (await first.boundingBox())!;
+  expect(cardBox.y - listBox.y).toBeGreaterThanOrEqual(32);
+  await expect(list).toHaveCSS("overflow-y", "auto");
 });
