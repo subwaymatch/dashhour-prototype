@@ -83,13 +83,14 @@ export function TakeTicketButton({ view, size = "md", className }: { view: Branc
  * A card torn in two along a dashed line, like a ticket stub. The notches are cut out of
  * both halves (see `notch-bottom`/`notch-top`), so pass a `shape-*` filter for the shadow.
  */
-function StubCard({ top, bottom, className }: { top: ReactNode; bottom: ReactNode; className?: string }) {
+function StubCard({ top, bottom, action, className }: { top: ReactNode; bottom: ReactNode; action?: ReactNode; className?: string }) {
   return (
     <article className={cx("relative", className)}>
       <div className="notch-bottom relative rounded-t-lg bg-white">{top}</div>
-      <div className="notch-top rounded-b-lg bg-white">
+      <div className="notch-top relative rounded-b-lg bg-white">
         <div aria-hidden className="mx-4 border-t-[1.5px] border-dashed border-line" />
         {bottom}
+        {action}
       </div>
     </article>
   );
@@ -119,7 +120,7 @@ function CardHeader({ view }: { view: BranchView }) {
   );
 }
 
-function CardFooter({ view }: { view: BranchView }) {
+function CardFooter({ view, selectable = false }: { view: BranchView; selectable?: boolean }) {
   const { t } = useStore();
   return (
     <div className="flex items-center gap-3 px-4 pt-3 pb-4">
@@ -127,11 +128,11 @@ function CardFooter({ view }: { view: BranchView }) {
         <p className="flex items-baseline gap-1 text-navy-900">
           {view.wait > 0 ? (
             <>
-              <span className="font-display text-xl leading-none font-bold tracking-tight tabular">{view.wait}</span>
-              <span className="text-xs font-semibold">{t("minWait")}</span>
+              <span className="text-sm font-semibold tabular">{view.wait}</span>
+              <span className="text-sm font-semibold">{t("minWait")}</span>
             </>
           ) : (
-            <span className="text-base leading-7 font-bold text-emerald-700">{t("noWait")}</span>
+            <span className="text-sm font-semibold text-emerald-700">{t("noWait")}</span>
           )}
         </p>
         <p className="mt-1 flex items-center gap-1.5 text-xs text-muted">
@@ -139,7 +140,7 @@ function CardFooter({ view }: { view: BranchView }) {
           {t("waitingCount", { n: view.waiting })}
         </p>
       </div>
-      <TakeTicketButton view={view} />
+      <TakeTicketButton view={view} className={selectable ? "relative z-20" : undefined} />
     </div>
   );
 }
@@ -180,10 +181,20 @@ export function SelectableBranchCard({ view, selected, onSelect }: { view: Branc
           >
             <CardHeader view={view} />
           </button>
-          <FavoriteButton view={view} className="absolute top-3 right-3" />
+          <FavoriteButton view={view} className="absolute top-3 right-3 z-20" />
         </>
       }
-      bottom={<CardFooter view={view} />}
+      bottom={<CardFooter view={view} selectable />}
+      action={
+        <button
+          type="button"
+          onClick={onSelect}
+          aria-label={view.fullName}
+          aria-current={selected || undefined}
+          tabIndex={-1}
+          className="absolute inset-0 z-10 cursor-pointer rounded-lg outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-navy-700"
+        />
+      }
     />
   );
 }

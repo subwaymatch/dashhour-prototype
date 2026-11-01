@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Switch } from "@base-ui/react/switch";
 import { Toggle } from "@base-ui/react/toggle";
 import { ToggleGroup } from "@base-ui/react/toggle-group";
-import { BellRing, BookOpen, ChevronRight, Clock4, Languages, RotateCcw, ShieldAlert, Sparkles, Ticket, Timer } from "lucide-react";
+import { BellRing, BookOpen, ChevronRight, CirclePlay, Clock4, Languages, RotateCcw, ShieldAlert, Ticket, Timer } from "lucide-react";
 import { SERVICES, type Visit } from "@/lib/data";
 import { SPEEDS } from "@/lib/sim";
 import { BankBadge } from "../bank-badge";
@@ -181,7 +181,7 @@ export function MeScreen() {
 
             <section className="overflow-hidden rounded-lg bg-white shadow-card ring-1 ring-line/70">
               {[
-                { icon: Sparkles, label: t("replayIntro"), onClick: () => setShowOnboarding(true) },
+                { icon: CirclePlay, label: t("replayIntro"), onClick: () => setShowOnboarding(true) },
                 { icon: RotateCcw, label: t("resetDemo"), onClick: resetDemo },
               ].map(({ icon: Icon, label, onClick }) => (
                 <button key={label} type="button" onClick={onClick} className={cx("flex w-full items-center gap-3 border-b border-line px-5 py-4 text-left text-sm font-medium text-ink hover:bg-paper", focusRing)}>

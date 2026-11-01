@@ -18,7 +18,6 @@ import {
   MapPin,
   Phone,
   Share2,
-  Sparkles,
   TrendingDown,
   TrendingUp,
   Users,
@@ -42,9 +41,9 @@ const AMENITY_ICONS: Record<AmenityKey, typeof CircleParking> = {
 
 const ALL_SERVICES: ServiceKey[] = ["general", "loan", "fx", "business"];
 
-export function Section({ title, icon: Icon, aside, children, className }: { title: string; icon?: typeof MapPin; aside?: React.ReactNode; children: React.ReactNode; className?: string }) {
+export function Section({ title, icon: Icon, aside, children, className, plain = false }: { title: string; icon?: typeof MapPin; aside?: React.ReactNode; children: React.ReactNode; className?: string; plain?: boolean }) {
   return (
-    <section className={cx("rounded-lg bg-white p-5 shadow-card ring-1 ring-line/70", className)}>
+    <section className={cx(plain ? "py-5" : "rounded-lg bg-white p-5 shadow-card ring-1 ring-line/70", className)}>
       <div className="flex items-start justify-between gap-3">
         <h2 className="flex items-center gap-2 text-sm font-bold text-ink">
           {Icon && <Icon className="size-4 text-navy-900" aria-hidden />}
@@ -70,7 +69,7 @@ function CrowdNote({ view }: { view: BranchView }) {
   );
 }
 
-export function ServiceQueues({ view }: { view: BranchView }) {
+export function ServiceQueues({ view, compact = false }: { view: BranchView; compact?: boolean }) {
   const { t, lang, sim } = useStore();
   return (
     <ul className="-my-1 divide-y divide-line">
@@ -90,7 +89,7 @@ export function ServiceQueues({ view }: { view: BranchView }) {
             </div>
             {q && (
               <div className="text-right">
-                <p className="font-display text-base font-bold text-navy-900 tabular">
+                <p className={cx("text-navy-900 tabular", compact ? "text-sm font-semibold" : "font-display text-base font-bold")}>
                   {q.wait}
                   <span className="ml-0.5 text-xs font-semibold">{t("min")}</span>
                 </p>
@@ -104,13 +103,13 @@ export function ServiceQueues({ view }: { view: BranchView }) {
   );
 }
 
-export function CrowdSection({ view, className }: { view: BranchView; className?: string }) {
+export function CrowdSection({ view, className, plain = false }: { view: BranchView; className?: string; plain?: boolean }) {
   const { t } = useStore();
   return (
-    <Section title={t("crowd")} icon={ChartSpline} aside={<CrowdNote view={view} />} className={className}>
+    <Section title={t("crowd")} icon={ChartSpline} aside={<CrowdNote view={view} />} className={className} plain={plain}>
       <CrowdChart branch={view} best={view.bestTime} />
       <p className="mt-3 flex items-center gap-2 rounded-md bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-800">
-        <Sparkles className="size-4 shrink-0" aria-hidden />
+        <Clock className="size-4 shrink-0" aria-hidden />
         {t("bestTime", { t: `${formatClock(view.bestTime)}–${formatClock(view.bestTime + 30)}` })}
       </p>
     </Section>

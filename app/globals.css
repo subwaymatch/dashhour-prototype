@@ -175,11 +175,9 @@ body {
 @utility shape-shadow-float {
   filter: drop-shadow(0 0 0.5px rgb(13 17 55 / 0.28)) drop-shadow(0 10px 16px rgb(13 17 55 / 0.14));
 }
-/* A 2px outline around the shape, from four hard shadows, for the selected card. */
+/* A soft hairline and gentle lift distinguish the selected ticket. */
 @utility shape-outline {
-  --c: var(--color-navy-900);
-  filter: drop-shadow(2px 0 0 var(--c)) drop-shadow(-2px 0 0 var(--c)) drop-shadow(0 2px 0 var(--c)) drop-shadow(0 -2px 0 var(--c))
-    drop-shadow(0 6px 10px rgb(13 17 55 / 0.1));
+  filter: drop-shadow(0 0 0.75px rgb(13 17 55 / 0.35)) drop-shadow(0 6px 10px rgb(13 17 55 / 0.09));
 }
 
 /* Perforation between a card and its tear-off button. */
