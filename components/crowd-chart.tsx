@@ -28,7 +28,7 @@ export function CrowdChart({ branch, best }: { branch: Branch; best?: number }) 
 
   const nx = xFor(now);
   const ny = yFor(crowdAt(branch, now));
-  const labelX = Math.min(Math.max(nx, 40), W - 40);
+  const labelX = Math.min(Math.max(nx, 26), W - 26);
 
   return (
     <svg
@@ -60,9 +60,9 @@ export function CrowdChart({ branch, best }: { branch: Branch; best?: number }) 
       <path d={area} fill={`url(#crowd-fill-${branch.id})`} />
       <path d={line} fill="none" stroke="var(--color-gold-500)" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
       {[9, 12, 15]
-        .filter((h) => Math.abs(xFor(h * 60) - labelX) > 56)
+        .filter((h) => Math.abs(xFor(h * 60) - labelX) > 36)
         .map((h) => (
-          <text key={h} x={xFor(h * 60)} y={H - 12} textAnchor="middle" fontSize="11" fill="var(--color-muted)">
+          <text key={h} x={xFor(h * 60)} y={H - 12} textAnchor="middle" fontSize="9" fill="var(--color-muted)">
             {`${h}:00`}
           </text>
         ))}
@@ -70,8 +70,8 @@ export function CrowdChart({ branch, best }: { branch: Branch; best?: number }) 
       <circle cx={nx} cy={PAD.top - 6} r="3.5" fill="var(--color-navy-900)" />
       <circle cx={nx} cy={ny} r="4.5" fill="white" stroke="var(--color-navy-900)" strokeWidth="2" />
       <g transform={`translate(${labelX} ${H - PAD.bottom + 4})`}>
-        <rect x="-30" y="0" width="60" height="16" rx="3" fill="var(--color-navy-900)" />
-        <text y="11.5" textAnchor="middle" fontSize="11" fontWeight="700" fill="white" className="tabular">
+        <rect x="-20" y="0" width="40" height="14" rx="3" fill="var(--color-navy-900)" />
+        <text y="10" textAnchor="middle" fontSize="9" fontWeight="700" fill="white" className="tabular">
           {formatClock(sim)}
         </text>
       </g>

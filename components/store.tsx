@@ -157,7 +157,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   const [ready, setReady] = React.useState(false);
-  const [lang, setLangState] = React.useState<Lang>("en");
+  const [lang, setLangState] = React.useState<Lang>("ko");
   const [clock, setClock] = React.useState<Clock>(() => ({ realStart: 0, simStart: SIM_START, speed: DEFAULT_SPEED }));
   const [favoriteIds, setFavoriteIds] = React.useState<string[]>(DEFAULT_FAVORITES);
   const [ticket, setTicket] = React.useState<Ticket | null>(null);

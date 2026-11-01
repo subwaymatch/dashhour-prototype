@@ -18,7 +18,7 @@ import {
   useGreeting,
 } from "../branch-card";
 import { CityMap } from "../city-map";
-import { LogoMark, Wordmark } from "../logo";
+import { LogoMark } from "../logo";
 import { OptionsMenu, RefreshButton, SearchDialog, darkIconButton } from "../shell";
 import { useStore, type BranchView } from "../store";
 import { CrowdSection, ServiceQueues, Section } from "./branch";
@@ -67,7 +67,7 @@ function Recommendation({ view }: { view: BranchView }) {
 }
 
 function MobileHome() {
-  const { favorites, others, t, lang, ticket, updatedLabel, ready } = useStore();
+  const { favorites, others, t, lang, ticket } = useStore();
   const greeting = useGreeting();
   const [showAll, setShowAll] = React.useState(false);
   const visible = showAll ? others : others.slice(0, LIST_LIMIT);
@@ -79,8 +79,9 @@ function MobileHome() {
         <div aria-hidden className="pointer-events-none absolute -top-24 -right-20 size-72 rounded-full bg-[radial-gradient(circle,rgb(180_166_122/0.35),transparent_65%)]" />
         <div className="relative mx-auto max-w-xl px-4">
           <div className="flex h-14 items-center gap-2.5">
-            <LogoMark className="h-7 w-auto text-white" />
-            <Wordmark className="text-base" />
+            <Link href="/" aria-label="Dash Hour" className={cx("rounded-sm", focusRing)}>
+              <LogoMark className="h-7 w-auto text-white" />
+            </Link>
             <div className="flex-1" />
             <RefreshButton className={darkIconButton} />
             <OptionsMenu className={cx(darkIconButton, "-mr-2")} />
@@ -140,9 +141,6 @@ function MobileHome() {
             <ChevronDown className={cx("size-4 transition-transform", showAll && "rotate-180")} aria-hidden />
           </button>
         )}
-        <p className="mt-2 text-center text-xs text-muted" suppressHydrationWarning>
-          {ready ? `${updatedLabel} · ${t("simulated")}` : t("simulated")}
-        </p>
       </div>
     </div>
   );
@@ -153,18 +151,13 @@ function MobileHome() {
 /* ------------------------------------------------------------------ */
 
 function DesktopList() {
-  const { favorites, others, selected, select, t, updatedLabel } = useStore();
+  const { favorites, others, selected, select, t } = useStore();
   const card = (v: BranchView) => <SelectableBranchCard key={v.id} view={v} selected={v.id === selected.id} onSelect={() => select(v.id)} />;
   return (
     <aside className="flex min-h-0 flex-col border-r border-line">
       <div className="flex shrink-0 flex-col gap-3 px-4 pt-5 pb-3">
         <div className="flex items-center justify-between gap-2">
-          <div>
-            <h1 className="text-lg font-bold text-ink">{t("nearby")}</h1>
-            <p className="text-xs text-muted">
-              {updatedLabel} · {t("simulated")}
-            </p>
-          </div>
+          <h1 className="text-lg font-bold text-ink">{t("nearby")}</h1>
           <SortToggle />
         </div>
         <FilterChips className="flex-wrap overflow-visible" />
