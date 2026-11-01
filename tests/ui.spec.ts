@@ -279,7 +279,8 @@ test("responsive layouts, intro and story toggles survive the CSS migration", as
   await expect(page.getByRole("dialog")).toBeVisible();
   await checkPointers(page);
   await page.getByRole("button", { name: "건너뛰기" }).click();
-  await page.goto("/story");
+  await page.locator(".me-screen-link-about-project").click();
+  await expect(page).toHaveURL(/\/story$/);
   const toggle = page.getByRole("switch").first();
   await toggle.click();
   await expect(toggle).toBeChecked();
