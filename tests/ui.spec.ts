@@ -1,9 +1,9 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Page, type Locator } from "@playwright/test";
 
 async function checkPointers(page: Page) {
   const failures = await page
     .locator(
-      'a[href], button, select, [role="radio"], [role="switch"], [role^="menuitem"], [role="tab"]',
+      'a[href], button, select, [role="option"], [role="radio"], [role="switch"], [role^="menuitem"], [role="tab"]',
     )
     .evaluateAll((elements) =>
       elements
@@ -21,6 +21,38 @@ async function checkPointers(page: Page) {
         .map((element) => element.outerHTML.slice(0, 200)),
     );
   expect(failures).toEqual([]);
+}
+
+async function checkModalType(dialog: Locator) {
+  await expect(dialog.locator(".header-drawer-title")).toHaveCSS(
+    "font-size",
+    "20px",
+  );
+  const incorrect = await dialog.evaluate((root) => {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    const failures = [];
+    let node;
+    while ((node = walker.nextNode())) {
+      const parent = node.parentElement;
+      if (
+        !node.textContent?.trim() ||
+        !parent ||
+        parent.closest(".header-drawer-title, svg")
+      )
+        continue;
+      const size = getComputedStyle(parent).fontSize;
+      if (size !== "14px") failures.push({ text: node.textContent, size });
+    }
+    return failures;
+  });
+  expect(incorrect).toEqual([]);
+  for (const minutes of await dialog
+    .locator(
+      ".service-option-span-min-2, .sheet-body-p-eta-label .minute-number",
+    )
+    .all()) {
+    await expect(minutes).toHaveCSS("font-family", /Inter/i);
+  }
 }
 
 async function open(page: Page, path: string) {
@@ -188,6 +220,7 @@ test("ticket sheet controls and issuing, delay and cancellation flows work", asy
   await page.locator(".desktop-list .take-ticket-button").first().click();
   const dialog = page.getByRole("dialog");
   await expect(dialog).toBeVisible();
+  await checkModalType(dialog);
   await checkPointers(page);
   const radios = dialog.getByRole("radio");
   for (const [index, row] of (await radios.all()).entries()) {
@@ -204,7 +237,7 @@ test("ticket sheet controls and issuing, delay and cancellation flows work", asy
   await radios.nth(1).click();
   await expect(radios.nth(1)).toHaveCSS("box-shadow", "none");
   for (const value of await dialog.locator(".sheet-time-value").all()) {
-    await expect(value).toHaveCSS("font-size", "17px");
+    await expect(value).toHaveCSS("font-size", "14px");
     await expect(value).toHaveCSS("font-weight", "500");
     for (const number of await value.locator(".minute-number").all())
       await expect(number).toHaveCSS("font-family", /Inter/i);
@@ -392,13 +425,14 @@ test("bank filtering combines with facilities, sorting and clear filters", async
   const cards = list.locator(".stub-card");
   const total = await cards.count();
   await expect(bank).toHaveCSS("cursor", "pointer");
-  await bank.selectOption("hana");
+  await bank.click();
+  await page.getByRole("option", { name: "하나은행", exact: true }).click();
   await expect(cards).toHaveCount(2);
   for (const name of await cards.locator(".card-bank-name").all())
     await expect(name).toContainText("하나은행");
   await expect(page.locator(".branch-panel-bank")).toHaveText("하나은행");
   await list.getByRole("button", { name: "가까운 순", exact: true }).click();
-  await expect(bank).toHaveValue("hana");
+  await expect(bank).toContainText("하나은행");
   await expect(cards.first().locator(".card-branch-name")).toHaveText(
     "역삼동점",
   );
@@ -407,16 +441,18 @@ test("bank filtering combines with facilities, sorting and clear filters", async
   await expect(cards.first().locator(".card-branch-name")).toHaveText(
     "강남대로점",
   );
-  await bank.selectOption("ibk");
+  await bank.click();
+  await page.getByRole("option", { name: "IBK기업은행", exact: true }).click();
   await expect(cards).toHaveCount(0);
   await expect(list.getByText("조건에 맞는 지점이 없습니다")).toBeVisible();
   await list.locator(".empty-filters-button-clear-filters").click();
-  await expect(bank).toHaveValue("all");
+  await expect(bank).toContainText("전체 은행");
   await expect(cards).toHaveCount(total);
   await expect(
     list.getByRole("button", { name: "주차", exact: true }),
   ).not.toHaveAttribute("data-pressed");
-  await bank.selectOption("hana");
+  await bank.click();
+  await page.getByRole("option", { name: "하나은행", exact: true }).click();
   await page
     .getByRole("button", { name: "옵션" })
     .filter({ visible: true })
@@ -424,9 +460,9 @@ test("bank filtering combines with facilities, sorting and clear filters", async
   await page
     .getByRole("menuitemradio", { name: "English", exact: true })
     .click();
-  await expect(list.getByRole("combobox", { name: "Choose bank" })).toHaveValue(
-    "hana",
-  );
+  await expect(
+    list.getByRole("combobox", { name: "Choose bank" }),
+  ).toContainText("Hana Bank");
   await expect(cards).toHaveCount(2);
   await expect(cards.first().locator(".card-wait")).toContainText("About");
 });
@@ -482,6 +518,7 @@ test("ticket service rows and timing text fit the mobile modal", async ({
   await page.locator(".take-ticket-button:visible").first().click();
   const dialog = page.getByRole("dialog");
   await expect(dialog).toBeVisible();
+  await checkModalType(dialog);
   const rows = dialog.getByRole("radio");
   await rows.nth(1).click();
   await expect(rows.nth(1)).toBeChecked();
@@ -490,7 +527,7 @@ test("ticket service rows and timing text fit the mobile modal", async ({
     .evaluateAll((elements) =>
       elements.map((e) => getComputedStyle(e).fontSize),
     );
-  expect(sizes).toEqual(["17px", "17px"]);
+  expect(sizes).toEqual(["14px", "14px"]);
   for (const value of await dialog.locator(".sheet-time-value").all())
     expect(await value.evaluate((e) => e.scrollWidth <= e.clientWidth)).toBe(
       true,
@@ -501,4 +538,84 @@ test("ticket service rows and timing text fit the mobile modal", async ({
   expect(await dialog.evaluate((e) => e.scrollWidth <= e.clientWidth)).toBe(
     true,
   );
+});
+
+test("English service choices use color-only states and smaller radio circles", async ({
+  page,
+}) => {
+  await open(page, "/");
+  await page
+    .getByRole("button", { name: "옵션" })
+    .filter({ visible: true })
+    .click();
+  await page
+    .getByRole("menuitemradio", { name: "English", exact: true })
+    .click();
+  await page.locator(".desktop-list .take-ticket-button").first().click();
+  const dialog = page.getByRole("dialog");
+  await checkModalType(dialog);
+  const row = dialog.getByRole("radio").nth(1);
+  const title = row.locator(".service-option-span-2");
+  const surfaces = () =>
+    row.evaluate((element) =>
+      [element, element.querySelector(".service-option-span")!].map(
+        (e) => getComputedStyle(e).backgroundColor,
+      ),
+    );
+  const original = await surfaces();
+  await row.hover();
+  await expect(title).toHaveCSS("color", "rgb(44, 52, 132)");
+  expect(await surfaces()).toEqual(original);
+  await page.mouse.down();
+  await expect(title).toHaveCSS("color", "rgb(110, 97, 57)");
+  expect(await surfaces()).toEqual(original);
+  await page.mouse.up();
+  await page.mouse.move(20, 20);
+  await expect(row).toBeChecked();
+  await expect(title).toHaveCSS("color", "rgb(125, 110, 66)");
+  expect(await surfaces()).toEqual(original);
+  await expect(row.locator(".service-option-span-3")).toHaveCSS(
+    "width",
+    "18px",
+  );
+  await expect(row.locator(".service-option-radio-indicator")).toHaveCSS(
+    "width",
+    "8px",
+  );
+  await page.keyboard.press("Tab");
+  await row.focus();
+  await expect(row).toHaveCSS("outline-width", "2px");
+});
+
+test("styled bank select shows logos and supports keyboard selection", async ({
+  page,
+}) => {
+  await open(page, "/");
+  const bank = page.getByRole("combobox", { name: "은행 선택" });
+  await bank.click();
+  const options = page.getByRole("option");
+  await expect(options).toHaveCount(10);
+  for (const option of await options.all()) {
+    await expect(option.locator(".bank-filter-logo")).toBeVisible();
+    await expect(option.locator(".bank-filter-logo")).toHaveCSS(
+      "width",
+      "20px",
+    );
+  }
+  await checkPointers(page);
+  await page.getByRole("option", { name: "하나은행", exact: true }).click();
+  await expect(bank).toContainText("하나은행");
+  await expect(bank.locator("img")).toHaveAttribute("src", "/banks/hana.webp");
+  await bank.press("ArrowDown");
+  await expect(page.getByRole("listbox")).toBeVisible();
+  await page.keyboard.press("Home");
+  await page.keyboard.press("ArrowDown");
+  await page.keyboard.press("Enter");
+  await expect(bank).toContainText("신한은행");
+  await expect(page.locator(".desktop-list .stub-card")).toHaveCount(2);
+  await bank.press("ArrowDown");
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("listbox")).toHaveCount(0);
+  await expect(bank).toBeFocused();
+  await expect(bank).toContainText("신한은행");
 });

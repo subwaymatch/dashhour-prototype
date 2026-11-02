@@ -306,23 +306,96 @@
     flex: 1;
   }
   .bank-filter-select {
-    appearance: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     width: 100%;
     height: 36px;
-    padding: 0 32px 0 12px;
+    padding: 0 10px;
+    text-align: left;
     border: 1px solid var(--color-line);
     border-radius: var(--radius-md);
     background: white;
     color: var(--color-ink);
     cursor: pointer;
   }
+  .bank-filter-value {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .bank-filter-logo {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    color: var(--color-navy-700);
+  }
   .bank-filter-chevron {
-    position: absolute;
-    right: 10px;
-    top: 10px;
+    display: flex;
     width: 16px;
     height: 16px;
-    pointer-events: none;
+    flex-shrink: 0;
+    color: var(--color-muted);
+  }
+  .bank-filter-chevron svg {
+    width: 100%;
+    height: 100%;
+  }
+  .bank-filter-select:hover,
+  .bank-filter-select[data-popup-open] {
+    border-color: var(--color-navy-200, #c9cce6);
+  }
+  .bank-filter-positioner {
+    z-index: 60;
+    outline: none;
+  }
+  .bank-filter-popup {
+    width: var(--anchor-width);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-lg);
+    background: white;
+    color: var(--color-ink);
+    box-shadow: 0 8px 24px rgb(13 17 55 / 0.16);
+    outline: none;
+  }
+  .bank-filter-list {
+    max-height: min(360px, var(--available-height));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 4px;
+  }
+  .bank-filter-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 36px;
+    padding: 6px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    cursor: pointer;
+    outline: none;
+  }
+  .bank-filter-item[data-highlighted] {
+    background: var(--color-navy-100);
+    color: var(--color-navy-900);
+  }
+  .bank-filter-item[data-selected] {
+    font-weight: 500;
+  }
+  .bank-filter-item-check {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    width: 16px;
+    height: 16px;
+    color: var(--color-navy-700);
+  }
+  .bank-filter-item-check svg {
+    width: 14px;
+    height: 14px;
   }
   .map-branch-card-article-min {
     display: flex;
