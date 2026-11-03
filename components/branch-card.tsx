@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { Select } from "@base-ui/react/select";
 import { Toggle } from "@base-ui/react/toggle";
 import { ToggleGroup } from "@base-ui/react/toggle-group";
 import {
@@ -9,6 +10,8 @@ import {
   Banknote,
   ChevronRight,
   ChevronDown,
+  Check,
+  Landmark,
   Clock,
   CircleParking,
   Languages,
@@ -408,28 +411,70 @@ const FILTERS = [
 
 export function BankFilter() {
   const { bankFilter, setBankFilter, lang, t } = useStore();
+  const items = [
+    { value: "all" as const, label: t("allBanks") },
+    ...(Object.keys(BANKS) as BankKey[]).map((bank) => ({
+      value: bank,
+      label: BANKS[bank].name[lang],
+    })),
+  ];
+  const logo = (bank: BankFilterKey) =>
+    bank === "all" ? (
+      <Landmark className="bank-filter-logo" aria-hidden />
+    ) : (
+      <BankBadge bank={bank} className="bank-filter-logo" />
+    );
   return (
-    <label className="bank-filter">
-      <span>{t("filterBank")}</span>
-      <span className="bank-filter-control">
-        <select
-          aria-label={t("filterBank")}
-          value={bankFilter}
-          onChange={(event) =>
-            setBankFilter(event.target.value as BankFilterKey)
-          }
-          className={cx("bank-filter-select", focusRing)}
-        >
-          <option value="all">{t("allBanks")}</option>
-          {(Object.keys(BANKS) as BankKey[]).map((bank) => (
-            <option key={bank} value={bank}>
-              {BANKS[bank].name[lang]}
-            </option>
-          ))}
-        </select>
-        <ChevronDown className="bank-filter-chevron" aria-hidden />
-      </span>
-    </label>
+    <div className="bank-filter">
+      <Select.Root<BankFilterKey>
+        items={items}
+        value={bankFilter}
+        onValueChange={(value) => setBankFilter(value ?? "all")}
+      >
+        <Select.Label>{t("filterBank")}</Select.Label>
+        <div className="bank-filter-control">
+          <Select.Trigger
+            aria-label={t("filterBank")}
+            className={cx("bank-filter-select", focusRing)}
+          >
+            {logo(bankFilter)}
+            <Select.Value className="bank-filter-value" />
+            <Select.Icon className="bank-filter-chevron">
+              <ChevronDown />
+            </Select.Icon>
+          </Select.Trigger>
+        </div>
+        <Select.Portal>
+          <Select.Positioner
+            sideOffset={6}
+            align="start"
+            alignItemWithTrigger={false}
+            className="bank-filter-positioner"
+          >
+            <Select.Popup className="bank-filter-popup">
+              <Select.List className="bank-filter-list">
+                {items.map((item) => (
+                  <Select.Item
+                    key={item.value}
+                    value={item.value}
+                    label={item.label}
+                    className="bank-filter-item"
+                  >
+                    {logo(item.value)}
+                    <Select.ItemText>{item.label}</Select.ItemText>
+                    <span className="bank-filter-item-check" aria-hidden>
+                      <Select.ItemIndicator>
+                        <Check />
+                      </Select.ItemIndicator>
+                    </span>
+                  </Select.Item>
+                ))}
+              </Select.List>
+            </Select.Popup>
+          </Select.Positioner>
+        </Select.Portal>
+      </Select.Root>
+    </div>
   );
 }
 
