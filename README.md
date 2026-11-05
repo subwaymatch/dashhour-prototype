@@ -56,10 +56,14 @@ pnpm run deploy
 
 ## Images
 
-All images were made with OpenAI GPT Image 2.5 (`gpt-image-2.5-sunburst`) at `quality: "low"`, with prompts that ask for no text, letters or logos.
+**Every new image is generated with OpenAI GPT Image 2.6 (`gpt-image-2.6-sunburst`) at `quality: "low"` with `background: "transparent"`,** on both the generations and the edit endpoint. Both scripts below pin all three, so there is no model, quality or background argument to get wrong. Prompts still ask for no text, letters or logos.
 
 - **Sketches:** `sketches/` holds the full-size redrawn sketches as transparent PNGs, and `public/sketches/` the web-sized copies plus the original notepad photos used on `/story`. Each was made by sending the original photo to the image edit endpoint with `background: "transparent"`, asking for black pen line work only. Script: `sketches/generate.py`.
-- **App art:** `public/images/` holds eight branch scenes (opaque) and the onboarding, empty-ticket and "your turn" illustrations (transparent), converted to WebP. Script: `scripts/generate_image.py`.
+- **App art:** `public/images/` holds eight branch scenes (opaque, made before the transparent-background rule) and the onboarding, empty-ticket and "your turn" illustrations (transparent), converted to WebP. Script: `scripts/generate_image.py`.
+
+The images already in the repo were made earlier with GPT Image 2.5 (`gpt-image-2.5-sunburst`), also at `quality: "low"`. They stay as they are and do not need regenerating.
+
+Two things to know about 2.6. OpenAI's Batch API does not accept either 2.6 model (`-sunburst` or `-flare`; it answers `model_not_found`), so every request is synchronous. And a `low` image costs more than it did on 2.5: 664 image output tokens at 1536x1024 or 1024x1536 and 824 at 1024x1024 (2.5 used 158 and 196), which at $30 per 1M is about $0.02-0.025 per image. A subject on a transparent background comes back at alpha 254 rather than 255, so treat 250 and above as opaque when measuring a cut-out.
 
 App icons (`public/icon-*.png`, `apple-touch-icon.png`) are rendered from `public/icon.svg`.
 
