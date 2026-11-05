@@ -1,10 +1,11 @@
-"""Redraw a photographed notepad UI sketch as a clean, text-free pen sketch with OpenAI GPT Image 2.5.
+"""Redraw a photographed notepad UI sketch as a clean, text-free pen sketch with OpenAI GPT Image 2.6.
 
-Sends the photo to the Images edit endpoint with quality "low" and a transparent background.
-The sketches in this folder were made with gpt-image-2.5-sunburst.
+Sends the photo to the Images edit endpoint as MODEL with quality "low" and a transparent background
+(see "Images" in README.md). The sketches already in this folder were made earlier with
+gpt-image-2.5-sunburst and are not regenerated.
 
 Usage:
-    OPENAI_API_KEY=... python3 generate.py <model> <photo.png> <out.png> <WxH> "<what the screen shows>"
+    OPENAI_API_KEY=... python3 generate.py <photo.png> <out.png> <WxH> "<what the screen shows>"
 """
 import base64
 import json
@@ -13,7 +14,9 @@ import sys
 import urllib.request
 import uuid
 
-model, src, dst, size, screen = sys.argv[1:6]
+MODEL = "gpt-image-2.6-sunburst"
+
+src, dst, size, screen = sys.argv[1:5]
 
 PROMPT = f"""Redraw the mobile app UI sketch from this photo of a notepad as a clean, pen-drawn sketch.
 
@@ -29,7 +32,7 @@ Requirements:
 
 boundary = uuid.uuid4().hex
 fields = {
-    "model": model,
+    "model": MODEL,
     "prompt": PROMPT,
     "quality": "low",
     "background": "transparent",

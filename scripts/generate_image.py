@@ -1,10 +1,11 @@
-"""Generate one image with OpenAI GPT Image 2.5 (text-to-image) at quality "low".
+"""Generate one image with OpenAI GPT Image 2.6 (text-to-image): quality "low", transparent background.
 
-The images in public/images were made with gpt-image-2.5-sunburst: branch scenes at 1536x1024 (opaque)
-and spot illustrations at 1024x1024 (transparent), then converted to WebP.
+Every request uses MODEL at quality "low" with background "transparent" (see "Images" in README.md).
+The images already in public/images were made earlier with gpt-image-2.5-sunburst (branch scenes at
+1536x1024, opaque; spot illustrations at 1024x1024, transparent) and are not regenerated.
 
 Usage:
-    OPENAI_API_KEY=... python3 scripts/generate_image.py <model> <out.png> <WxH> <transparent|opaque> "<prompt>"
+    OPENAI_API_KEY=... python3 scripts/generate_image.py <out.png> <WxH> "<prompt>"
 """
 import base64
 import json
@@ -13,15 +14,17 @@ import sys
 import urllib.error
 import urllib.request
 
-model, dst, size, background, prompt = sys.argv[1:6]
+MODEL = "gpt-image-2.6-sunburst"
+
+dst, size, prompt = sys.argv[1:4]
 
 body = json.dumps(
     {
-        "model": model,
+        "model": MODEL,
         "prompt": prompt,
         "quality": "low",
         "size": size,
-        "background": background,
+        "background": "transparent",
         "output_format": "png",
         "n": 1,
     }
