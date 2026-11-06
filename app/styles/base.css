@@ -328,6 +328,13 @@ html:has(.plain-page) body {
 html:has(.plain-page) .mobile-top-bar-div {
   background-color: color-mix(in srgb, #fff 92%, transparent);
 }
+/* The phone home list is white too; the desktop explorer keeps the paper tone. */
+@media (width < 64rem) {
+  html:has(.mobile-home-div-home-title),
+  html:has(.mobile-home-div-home-title) body {
+    background: var(--color-white);
+  }
+}
 /* The branch page's action bar sits on the tab bar; read them as one block. */
 html:has(.branch-screen-div-min-wait) .bottom-nav-nav {
   border-top-color: transparent;

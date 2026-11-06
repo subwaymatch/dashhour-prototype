@@ -15,7 +15,7 @@ export function TicketScreen() {
   return (
     <>
       <MobileTopBar title={t("myTicket")} />
-      <div className="ticket-screen-div-my-ticket">
+      <div className="ticket-screen-div-my-ticket plain-page">
         <h1 className="ticket-screen-h1-my-ticket">{t("myTicket")}</h1>
         {!ready ? (
           <div className="ticket-screen-div" />

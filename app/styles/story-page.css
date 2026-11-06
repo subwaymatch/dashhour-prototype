@@ -232,4 +232,15 @@
     font-size: var(--text-xs);
     color: var(--color-muted);
   }
+  /* Same breakpoint as the app's switch to the phone layout. */
+  @media (width < 64rem) {
+    .story-wide {
+      display: none;
+    }
+  }
+  @media (width >= 64rem) {
+    .story-narrow {
+      display: none;
+    }
+  }
 }

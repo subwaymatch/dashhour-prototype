@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Smartphone, Monitor, Trophy } from "lucide-react";
+import {
+  ArrowRight,
+  Monitor,
+  Smartphone,
+  SquarePlus,
+  Trophy,
+} from "lucide-react";
 import { LogoMark, Wordmark } from "@/components/logo";
 import { SketchCard, type Sketch } from "@/components/sketch-card";
 
@@ -134,15 +140,28 @@ export default function StoryPage() {
             web app: the original three-tab layout on phones and a list, map and
             detail view on larger screens.
           </p>
+          {/* Wide screens get the desktop pitch; phones, where the app is
+              already the three-tab layout, get "Open the app". */}
           <div className="story-page-div-4">
             <Link href="/" className="story-page-link-3">
-              <Monitor className="story-page-monitor" aria-hidden /> Try it on
-              desktop
+              <Monitor className="story-page-monitor story-wide" aria-hidden />
+              <Smartphone
+                className="story-page-monitor story-narrow"
+                aria-hidden
+              />
+              <span className="story-wide">Try it on desktop</span>
+              <span className="story-narrow">Open the app</span>
             </Link>
-            <p className="story-page-p-4">
+            <p className="story-page-p-4 story-wide">
               <Smartphone className="story-page-smartphone" aria-hidden />
               On a phone it switches to the original three-tab app, and you can
               add it to your home screen.
+            </p>
+            <p className="story-page-p-4 story-narrow">
+              <SquarePlus className="story-page-smartphone" aria-hidden />
+              It opens as the original three-tab app. Add it to your home screen
+              from your browser&rsquo;s share menu to use it like an installed
+              app.
             </p>
           </div>
           <div className="story-team">

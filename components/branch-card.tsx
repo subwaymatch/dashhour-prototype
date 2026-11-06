@@ -237,34 +237,56 @@ function CardFooter({ view }: { view: BranchView }) {
   );
 }
 
-/** The action covers both halves; the favorite and ticket controls sit above it. */
-export function BranchCard({
+/**
+ * Mobile list row: the whole row opens the branch page, which holds the ticket
+ * and favorite controls. One action per row keeps a long list calm.
+ */
+export function BranchRow({
   view,
   className,
 }: {
   view: BranchView;
   className?: string;
 }) {
+  const { t } = useStore();
   return (
-    <StubCard
-      className={className}
-      action={
-        <Link
-          href={`/branch/${view.id}`}
-          aria-label={view.fullName}
-          className={cx("stub-card-action", focusRing)}
-        />
-      }
-      top={
-        <>
-          <div className="stub-card-heading">
-            <CardHeader view={view} />
-          </div>
-          <FavoriteButton view={view} className="card-favorite" />
-        </>
-      }
-      bottom={<CardFooter view={view} />}
-    />
+    <Link
+      href={`/branch/${view.id}`}
+      className={cx("branch-row", focusRing, className)}
+    >
+      <BankBadge bank={view.bank} className="branch-row-badge" />
+      <span className="branch-row-main">
+        <span className="branch-row-bank">
+          {view.bankName}
+          {view.rank === 1 && !view.favorite && (
+            <span className="branch-row-fastest">
+              <Zap className="branch-row-fastest-icon" aria-hidden />
+              {t("sortWait")}
+            </span>
+          )}
+        </span>
+        <span className="branch-row-name">{view.branchName}</span>
+        <span className="branch-row-meta">
+          {formatDistance(view.distance)} ·{" "}
+          {t("walkMin", { n: view.travel.walk })}
+        </span>
+      </span>
+      <span className="branch-row-wait">
+        <span className="branch-row-wait-value">
+          {view.wait > 0 ? (
+            <>
+              <span className="minute-number">{view.wait}</span>
+              {t("min")}
+            </>
+          ) : (
+            t("availableNow")
+          )}
+        </span>
+        <span className="branch-row-queue">
+          {t("waitingCount", { n: view.waiting })}
+        </span>
+      </span>
+    </Link>
   );
 }
 
