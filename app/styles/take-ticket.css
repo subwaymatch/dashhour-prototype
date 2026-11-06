@@ -90,7 +90,7 @@
   .service-option-span-min-2 {
     display: block;
     font-size: var(--ticket-sheet-text-size);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
     color: var(--color-navy-900);
     font-variant-numeric: tabular-nums;
   }
@@ -137,7 +137,7 @@
   .header-drawer-title {
     font-size: var(--text-lg);
     line-height: var(--leading-tight);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
     color: var(--color-ink);
   }
   .header-drawer-description {
@@ -473,7 +473,7 @@
   }
   .issuing-overlay-dialog-title-issuing {
     font-size: var(--text-lg);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
     color: var(--color-gold-300);
   }
 }

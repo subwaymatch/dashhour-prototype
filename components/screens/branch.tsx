@@ -426,7 +426,7 @@ export function BranchScreen({ id }: { id: string }) {
   const view = viewById(id);
   if (!view) return null;
   return (
-    <div className="branch-screen-div-services-title">
+    <div className="branch-screen-div-services-title plain-page">
       <div className="branch-screen-div-services-title-2">
         <div>
           <Hero view={view} />
@@ -455,15 +455,25 @@ export function BranchScreen({ id }: { id: string }) {
           <Section title={t("servicesTitle")}>
             <ServiceQueues view={view} />
           </Section>
-          <div className="branch-screen-div-min">
-            <p className="branch-screen-p">{SERVICES.general.name[lang]}</p>
-            <p className="branch-screen-p-min">
-              <span className="minute-number">{view.wait}</span>
-              <span className="branch-screen-span-min">{t("min")}</span>
+          <div className="branch-screen-action">
+            <p className="branch-screen-action-label">
+              {SERVICES.general.name[lang]}
             </p>
+            <p className="branch-screen-action-wait">
+              <span className="minute-number">{view.wait}</span>
+              <span className="branch-screen-action-unit">{t("minWait")}</span>
+              <span className="branch-screen-action-queue">
+                · {t("waitingCount", { n: view.waiting })}
+              </span>
+            </p>
+            <div className="branch-screen-meter-caption" aria-hidden>
+              <span>{t("crowdNow")}</span>
+              <span className="branch-screen-meter-value">
+                {Math.round(view.crowd * 100)}%
+              </span>
+            </div>
             <Meter.Root
               value={Math.round(view.crowd * 100)}
-              className="section-div-2"
               aria-label={t("crowdNow")}
             >
               <Meter.Track className="branch-screen-meter-track">

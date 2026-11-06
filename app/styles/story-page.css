@@ -49,7 +49,7 @@
     background-color: var(--color-gold-500);
     padding-inline: 1rem;
     font-size: var(--text-sm);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
     color: var(--color-navy-950);
     transition-property:
       color, background-color, border-color, outline-color,
@@ -78,7 +78,7 @@
   }
   .story-page-p {
     font-size: var(--text-xs);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
     letter-spacing: 0.18em;
     color: var(--color-gold-700);
     text-transform: uppercase;
@@ -88,7 +88,7 @@
     font-family: var(--font-display);
     font-size: var(--text-3xl);
     line-height: 1.05;
-    font-weight: var(--font-weight-black);
+    font-weight: var(--font-weight-semibold);
     letter-spacing: var(--tracking-tight);
     color: var(--color-navy-900);
     @media (width >= 40rem) {
@@ -122,7 +122,7 @@
     background-color: var(--color-navy-900);
     padding-inline: 1.25rem;
     font-size: var(--text-sm);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
     color: var(--color-white);
     transition-property:
       color, background-color, border-color, outline-color,
@@ -163,7 +163,7 @@
   .story-page-h2 {
     font-family: var(--font-display);
     font-size: var(--text-2xl);
-    font-weight: var(--font-weight-black);
+    font-weight: var(--font-weight-semibold);
     letter-spacing: var(--tracking-tight);
     color: var(--color-navy-900);
   }
@@ -217,7 +217,7 @@
   }
   .story-page-dt {
     font-size: var(--text-base);
-    font-weight: var(--font-weight-extrabold);
+    font-weight: var(--font-weight-semibold);
     color: var(--color-navy-900);
   }
   .story-page-dd {

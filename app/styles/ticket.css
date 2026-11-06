@@ -100,10 +100,10 @@
   .ticket-stub-p {
     margin-top: var(--spacing);
     font-family: var(--font-display);
-    font-size: var(--text-5xl);
-    line-height: 0.95;
-    font-weight: var(--font-weight-extrabold);
-    letter-spacing: -0.04em;
+    font-size: var(--text-4xl);
+    line-height: 1;
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: -0.03em;
     color: var(--color-navy-900);
     font-variant-numeric: tabular-nums;
   }
@@ -113,7 +113,7 @@
     line-height: var(--leading-tight);
   }
   .ticket-stub-span-2 {
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
     color: var(--color-gold-700);
   }
   .ticket-stub-span-3 {
@@ -164,9 +164,9 @@
   .ticket-stub-p-3 {
     margin-top: var(--spacing);
     font-family: var(--font-display);
-    font-size: var(--text-2xl);
+    font-size: var(--text-xl);
     line-height: 1;
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
     color: var(--color-navy-900);
     font-variant-numeric: tabular-nums;
   }
@@ -249,7 +249,7 @@
   }
   .ticket-timeline-h2-timeline {
     font-size: var(--text-sm);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
     color: var(--color-ink);
   }
   .ticket-timeline-ol {
@@ -339,7 +339,7 @@
     align-items: center;
     gap: 0.5rem;
     font-size: var(--text-sm);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
     color: var(--color-ink);
   }
   .bring-list-ul {
@@ -406,7 +406,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     font-size: var(--text-base);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
     color: var(--color-ink);
   }
   .ticket-branch-card-p-2 {
@@ -442,7 +442,7 @@
   .empty-ticket-p-no-ticket {
     margin-top: 1rem;
     font-size: var(--text-lg);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
     color: var(--color-ink);
   }
   .empty-ticket-p-no-ticket-body {
@@ -470,7 +470,7 @@
   }
   .cancel-ticket-dialog-alert-dialog-title-cancel-title {
     font-size: var(--text-base);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
     color: var(--color-ink);
   }
   .cancel-ticket-dialog-alert-dialog-description-cancel-body {

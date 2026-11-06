@@ -157,7 +157,7 @@
   }
   b,
   strong {
-    font-weight: bolder;
+    font-weight: 600;
   }
   code,
   kbd,
@@ -248,7 +248,7 @@
     opacity: 1;
   }
   :where(select:is([multiple], [size])) optgroup {
-    font-weight: bolder;
+    font-weight: 600;
   }
   :where(select:is([multiple], [size])) optgroup option {
     padding-inline-start: 20px;
@@ -319,6 +319,18 @@ html,
 body {
   background: var(--color-paper);
   color: var(--color-ink);
+}
+/* Detail pages (branch, account) sit on plain white instead of the paper tone. */
+html:has(.plain-page),
+html:has(.plain-page) body {
+  background: var(--color-white);
+}
+html:has(.plain-page) .mobile-top-bar-div {
+  background-color: color-mix(in srgb, #fff 92%, transparent);
+}
+/* The branch page's action bar sits on the tab bar; read them as one block. */
+html:has(.branch-screen-div-min-wait) .bottom-nav-nav {
+  border-top-color: transparent;
 }
 body {
   margin: 0;

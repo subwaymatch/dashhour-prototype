@@ -161,7 +161,7 @@ export function MeScreen() {
   return (
     <>
       <MobileTopBar title={t("account")} />
-      <div className="me-screen-div-account">
+      <div className="me-screen-div-account plain-page">
         <h1 className="me-screen-h1-account">{t("account")}</h1>
         <div className="me-screen-div-guest">
           <div className="me-screen-div-guest-2">

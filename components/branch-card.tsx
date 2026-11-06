@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { Select } from "@base-ui/react/select";
@@ -8,6 +9,7 @@ import { ToggleGroup } from "@base-ui/react/toggle-group";
 import {
   Accessibility,
   Banknote,
+  ChevronLeft,
   ChevronRight,
   ChevronDown,
   Check,
@@ -15,6 +17,7 @@ import {
   Clock,
   CircleParking,
   Languages,
+  RotateCcw,
   Star,
   Ticket,
   Timer,
@@ -431,7 +434,6 @@ export function BankFilter() {
         value={bankFilter}
         onValueChange={(value) => setBankFilter(value ?? "all")}
       >
-        <Select.Label>{t("filterBank")}</Select.Label>
         <div className="bank-filter-control">
           <Select.Trigger
             aria-label={t("filterBank")}
@@ -481,15 +483,21 @@ export function BankFilter() {
 export function FilterChips({
   className,
   tone = "light",
+  compact = false,
+  showClear = true,
 }: {
   className?: string;
   tone?: "light" | "dark";
+  compact?: boolean;
+  /** The desktop list shows its own reset button next to the bank filter. */
+  showClear?: boolean;
 }) {
   const { filters, setFilters, bankFilter, setBankFilter, lang, t } =
     useStore();
   const chip = cx(
     "filter-chip",
     tone === "light" ? "filter-chip-light" : "filter-chip-dark",
+    compact && "filter-chip-compact",
     focusRing,
   );
   return (
@@ -506,7 +514,7 @@ export function FilterChips({
           {f === "fx" ? SERVICES.fx.name[lang] : AMENITIES[f][lang]}
         </Toggle>
       ))}
-      {(filters.length > 0 || bankFilter !== "all") && (
+      {showClear && (filters.length > 0 || bankFilter !== "all") && (
         <button
           type="button"
           onClick={() => {
@@ -526,6 +534,104 @@ export function FilterChips({
         </button>
       )}
     </ToggleGroup>
+  );
+}
+
+/**
+ * One row that scrolls sideways, with faded edges and arrow buttons when chips are
+ * hidden. Keyboard focus scrolls a chip into view on its own, so the arrows are
+ * only for pointer users.
+ */
+function ScrollRow({ children }: { children: ReactNode }) {
+  const { t } = useStore();
+  const ref = React.useRef<HTMLDivElement>(null);
+  const [edges, setEdges] = React.useState({ start: false, end: false });
+
+  React.useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const update = () => {
+      const max = el.scrollWidth - el.clientWidth;
+      setEdges({ start: el.scrollLeft > 1, end: el.scrollLeft < max - 1 });
+    };
+    update();
+    el.addEventListener("scroll", update, { passive: true });
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    if (el.firstElementChild) observer.observe(el.firstElementChild);
+    return () => {
+      el.removeEventListener("scroll", update);
+      observer.disconnect();
+    };
+  }, []);
+
+  const scroll = (dir: 1 | -1) =>
+    ref.current?.scrollBy({
+      left: dir * ref.current.clientWidth * 0.7,
+      behavior: "smooth",
+    });
+
+  return (
+    <div
+      className="scroll-row"
+      data-overflow-start={edges.start || undefined}
+      data-overflow-end={edges.end || undefined}
+    >
+      <div ref={ref} className="scroll-row-viewport">
+        {children}
+      </div>
+      {edges.start && (
+        <button
+          type="button"
+          tabIndex={-1}
+          aria-label={t("scrollLeft")}
+          onClick={() => scroll(-1)}
+          className="scroll-row-arrow scroll-row-arrow-start"
+        >
+          <ChevronLeft aria-hidden />
+        </button>
+      )}
+      {edges.end && (
+        <button
+          type="button"
+          tabIndex={-1}
+          aria-label={t("scrollRight")}
+          onClick={() => scroll(1)}
+          className="scroll-row-arrow scroll-row-arrow-end"
+        >
+          <ChevronRight aria-hidden />
+        </button>
+      )}
+    </div>
+  );
+}
+
+/** Desktop list filters: bank select with a reset button, then one row of chips. */
+export function DesktopFilters() {
+  const { filters, setFilters, bankFilter, setBankFilter, t } = useStore();
+  const active = filters.length > 0 || bankFilter !== "all";
+  return (
+    <div className="desktop-filters">
+      <div className="desktop-filters-bank">
+        <BankFilter />
+        {active && (
+          <button
+            type="button"
+            onClick={() => {
+              setFilters([]);
+              setBankFilter("all");
+            }}
+            className={cx("desktop-filters-reset", focusRing)}
+          >
+            <RotateCcw className="desktop-filters-reset-icon" aria-hidden />
+            {t("resetFilters")}
+          </button>
+        )}
+      </div>
+      <ScrollRow>
+        <FilterChips compact showClear={false} className="desktop-filter-chips" />
+      </ScrollRow>
+    </div>
   );
 }
 

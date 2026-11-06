@@ -84,7 +84,7 @@
     background-color: var(--color-navy-950);
     font-family: var(--font-display);
     font-size: var(--text-sm);
-    font-weight: var(--font-weight-black);
+    font-weight: var(--font-weight-semibold);
     color: var(--color-white);
   }
   .sketch-card-div-7 {
@@ -102,7 +102,7 @@
   }
   .sketch-card-h3 {
     font-size: var(--text-lg);
-    font-weight: var(--font-weight-extrabold);
+    font-weight: var(--font-weight-semibold);
     color: var(--color-navy-900);
   }
   .sketch-card-p {
@@ -188,7 +188,7 @@
     align-self: flex-start;
     padding-top: 0.5rem;
     font-size: var(--text-sm);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
     color: var(--color-gold-700);
     &:hover {
       @media (hover: hover) {

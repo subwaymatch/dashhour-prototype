@@ -8,8 +8,8 @@ import { formatDistance } from "@/lib/sim";
 import { BankBadge } from "../bank-badge";
 import {
   ActiveTicketCard,
-  BankFilter,
   BranchCard,
+  DesktopFilters,
   EmptyFilters,
   FavoriteButton,
   FilterChips,
@@ -215,8 +215,7 @@ function DesktopList() {
           <h1 className="desktop-list-title">{t("nearby")}</h1>
           <SortToggle />
         </div>
-        <BankFilter />
-        <FilterChips className="desktop-list-filter-chips" />
+        <DesktopFilters />
       </div>
       <div className="desktop-list-cards">
         <ActiveTicketCard />

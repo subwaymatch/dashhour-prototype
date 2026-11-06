@@ -300,7 +300,7 @@ function Kiosk() {
         y="24.5"
         textAnchor="middle"
         fontSize="15"
-        fontWeight="900"
+        fontWeight="600"
         letterSpacing="4"
         fill="currentColor"
         stroke="none"

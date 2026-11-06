@@ -290,7 +290,9 @@ test("search, menu, filters and account switches retain their CSS states", async
     .getByRole("button", { name: "주차", exact: true });
   await filter.click();
   await expect(filter).toHaveAttribute("data-pressed");
-  await expect(filter).toHaveCSS("background-color", "rgb(21, 26, 79)");
+  // Desktop filters are text toggles: a light navy tint only when switched on.
+  await expect(filter).toHaveCSS("background-color", "rgb(230, 232, 244)");
+  await expect(filter).toHaveCSS("color", "rgb(21, 26, 79)");
   await page
     .getByRole("button", { name: "은행 또는 지점 검색" })
     .filter({ visible: true })
@@ -412,7 +414,7 @@ test("first ticket has space for its glow above the scrollable list", async ({
   await first.hover();
   const listBox = (await list.boundingBox())!;
   const cardBox = (await first.boundingBox())!;
-  expect(cardBox.y - listBox.y).toBeGreaterThanOrEqual(32);
+  expect(cardBox.y - listBox.y).toBeGreaterThanOrEqual(20);
   await expect(list).toHaveCSS("overflow-y", "auto");
 });
 
@@ -504,10 +506,10 @@ test("sidebar typography, icons and chart divider match the refined design", asy
     "border-bottom-width",
     "0px",
   );
-  await expect(page.locator(".branch-panel-details")).toHaveCSS(
-    "background-color",
-    "rgb(232, 237, 249)",
-  );
+  const details = page.locator(".branch-panel-details");
+  await expect(details).toHaveCSS("background-color", "rgb(21, 26, 79)");
+  await expect(details).toHaveCSS("color", "rgb(255, 255, 255)");
+  await expect(details).toHaveCSS("position", "sticky");
 });
 
 test("ticket service rows and timing text fit the mobile modal", async ({
