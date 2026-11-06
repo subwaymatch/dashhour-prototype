@@ -58,8 +58,12 @@
     }
   }
   .onboarding-dialog-close-skip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.125rem;
     border-radius: var(--radius-md);
-    padding-inline: 0.75rem;
+    padding-left: 0.75rem;
+    padding-right: 0.5rem;
     padding-block: 0.375rem;
     font-size: var(--text-sm);
     font-weight: var(--font-weight-medium);
@@ -149,8 +153,22 @@
       }
     }
   }
+  .onboarding-skip-icon {
+    width: 1rem;
+    height: 1rem;
+  }
   .onboarding-button-get-started {
     height: 3.5rem;
     width: 100%;
+  }
+  .onboarding-next-icon {
+    width: 1.125rem;
+    height: 1.125rem;
+    transition: translate 150ms ease;
+  }
+  @media (hover: hover) {
+    .onboarding-button-get-started:hover .onboarding-next-icon {
+      translate: 0.125rem 0;
+    }
   }
 }

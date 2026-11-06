@@ -407,12 +407,15 @@ function Stats({ view }: { view: BranchView }) {
   return (
     <div className="stats-div-min-wait">
       {[
-        { label: t("minWait"), value: view.wait },
-        { label: t("inQueue"), value: view.waiting },
-        { label: t("crowdNow"), value: `${level}%` },
+        { label: t("waitTime"), value: view.wait, unit: t("min") },
+        { label: t("inQueue"), value: view.waiting, unit: t("peopleUnit") },
+        { label: t("crowdNow"), value: level, unit: "%" },
       ].map((s) => (
         <div key={s.label} className="stats-div">
-          <p className="stats-p">{s.value}</p>
+          <p className="stats-p">
+            <span className="minute-number">{s.value}</span>
+            {s.unit && <span className="stats-unit">{s.unit}</span>}
+          </p>
           <p className="stats-p-2">{s.label}</p>
         </div>
       ))}
@@ -461,7 +464,7 @@ export function BranchScreen({ id }: { id: string }) {
             </p>
             <p className="branch-screen-action-wait">
               <span className="minute-number">{view.wait}</span>
-              <span className="branch-screen-action-unit">{t("minWait")}</span>
+              {t("minWait")}
               <span className="branch-screen-action-queue">
                 · {t("waitingCount", { n: view.waiting })}
               </span>

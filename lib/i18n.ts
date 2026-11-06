@@ -56,6 +56,8 @@ const STRINGS = {
   // Branch card & page
   min: { en: "min", ko: "분" },
   minWait: { en: "min wait", ko: "분 대기" },
+  waitTime: { en: "Wait time", ko: "대기 시간" },
+  peopleUnit: { en: "", ko: "명" },
   waitEstimatePrefix: { en: "About", ko: "약" },
   availableNow: { en: "Available now", ko: "바로 이용" },
   inQueue: { en: "In queue", ko: "대기 인원" },
