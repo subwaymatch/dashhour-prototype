@@ -13,7 +13,10 @@ export type Sketch = {
   titleKo: string;
   notes: string[];
   href: string;
+  /** Landscape sketch (3:2) instead of portrait (3:4). */
   wide?: boolean;
+  /** Spans both grid columns with the notes beside the sketch. */
+  row?: boolean;
 };
 
 export function SketchCard({ sketch }: { sketch: Sketch }) {
@@ -22,20 +25,21 @@ export function SketchCard({ sketch }: { sketch: Sketch }) {
   return (
     <article
       className={cx(
-        "sketch-card-article",
-        sketch.wide && "sketch-card-article-2",
+        "sketch",
+        sketch.wide && "sketch-wide",
+        sketch.row && "sketch-row",
       )}
     >
       <div
         className={cx(
-          "sketch-card-div",
-          original ? "sketch-card-div-2" : "sketch-card-div-3",
+          "sketch-frame",
+          original ? "sketch-frame-original" : "sketch-frame-paper",
         )}
       >
         <div
           className={cx(
-            "sketch-card-div-4",
-            sketch.wide ? "sketch-card-div-5" : "sketch-card-div-6",
+            "sketch-media",
+            sketch.wide ? "sketch-media-wide" : "sketch-media-tall",
           )}
         >
           <img
@@ -44,51 +48,53 @@ export function SketchCard({ sketch }: { sketch: Sketch }) {
             width={sketch.wide ? 768 : 512}
             height={sketch.wide ? 512 : 768}
             loading="lazy"
-            className={cx("sketch-card-img", original && "sketch-card-img-2")}
+            className={cx("sketch-img-redrawn", original && "sketch-img-hidden")}
           />
           <img
             src={`/sketches/original/${sketch.slug}.webp`}
             alt={`Original notepad page for the ${sketch.title.toLowerCase()} screen, with handwritten Korean notes`}
             loading="lazy"
             className={cx(
-              "sketch-card-img-3",
-              !original && "sketch-card-img-2",
+              "sketch-img-original",
+              !original && "sketch-img-hidden",
             )}
           />
         </div>
-        <span className="sketch-card-span">{sketch.number}</span>
       </div>
-      <div className="sketch-card-div-7">
-        <div className="sketch-card-div-8">
+      <div className="sketch-body">
+        <div className="sketch-heading">
           <div>
-            <h3 className="sketch-card-h3">{sketch.title}</h3>
-            <p lang="ko" className="sketch-card-p">
-              {sketch.titleKo}
-            </p>
+            <p className="sketch-step">Sketch {sketch.number}</p>
+            <h3 className="sketch-title">
+              {sketch.title}
+              <span lang="ko" className="sketch-title-ko">
+                {sketch.titleKo}
+              </span>
+            </h3>
           </div>
-          <label htmlFor={id} className="sketch-card-label">
+          <label htmlFor={id} className="sketch-toggle">
             Original page
             <Switch.Root
               id={id}
               checked={original}
               onCheckedChange={setOriginal}
-              className="sketch-card-switch-root"
+              className="sketch-switch"
             >
-              <Switch.Thumb className="sketch-card-switch-thumb" />
+              <Switch.Thumb className="sketch-switch-thumb" />
             </Switch.Root>
           </label>
         </div>
-        <ul className="sketch-card-ul">
+        <ul className="sketch-notes">
           {sketch.notes.map((n) => (
-            <li key={n} className="sketch-card-li">
-              <span className="sketch-card-span-2" aria-hidden />
+            <li key={n} className="sketch-note">
+              <span className="sketch-note-dot" aria-hidden />
               {n}
             </li>
           ))}
         </ul>
-        <Link href={sketch.href} className="sketch-card-link">
+        <Link href={sketch.href} className="sketch-link">
           See it in the prototype{" "}
-          <ArrowRight className="sketch-card-arrow-right" aria-hidden />
+          <ArrowRight className="sketch-link-arrow" aria-hidden />
         </Link>
       </div>
     </article>
