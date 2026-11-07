@@ -87,7 +87,7 @@
   }
   .toast-list-toast-title {
     font-size: var(--text-sm);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
   }
   .toast-list-toast-description {
     margin-top: 0.125rem;

@@ -8,9 +8,10 @@ const inter = Inter({
   display: "swap",
 });
 
+// Variable font: Google serves the same files either way, and a fixed weight list
+// would render 600 as 700 for Korean text.
 const notoKr = Noto_Sans_KR({
   subsets: ["latin"],
-  weight: ["400", "500", "700", "900"],
   variable: "--font-noto-kr",
   display: "swap",
 });

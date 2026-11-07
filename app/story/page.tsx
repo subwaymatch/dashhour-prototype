@@ -1,13 +1,19 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Smartphone, Monitor } from "lucide-react";
+import {
+  ArrowRight,
+  Monitor,
+  Smartphone,
+  SquarePlus,
+  Trophy,
+} from "lucide-react";
 import { LogoMark, Wordmark } from "@/components/logo";
 import { SketchCard, type Sketch } from "@/components/sketch-card";
 
 export const metadata: Metadata = {
   title: "From sketch to prototype",
   description:
-    "How Dash Hour went from six notepad sketches at a 2016 hackathon to a working web and mobile prototype.",
+    "How Dash Hour, winner of the first BlueHack Samsung Hackathon in 2016, went from six notepad sketches to a working web and mobile prototype.",
 };
 
 const SKETCHES: Sketch[] = [
@@ -46,6 +52,7 @@ const SKETCHES: Sketch[] = [
     ],
     href: "/branch/shinhan-gangnam",
     wide: true,
+    row: true,
   },
   {
     slug: "03-ticket",
@@ -81,43 +88,22 @@ const SKETCHES: Sketch[] = [
       "Missing your turn three times without cancelling adds a penalty.",
     ],
     href: "/ticket",
+    row: true,
   },
 ];
 
-const STACK = [
+const TEAM = [
   {
-    name: "Vinext",
-    detail:
-      "Next.js App Router on Vite, prerendered and served from Cloudflare Workers",
+    role: "Team lead",
+    name: "Bolim Lee",
+    note: "Former designer at Samsung Electronics",
   },
-  {
-    name: "Base UI",
-    detail:
-      "Drawer, Dialog, Alert Dialog, Menu, Toast, Radio Group, Toggle Group, Switch, Meter, Progress, Input",
-  },
-  {
-    name: "Regular CSS",
-    detail: "Navy and gold palette carried over from the 2016 visual design",
-  },
-  {
-    name: "Lucide",
-    detail: "Open-source icons in place of the original hand-drawn set",
-  },
-  {
-    name: "MapLibre",
-    detail:
-      "A real street map of Gangnam from OpenStreetMap, served by OpenFreeMap, with walking routes from OSRM",
-  },
-  {
-    name: "GPT Image 2.5",
-    detail:
-      "Redrew the notepad photos as clean, text-free pen sketches, and painted the branch scenes and onboarding illustrations",
-  },
+  { role: "Developer", name: "Ye Joo Park" },
 ];
 
 export default function StoryPage() {
   return (
-    <div className="story-page-div">
+    <div className="story-page-div plain-page">
       <header className="story-page-header">
         <div className="story-page-div-2">
           <Link href="/" className="story-page-link">
@@ -134,7 +120,10 @@ export default function StoryPage() {
 
       <main className="story-page-main">
         <section className="story-page-section">
-          <p className="story-page-p">Hackathon project · 2016</p>
+          <p className="story-page-p">
+            <Trophy className="story-page-trophy" aria-hidden />
+            Winner of the first BlueHack Samsung Hackathon · 2016
+          </p>
           <h1 className="story-page-h1">
             From a notepad to a working prototype
           </h1>
@@ -151,28 +140,51 @@ export default function StoryPage() {
             web app: the original three-tab layout on phones and a list, map and
             detail view on larger screens.
           </p>
+          {/* Wide screens get the desktop pitch; phones, where the app is
+              already the three-tab layout, get "Open the app". */}
           <div className="story-page-div-4">
             <Link href="/" className="story-page-link-3">
-              <Monitor className="story-page-monitor" aria-hidden /> Try it on
-              desktop
+              <Monitor className="story-page-monitor story-wide" aria-hidden />
+              <Smartphone
+                className="story-page-monitor story-narrow"
+                aria-hidden
+              />
+              <span className="story-wide">Try it on desktop</span>
+              <span className="story-narrow">Open the app</span>
             </Link>
-            <p className="story-page-p-4">
+            <p className="story-page-p-4 story-wide">
               <Smartphone className="story-page-smartphone" aria-hidden />
               On a phone it switches to the original three-tab app, and you can
               add it to your home screen.
             </p>
+            <p className="story-page-p-4 story-narrow">
+              <SquarePlus className="story-page-smartphone" aria-hidden />
+              It opens as the original three-tab app. Add it to your home screen
+              from your browser&rsquo;s share menu to use it like an installed
+              app.
+            </p>
+          </div>
+          <div className="story-team">
+            <h2 className="story-team-title">Built by a hackathon team</h2>
+            <dl className="story-team-list">
+              {TEAM.map((m) => (
+                <div key={m.name} className="story-team-member">
+                  <dt className="story-team-role">{m.role}</dt>
+                  <dd className="story-team-name">{m.name}</dd>
+                  {m.note && <dd className="story-team-note">{m.note}</dd>}
+                </div>
+              ))}
+            </dl>
           </div>
         </section>
 
         <section className="story-page-section-2" aria-labelledby="sketches">
-          <div className="story-page-div-5">
-            <h2 id="sketches" className="story-page-h2">
-              The sketches
-            </h2>
-            <p className="story-page-p-5">
-              Turn on “Original page” to see each scanned notepad page.
-            </p>
-          </div>
+          <h2 id="sketches" className="story-page-h2">
+            The sketches
+          </h2>
+          <p className="story-page-p-5">
+            Turn on “Original page” to see each scanned notepad page.
+          </p>
           <div className="story-page-div-6">
             {SKETCHES.map((s) => (
               <SketchCard key={s.slug} sketch={s} />
@@ -180,30 +192,6 @@ export default function StoryPage() {
           </div>
         </section>
 
-        <section className="story-page-section-3" aria-labelledby="stack">
-          <div>
-            <h2 id="stack" className="story-page-h2">
-              How it&rsquo;s built
-            </h2>
-            <p className="story-page-p-3">
-              Queue lengths are simulated from a typical day at a Korean bank
-              branch, with a quiet mid-morning and rushes at lunch and before
-              closing. Each counter type (deposits, loans, foreign exchange and
-              business banking) keeps its own queue, as on a real ticket kiosk.
-              A demo clock runs ten times faster than real time so you can watch
-              a ticket count down, get called to a counter, or miss your turn.
-              You can change its speed from the ⋮ menu.
-            </p>
-          </div>
-          <dl className="story-page-dl">
-            {STACK.map((s) => (
-              <div key={s.name} className="story-page-div-7">
-                <dt className="story-page-dt">{s.name}</dt>
-                <dd className="story-page-dd">{s.detail}</dd>
-              </div>
-            ))}
-          </dl>
-        </section>
       </main>
     </div>
   );

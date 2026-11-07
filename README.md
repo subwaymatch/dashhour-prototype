@@ -2,7 +2,7 @@
 
 Dash Hour lets you take a bank's queue number before you get there. You can see how long each nearby branch's queue is and how busy it usually gets through the day, and the ticket counts down so you know when to leave.
 
-It started as a hackathon project in 2016 with six pages of pen sketches. This repository rebuilds it as a responsive web app:
+It started in 2016 as six pages of pen sketches and won the first BlueHack Samsung Hackathon that year. The team was led by Bolim Lee, a former designer at Samsung Electronics, with Ye Joo Park as the developer. This repository rebuilds it as a responsive web app:
 
 - **Phones:** a bottom tab bar (Home, Map, Ticket, My) and an installable home-screen app.
 - **Desktop:** branch list, map and branch panel side by side, with My ticket and Account pages.

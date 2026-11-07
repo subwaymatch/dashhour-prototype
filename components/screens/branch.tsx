@@ -407,12 +407,15 @@ function Stats({ view }: { view: BranchView }) {
   return (
     <div className="stats-div-min-wait">
       {[
-        { label: t("minWait"), value: view.wait },
-        { label: t("inQueue"), value: view.waiting },
-        { label: t("crowdNow"), value: `${level}%` },
+        { label: t("waitTime"), value: view.wait, unit: t("min") },
+        { label: t("inQueue"), value: view.waiting, unit: t("peopleUnit") },
+        { label: t("crowdNow"), value: level, unit: "%" },
       ].map((s) => (
         <div key={s.label} className="stats-div">
-          <p className="stats-p">{s.value}</p>
+          <p className="stats-p">
+            <span className="minute-number">{s.value}</span>
+            {s.unit && <span className="stats-unit">{s.unit}</span>}
+          </p>
           <p className="stats-p-2">{s.label}</p>
         </div>
       ))}
@@ -426,7 +429,7 @@ export function BranchScreen({ id }: { id: string }) {
   const view = viewById(id);
   if (!view) return null;
   return (
-    <div className="branch-screen-div-services-title">
+    <div className="branch-screen-div-services-title plain-page">
       <div className="branch-screen-div-services-title-2">
         <div>
           <Hero view={view} />
@@ -455,15 +458,25 @@ export function BranchScreen({ id }: { id: string }) {
           <Section title={t("servicesTitle")}>
             <ServiceQueues view={view} />
           </Section>
-          <div className="branch-screen-div-min">
-            <p className="branch-screen-p">{SERVICES.general.name[lang]}</p>
-            <p className="branch-screen-p-min">
-              <span className="minute-number">{view.wait}</span>
-              <span className="branch-screen-span-min">{t("min")}</span>
+          <div className="branch-screen-action">
+            <p className="branch-screen-action-label">
+              {SERVICES.general.name[lang]}
             </p>
+            <p className="branch-screen-action-wait">
+              <span className="minute-number">{view.wait}</span>
+              {t("minWait")}
+              <span className="branch-screen-action-queue">
+                · {t("waitingCount", { n: view.waiting })}
+              </span>
+            </p>
+            <div className="branch-screen-meter-caption" aria-hidden>
+              <span>{t("crowdNow")}</span>
+              <span className="branch-screen-meter-value">
+                {Math.round(view.crowd * 100)}%
+              </span>
+            </div>
             <Meter.Root
               value={Math.round(view.crowd * 100)}
-              className="section-div-2"
               aria-label={t("crowdNow")}
             >
               <Meter.Track className="branch-screen-meter-track">

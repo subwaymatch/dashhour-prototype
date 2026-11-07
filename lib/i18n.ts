@@ -45,6 +45,9 @@ const STRINGS = {
   allBanks: { en: "All banks", ko: "전체 은행" },
   noMatches: { en: "No branches match these filters", ko: "조건에 맞는 지점이 없습니다" },
   clearFilters: { en: "Clear filters", ko: "필터 해제" },
+  resetFilters: { en: "Reset", ko: "초기화" },
+  scrollLeft: { en: "Show previous filters", ko: "이전 필터 보기" },
+  scrollRight: { en: "Show more filters", ko: "필터 더 보기" },
   showMore: { en: "Show {n} more", ko: "{n}곳 더보기" },
   showLess: { en: "Show less", ko: "접기" },
   you: { en: "You", ko: "내 위치" },
@@ -53,6 +56,8 @@ const STRINGS = {
   // Branch card & page
   min: { en: "min", ko: "분" },
   minWait: { en: "min wait", ko: "분 대기" },
+  waitTime: { en: "Wait time", ko: "대기 시간" },
+  peopleUnit: { en: "", ko: "명" },
   waitEstimatePrefix: { en: "About", ko: "약" },
   availableNow: { en: "Available now", ko: "바로 이용" },
   inQueue: { en: "In queue", ko: "대기 인원" },

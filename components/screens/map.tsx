@@ -19,7 +19,9 @@ function MobileMap() {
         className="mobile-map-city-map-2"
       />
       <div className="mobile-map-div-search-placeholder-2">
-        <div className="mobile-map-div-search-placeholder-3">
+        {/* Search and filters share one surface so the plain toggles stay
+            legible over the map. */}
+        <div className="mobile-map-div-search-placeholder-3 mobile-map-panel">
           <SearchDialog
             trigger={
               <button
@@ -34,7 +36,7 @@ function MobileMap() {
               </button>
             }
           />
-          <FilterChips className="mobile-map-filter-chips" />
+          <FilterChips compact className="mobile-map-filter-chips" />
         </div>
       </div>
       <div className="mobile-map-div">

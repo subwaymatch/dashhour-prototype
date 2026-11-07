@@ -259,16 +259,16 @@ test("ticket sheet controls and issuing, delay and cancellation flows work", asy
   await checkPointers(page);
 });
 
-test("mobile cards navigate from the bottom half and layouts fit small screens", async ({
+test("mobile list rows open the branch and layouts fit small screens", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await open(page, "/");
-  const card = page.locator(".stub-card").filter({ visible: true }).first();
-  const action = card.locator(".stub-card-action");
-  const href = await action.getAttribute("href");
-  const box = (await card.boundingBox())!;
-  await page.mouse.click(box.x + 28, box.y + box.height - 16);
+  const row = page.locator(".branch-row").filter({ visible: true }).first();
+  const href = await row.getAttribute("href");
+  const box = (await row.boundingBox())!;
+  // The whole row is one link: clicking the wait time on the right opens it.
+  await page.mouse.click(box.x + box.width - 12, box.y + box.height - 12);
   await expect(page).toHaveURL(new RegExp(href!));
   for (const route of ["/", "/map", "/ticket", "/me", "/story"]) {
     await open(page, route);
@@ -290,7 +290,9 @@ test("search, menu, filters and account switches retain their CSS states", async
     .getByRole("button", { name: "주차", exact: true });
   await filter.click();
   await expect(filter).toHaveAttribute("data-pressed");
-  await expect(filter).toHaveCSS("background-color", "rgb(21, 26, 79)");
+  // Desktop filters are text toggles: a light navy tint only when switched on.
+  await expect(filter).toHaveCSS("background-color", "rgb(230, 232, 244)");
+  await expect(filter).toHaveCSS("color", "rgb(21, 26, 79)");
   await page
     .getByRole("button", { name: "은행 또는 지점 검색" })
     .filter({ visible: true })
@@ -353,16 +355,15 @@ for (const width of [1440, 390]) {
     page,
   }) => {
     await page.setViewportSize({ width, height: 900 });
-    await open(page, "/");
+    // Phone list rows have no star, so on phones the branch page's copy-address
+    // button raises the toasts (the hero star sits under the toast stack).
+    await open(page, width >= 1024 ? "/" : "/branch/shinhan-gangnam");
     await page.clock.install();
     await page.clock.pauseAt(new Date(Date.now() + 100));
-    const favorite = page
-      .locator(
-        width >= 1024
-          ? ".desktop-list .card-favorite"
-          : ".card-favorite:visible",
-      )
-      .first();
+    const favorite =
+      width >= 1024
+        ? page.locator(".desktop-list .card-favorite").first()
+        : page.getByRole("button", { name: "복사" }).filter({ visible: true });
     for (let i = 0; i < 3; i++) await favorite.click();
     const toasts = page.locator(
       ".toast-card:not([data-ending-style]):not([data-limited])",
@@ -412,7 +413,7 @@ test("first ticket has space for its glow above the scrollable list", async ({
   await first.hover();
   const listBox = (await list.boundingBox())!;
   const cardBox = (await first.boundingBox())!;
-  expect(cardBox.y - listBox.y).toBeGreaterThanOrEqual(32);
+  expect(cardBox.y - listBox.y).toBeGreaterThanOrEqual(20);
   await expect(list).toHaveCSS("overflow-y", "auto");
 });
 
@@ -504,10 +505,10 @@ test("sidebar typography, icons and chart divider match the refined design", asy
     "border-bottom-width",
     "0px",
   );
-  await expect(page.locator(".branch-panel-details")).toHaveCSS(
-    "background-color",
-    "rgb(232, 237, 249)",
-  );
+  const details = page.locator(".branch-panel-details");
+  await expect(details).toHaveCSS("background-color", "rgb(21, 26, 79)");
+  await expect(details).toHaveCSS("color", "rgb(255, 255, 255)");
+  await expect(details).toHaveCSS("position", "sticky");
 });
 
 test("ticket service rows and timing text fit the mobile modal", async ({

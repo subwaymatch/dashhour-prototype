@@ -19,7 +19,7 @@ export function BankBadge({
             y="25.5"
             textAnchor="middle"
             fontSize="15"
-            fontWeight="900"
+            fontWeight="600"
             letterSpacing="-0.5"
             fill={letters.color}
           >

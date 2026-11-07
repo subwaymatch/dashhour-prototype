@@ -8,8 +8,8 @@ import { formatDistance } from "@/lib/sim";
 import { BankBadge } from "../bank-badge";
 import {
   ActiveTicketCard,
-  BankFilter,
-  BranchCard,
+  BranchRow,
+  DesktopFilters,
   EmptyFilters,
   FavoriteButton,
   FilterChips,
@@ -140,7 +140,7 @@ function MobileHome() {
         ) : others[0] ? (
           <Recommendation view={others[0]} />
         ) : null}
-        <FilterChips className="mobile-home-filter-chips" />
+        <FilterChips compact className="mobile-home-filter-chips" />
         {empty && <EmptyFilters />}
         {favorites.length > 0 && (
           <section
@@ -149,7 +149,7 @@ function MobileHome() {
           >
             <SectionHeader title={t("favorites")} />
             {favorites.map((v) => (
-              <BranchCard key={v.id} view={v} />
+              <BranchRow key={v.id} view={v} />
             ))}
           </section>
         )}
@@ -162,7 +162,7 @@ function MobileHome() {
               <SortToggle />
             </SectionHeader>
             {visible.map((v) => (
-              <BranchCard
+              <BranchRow
                 key={v.id}
                 view={v}
                 className="mobile-home-branch-card"
@@ -215,8 +215,7 @@ function DesktopList() {
           <h1 className="desktop-list-title">{t("nearby")}</h1>
           <SortToggle />
         </div>
-        <BankFilter />
-        <FilterChips className="desktop-list-filter-chips" />
+        <DesktopFilters />
       </div>
       <div className="desktop-list-cards">
         <ActiveTicketCard />

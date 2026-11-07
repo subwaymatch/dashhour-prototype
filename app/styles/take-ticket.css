@@ -90,7 +90,7 @@
   .service-option-span-min-2 {
     display: block;
     font-size: var(--ticket-sheet-text-size);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
     color: var(--color-navy-900);
     font-variant-numeric: tabular-nums;
   }
@@ -137,7 +137,7 @@
   .header-drawer-title {
     font-size: var(--text-lg);
     line-height: var(--leading-tight);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
     color: var(--color-ink);
   }
   .header-drawer-description {
@@ -208,22 +208,24 @@
     flex-direction: column;
     gap: 0;
   }
+  /* Call time and departure as a plain two-column line, no filled box. */
   .sheet-body-div-eta-label {
     margin-top: 1rem;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.5rem;
-    border-radius: var(--radius-md);
-    background-color: var(--color-navy-900);
-    padding: 1rem;
-    color: var(--color-white);
+    padding-block: 0.25rem;
+    color: var(--color-ink);
+    & > :last-child {
+      border-left: 1px solid var(--color-line);
+      padding-left: 1rem;
+    }
   }
   .sheet-body-p-eta-label {
     display: flex;
     align-items: center;
     gap: 0.375rem;
     font-size: var(--ticket-sheet-text-size);
-    color: color-mix(in srgb, #fff 60%, transparent);
+    color: var(--color-muted);
   }
   .sheet-body-clock3 {
     width: 0.875rem;
@@ -234,10 +236,11 @@
     font-size: var(--ticket-sheet-text-size);
     line-height: var(--leading-tight);
     font-weight: 500;
+    color: var(--color-navy-900);
     font-variant-numeric: tabular-nums;
   }
   .sheet-time-departure {
-    color: var(--color-gold-300);
+    color: var(--color-gold-700);
   }
   .sheet-confirm-icon {
     width: 18px;
@@ -473,7 +476,7 @@
   }
   .issuing-overlay-dialog-title-issuing {
     font-size: var(--text-lg);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
     color: var(--color-gold-300);
   }
 }

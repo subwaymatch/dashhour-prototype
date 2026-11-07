@@ -29,7 +29,9 @@
     margin-inline: auto;
     width: 100%;
     max-width: 400px;
-    filter: drop-shadow(0 16px 32px rgba(13, 17, 55, 0.16));
+    /* A hairline keeps the torn edges visible on the white page. */
+    filter: drop-shadow(0 0 0.5px rgb(13 17 55 / 0.35))
+      drop-shadow(0 12px 28px rgb(13 17 55 / 0.1));
   }
   .ticket-stub-div-cancel-ticket-2 {
     position: relative;
@@ -100,10 +102,10 @@
   .ticket-stub-p {
     margin-top: var(--spacing);
     font-family: var(--font-display);
-    font-size: var(--text-5xl);
-    line-height: 0.95;
-    font-weight: var(--font-weight-extrabold);
-    letter-spacing: -0.04em;
+    font-size: var(--text-4xl);
+    line-height: 1;
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: -0.03em;
     color: var(--color-navy-900);
     font-variant-numeric: tabular-nums;
   }
@@ -113,7 +115,7 @@
     line-height: var(--leading-tight);
   }
   .ticket-stub-span-2 {
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
     color: var(--color-gold-700);
   }
   .ticket-stub-span-3 {
@@ -164,9 +166,9 @@
   .ticket-stub-p-3 {
     margin-top: var(--spacing);
     font-family: var(--font-display);
-    font-size: var(--text-2xl);
+    font-size: var(--text-xl);
     line-height: 1;
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
     color: var(--color-navy-900);
     font-variant-numeric: tabular-nums;
   }
@@ -237,19 +239,11 @@
     opacity: 45%;
   }
   .ticket-timeline-section-timeline {
-    border-radius: var(--radius-lg);
-    background-color: var(--color-white);
-    padding: 1.25rem;
-    --surface-shadow:
-      0 1px 2px rgb(13 17 55 / 0.04), 0 8px 24px -12px rgb(13 17 55 / 0.14);
-    --surface-ring: 0 0 0 1px var(--surface-ring-color, currentcolor);
-    box-shadow:
-      var(--surface-inset-ring), var(--surface-ring), var(--surface-shadow);
-    --surface-ring-color: color-mix(in srgb, #e7e4dc 70%, transparent);
+    min-width: 0;
   }
   .ticket-timeline-h2-timeline {
     font-size: var(--text-sm);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
     color: var(--color-ink);
   }
   .ticket-timeline-ol {
@@ -339,7 +333,7 @@
     align-items: center;
     gap: 0.5rem;
     font-size: var(--text-sm);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
     color: var(--color-ink);
   }
   .bring-list-ul {
@@ -369,44 +363,35 @@
     width: 0.75rem;
     height: 0.75rem;
   }
+  /* Branch link: a thumbnail and text, no card. */
   .ticket-branch-card-link-hours-value {
     display: flex;
-    overflow: hidden;
-    border-radius: var(--radius-lg);
-    background-color: var(--color-white);
-    --surface-shadow:
-      0 1px 2px rgb(13 17 55 / 0.04), 0 8px 24px -12px rgb(13 17 55 / 0.14);
-    --surface-ring: 0 0 0 1px var(--surface-ring-color, currentcolor);
-    box-shadow:
-      var(--surface-inset-ring), var(--surface-ring), var(--surface-shadow);
-    --surface-ring-color: color-mix(in srgb, #e7e4dc 70%, transparent);
-    transition-property: box-shadow;
-    transition-timing-function: var(--default-transition-timing-function);
-    transition-duration: var(--default-transition-duration);
-    &:hover {
-      @media (hover: hover) {
-        --surface-shadow:
-          0 2px 6px rgb(13 17 55 / 0.08), 0 18px 40px -12px rgb(13 17 55 / 0.28);
-        box-shadow:
-          var(--surface-inset-ring), var(--surface-ring), var(--surface-shadow);
-      }
-    }
+    align-items: center;
+    gap: 1rem;
+    border-radius: var(--radius-md);
   }
   .ticket-branch-card-img {
-    width: 7rem;
+    width: 6rem;
+    height: 4.5rem;
     flex-shrink: 0;
+    border-radius: var(--radius-md);
     object-fit: cover;
   }
   .ticket-branch-card-div-hours-value {
     min-width: 0px;
-    padding: 1rem;
+  }
+  @media (hover: hover) {
+    .ticket-branch-card-link-hours-value:hover .ticket-branch-card-p {
+      text-decoration-line: underline;
+      text-underline-offset: 3px;
+    }
   }
   .ticket-branch-card-p {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     font-size: var(--text-base);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
     color: var(--color-ink);
   }
   .ticket-branch-card-p-2 {
@@ -442,7 +427,7 @@
   .empty-ticket-p-no-ticket {
     margin-top: 1rem;
     font-size: var(--text-lg);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
     color: var(--color-ink);
   }
   .empty-ticket-p-no-ticket-body {
@@ -470,7 +455,7 @@
   }
   .cancel-ticket-dialog-alert-dialog-title-cancel-title {
     font-size: var(--text-base);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
     color: var(--color-ink);
   }
   .cancel-ticket-dialog-alert-dialog-description-cancel-body {

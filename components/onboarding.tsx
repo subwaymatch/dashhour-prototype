@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { Dialog } from "@base-ui/react/dialog";
+import { ArrowRight, ChevronsRight } from "lucide-react";
 import { useStore } from "./store";
 import { cx, focusRing, navyButton } from "./ui";
 
@@ -38,6 +39,7 @@ export function Onboarding() {
               className={cx("onboarding-dialog-close-skip", focusRing)}
             >
               {t("skip")}
+              <ChevronsRight className="onboarding-skip-icon" aria-hidden />
             </Dialog.Close>
           </div>
           <div className="onboarding-div">
@@ -86,6 +88,7 @@ export function Onboarding() {
               }
             >
               {last ? t("getStarted") : t("next")}
+              <ArrowRight className="onboarding-next-icon" aria-hidden />
             </button>
           </div>
         </Dialog.Popup>
