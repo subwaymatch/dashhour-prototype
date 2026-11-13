@@ -3,7 +3,8 @@ import { CLOSE_MIN, OPEN_MIN, type ServiceKey } from "./data";
 /** The demo always opens at 10:32, the time on the original screenshots. */
 export const SIM_START = 10 * 60 + 32;
 export const SPEEDS = [1, 10, 30] as const;
-export const DEFAULT_SPEED = 10;
+/** Real time by default; 10× and 30× are there to watch a ticket play out quickly. */
+export const DEFAULT_SPEED = 1;
 
 export type Clock = { realStart: number; simStart: number; speed: number };
 

@@ -63,7 +63,7 @@ export function Onboarding() {
             </Dialog.Description>
           </div>
           <div className="onboarding-div-get-started">
-            <div className="onboarding-div-4" role="tablist" aria-label="Steps">
+            <div className="onboarding-div-4" role="tablist" aria-label={t("steps")}>
               {SLIDES.map((s, i) => (
                 <button
                   key={s.image}

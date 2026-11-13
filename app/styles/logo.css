@@ -1,9 +1,115 @@
 /* components/logo.tsx */
 @layer components {
-  .wordmark-span {
-    font-family: var(--font-display);
-    font-weight: var(--font-weight-semibold);
-    letter-spacing: 0.06em;
-    white-space: nowrap;
+  .logo-mark,
+  .logo-hero {
+    overflow: visible;
+  }
+  .logo-mark-stub,
+  .logo-hero-stub {
+    /* Hinge at the stub's lower notch. */
+    transform-box: view-box;
+    transform-origin: 28px 24px;
+  }
+  @media (hover: hover) {
+    a:hover > .logo-mark .logo-mark-stub {
+      animation: logo-tear 0.7s cubic-bezier(0.3, 0.7, 0.2, 1);
+    }
+  }
+  a:focus-visible > .logo-mark .logo-mark-stub {
+    animation: logo-tear 0.7s cubic-bezier(0.3, 0.7, 0.2, 1);
+  }
+
+  .logo-hero-body {
+    transform-box: view-box;
+    transform-origin: 14px 14px;
+    animation: logo-hero-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .logo-hero-stub {
+    animation:
+      logo-hero-attach 0.9s 0.3s cubic-bezier(0.3, 1.35, 0.5, 1) both,
+      logo-hero-tear 6s 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+  .logo-hero-perforation {
+    opacity: 0;
+    animation: logo-hero-perforation 6s 2.4s linear infinite;
+  }
+  .logo-hero-spark {
+    transform-box: fill-box;
+    transform-origin: center;
+    transform: scale(0);
+    animation: logo-hero-spark 6s 2.4s ease-out infinite;
+  }
+}
+@keyframes logo-tear {
+  35% {
+    transform: translate(2px, -1px) rotate(13deg);
+  }
+  62% {
+    transform: translate(-0.3px, 0) rotate(-3deg);
+  }
+  82% {
+    transform: rotate(1.5deg);
+  }
+}
+@keyframes logo-hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(5px) scale(0.92);
+  }
+}
+@keyframes logo-hero-attach {
+  0% {
+    opacity: 0;
+    transform: translate(8px, -5px) rotate(24deg);
+  }
+  45% {
+    opacity: 1;
+  }
+}
+@keyframes logo-hero-tear {
+  0%,
+  50% {
+    transform: none;
+  }
+  56% {
+    transform: rotate(-4deg);
+  }
+  64%,
+  78% {
+    transform: translate(3.2px, -1.6px) rotate(16deg);
+  }
+  71% {
+    transform: translate(3.6px, -2.4px) rotate(14deg);
+  }
+  87% {
+    transform: translate(-0.4px, 0) rotate(-2.5deg);
+  }
+  93% {
+    transform: rotate(1.2deg);
+  }
+  100% {
+    transform: none;
+  }
+}
+@keyframes logo-hero-perforation {
+  0%,
+  58%,
+  88%,
+  100% {
+    opacity: 0;
+  }
+  64%,
+  80% {
+    opacity: 1;
+  }
+}
+@keyframes logo-hero-spark {
+  0%,
+  86%,
+  100% {
+    transform: scale(0) rotate(0deg);
+  }
+  92% {
+    transform: scale(1) rotate(45deg);
   }
 }

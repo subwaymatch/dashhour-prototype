@@ -146,11 +146,21 @@ export function ServiceQueues({
                       : "service-queues-p-min"
                   }
                 >
-                  <span className="minute-number">{q.wait}</span>
-                  <span className="service-queues-span-min">{t("min")}</span>
+                  {q.wait > 0 ? (
+                    <>
+                      <span className="minute-number">{q.wait}</span>
+                      <span className="service-queues-span-min">
+                        {t("min")}
+                      </span>
+                    </>
+                  ) : (
+                    t("availableNow")
+                  )}
                 </p>
                 <p className="crowd-note-span-usual">
-                  {t("waitingCount", { n: q.waiting })}
+                  {q.waiting > 0
+                    ? t("waitingCount", { n: q.waiting })
+                    : t("noWait")}
                 </p>
               </div>
             )}
@@ -192,9 +202,11 @@ export function CrowdSection({
 
 export function RouteSection({
   view,
+  title,
   className,
 }: {
   view: BranchView;
+  title?: string;
   className?: string;
 }) {
   const { t, lang, showOnMap } = useStore();
@@ -205,7 +217,7 @@ export function RouteSection({
   ];
   return (
     <Section
-      title={t("route")}
+      title={title ?? t("route")}
       icon={MapPin}
       aside={<span className="route-section-span">{view.via[lang]}</span>}
       className={className}
@@ -464,7 +476,7 @@ export function BranchScreen({ id }: { id: string }) {
             </p>
             <p className="branch-screen-action-wait">
               <span className="minute-number">{view.wait}</span>
-              {t("minWait")}
+              <span>{t("minWait")}</span>
               <span className="branch-screen-action-queue">
                 · {t("waitingCount", { n: view.waiting })}
               </span>

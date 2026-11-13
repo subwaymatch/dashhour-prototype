@@ -184,6 +184,56 @@
     color: var(--color-muted);
     font-variant-numeric: tabular-nums;
   }
+  .demo-speed {
+    margin-top: 0.875rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    column-gap: 0.625rem;
+    row-gap: 0.375rem;
+  }
+  .demo-speed-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: var(--text-2xs);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-muted);
+  }
+  .demo-speed-icon {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+  .demo-speed-group {
+    display: flex;
+    gap: 0.125rem;
+    border-radius: var(--radius-md);
+    background-color: var(--color-paper);
+    padding: 0.125rem;
+  }
+  .demo-speed-item {
+    height: 1.625rem;
+    border-radius: var(--radius-sm);
+    padding-inline: 0.5rem;
+    font-size: var(--text-2xs);
+    font-weight: var(--font-weight-medium);
+    white-space: nowrap;
+    color: var(--color-muted);
+    font-variant-numeric: tabular-nums;
+    transition:
+      color 150ms,
+      background-color 150ms;
+    &:hover {
+      @media (hover: hover) {
+        color: var(--color-ink);
+      }
+    }
+    &[data-pressed] {
+      background-color: var(--color-navy-900);
+      color: var(--color-white);
+    }
+  }
   .ticket-stub-div {
     margin-top: 1.5rem;
     border-top-style: dashed;

@@ -48,6 +48,10 @@
       top: 6rem;
     }
   }
+  /* The route map sits in the column's own rhythm, without the branch page's padding. */
+  .ticket-screen-route {
+    padding-block: 0;
+  }
   /* Plain sections beside the ticket: whitespace, no cards or rules. */
   .ticket-screen-div-3 {
     display: flex;

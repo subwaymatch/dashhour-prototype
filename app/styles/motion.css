@@ -1,0 +1,211 @@
+/* Small in-app animations. The reduced-motion rule in base.css shortens all of them. */
+@layer components {
+  /* Favorite star: pops when it's switched on (not on first render). */
+  .favorite-icon-pop {
+    animation: favorite-pop 0.45s cubic-bezier(0.3, 1.5, 0.5, 1);
+  }
+
+  /* Take-ticket buttons: the ticket icon tips on hover. */
+  @media (hover: hover) {
+    .take-ticket-button:hover:not(:disabled) svg {
+      animation: ticket-tip 0.5s var(--ease-out);
+    }
+  }
+
+  /* Phone tab bar: the active pill grows in, and the queue badge ticks when it changes. */
+  .bottom-nav-span-2 {
+    animation: nav-pill 0.28s var(--ease-out);
+  }
+  .bottom-nav-span-5 {
+    animation: badge-tick 0.4s cubic-bezier(0.3, 1.5, 0.5, 1);
+  }
+
+  /* Phone home: the recommendation and the list rows arrive in order. */
+  .recommendation-div-sort-wait {
+    animation: var(--animate-rise);
+  }
+  .mobile-home-branch-card:nth-child(3) {
+    animation-delay: 50ms;
+  }
+  .mobile-home-branch-card:nth-child(4) {
+    animation-delay: 100ms;
+  }
+  .mobile-home-branch-card:nth-child(5) {
+    animation-delay: 150ms;
+  }
+  .mobile-home-branch-card:nth-child(6) {
+    animation-delay: 200ms;
+  }
+
+  /* Crowd chart: the curve draws left to right, then the area fills in. */
+  .crowd-chart-line {
+    stroke-dasharray: 1;
+    animation: chart-draw 1.1s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+  .crowd-chart-area {
+    animation: chart-fade 0.6s 0.7s ease-out both;
+  }
+  .crowd-chart-now {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: chart-now 2.4s ease-out 1.2s infinite;
+  }
+
+  /* Ticket: prints in from the top; the details beside it follow. */
+  .ticket-screen-ticket-stub {
+    animation: ticket-print 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .ticket-screen-div-3 > * {
+    animation: var(--animate-rise);
+  }
+  .ticket-screen-div-3 > :nth-child(1) {
+    animation-delay: 120ms;
+  }
+  .ticket-screen-div-3 > :nth-child(2) {
+    animation-delay: 200ms;
+  }
+  .ticket-screen-div-3 > :nth-child(3) {
+    animation-delay: 280ms;
+  }
+  .ticket-screen-div-3 > :nth-child(4) {
+    animation-delay: 360ms;
+  }
+  /* The step you're on now. */
+  .ticket-timeline-span-6 {
+    position: relative;
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background-color: var(--color-gold-500);
+      animation: var(--animate-pulse-ring);
+    }
+  }
+  .ticket-stub-img {
+    animation: turn-pop 0.6s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+  }
+  .empty-ticket-img {
+    animation: float-soft 5s ease-in-out infinite;
+  }
+
+  /* Intro: the illustration keeps drifting once it has risen. */
+  .onboarding-img {
+    animation:
+      var(--animate-rise),
+      float-soft 6s 0.5s ease-in-out infinite;
+  }
+
+  /* Branch page: the photo settles, and the headline numbers rise. */
+  .hero-img {
+    animation: photo-settle 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* Account: visits arrive in order once they've loaded. */
+  .me-screen-ul > li {
+    animation: var(--animate-rise);
+    &:nth-child(2) {
+      animation-delay: 50ms;
+    }
+    &:nth-child(3) {
+      animation-delay: 100ms;
+    }
+    &:nth-child(4) {
+      animation-delay: 150ms;
+    }
+    &:nth-child(n + 5) {
+      animation-delay: 200ms;
+    }
+  }
+
+  /* Story page: the intro rises in order. */
+  .story-page-section > * {
+    animation: var(--animate-rise);
+  }
+  .story-page-section > :nth-child(2) {
+    animation-delay: 60ms;
+  }
+  .story-page-section > :nth-child(3) {
+    animation-delay: 120ms;
+  }
+  .story-page-section > :nth-child(n + 4) {
+    animation-delay: 180ms;
+  }
+}
+@keyframes favorite-pop {
+  0% {
+    scale: 0.6;
+    rotate: -18deg;
+  }
+  60% {
+    scale: 1.3;
+    rotate: 8deg;
+  }
+}
+@keyframes ticket-tip {
+  40% {
+    rotate: -14deg;
+    translate: 0 -1px;
+  }
+  75% {
+    rotate: 6deg;
+  }
+}
+@keyframes nav-pill {
+  from {
+    scale: 0.55 0.8;
+    opacity: 0;
+  }
+}
+@keyframes badge-tick {
+  from {
+    scale: 0.5;
+  }
+}
+@keyframes chart-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes chart-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes chart-now {
+  0% {
+    transform: scale(1);
+    opacity: 0.45;
+  }
+  70%,
+  100% {
+    transform: scale(3.2);
+    opacity: 0;
+  }
+}
+@keyframes ticket-print {
+  from {
+    opacity: 0;
+    translate: 0 -1.5rem;
+  }
+}
+@keyframes turn-pop {
+  from {
+    opacity: 0;
+    scale: 0.8;
+  }
+}
+@keyframes float-soft {
+  50% {
+    translate: 0 -8px;
+  }
+}
+@keyframes photo-settle {
+  from {
+    scale: 1.06;
+    opacity: 0.6;
+  }
+}

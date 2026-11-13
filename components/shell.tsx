@@ -9,6 +9,7 @@ import { Menu } from "@base-ui/react/menu";
 import {
   BookOpen,
   Check,
+  Info,
   CircleUserRound,
   EllipsisVertical,
   House,
@@ -250,6 +251,13 @@ export function OptionsMenu({ className }: { className?: string }) {
             </Menu.Item>
             <Menu.LinkItem
               className={itemClass}
+              render={<Link href="/about" />}
+            >
+              <Info className="options-menu-sparkles" aria-hidden />
+              {t("aboutApp")}
+            </Menu.LinkItem>
+            <Menu.LinkItem
+              className={itemClass}
               render={<Link href="/story" />}
             >
               <BookOpen className="options-menu-sparkles" aria-hidden />
@@ -330,7 +338,7 @@ export function DesktopHeader() {
       <Link href="/" aria-label="Dash Hour" className="desktop-header-link">
         <LogoMark className="desktop-header-logo-mark" />
       </Link>
-      <nav aria-label="Main" className="desktop-header-nav">
+      <nav aria-label={t("mainNav")} className="desktop-header-nav">
         {nav.map((n) => (
           <Link
             key={n.href}
@@ -383,7 +391,7 @@ export function BottomNav() {
     { href: "/me", key: "me", label: t("me"), icon: CircleUserRound },
   ] as const;
   return (
-    <nav aria-label="Main" className="bottom-nav-nav">
+    <nav aria-label={t("mainNav")} className="bottom-nav-nav">
       <ul className="bottom-nav-ul">
         {items.map(({ href, key, label, icon: Icon }) => {
           const active = section === key;
@@ -410,6 +418,7 @@ export function BottomNav() {
                   />
                   {key === "ticket" && ticket && (
                     <span
+                      key={status?.called ? "called" : status?.ahead}
                       className={cx(
                         "bottom-nav-span-3",
                         status?.called

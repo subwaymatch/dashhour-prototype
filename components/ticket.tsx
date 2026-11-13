@@ -4,11 +4,14 @@ import * as React from "react";
 import Link from "next/link";
 import { AlertDialog } from "@base-ui/react/alert-dialog";
 import { Progress } from "@base-ui/react/progress";
+import { Toggle } from "@base-ui/react/toggle";
+import { ToggleGroup } from "@base-ui/react/toggle-group";
 import { encode } from "uqr";
 import {
   Check,
   CircleCheck,
   Clock,
+  FastForward,
   ListChecks,
   Navigation,
   Undo2,
@@ -16,7 +19,12 @@ import {
   X,
 } from "lucide-react";
 import { SERVICES } from "@/lib/data";
-import { formatClock, formatCountdown, formatDistance } from "@/lib/sim";
+import {
+  SPEEDS,
+  formatClock,
+  formatCountdown,
+  formatDistance,
+} from "@/lib/sim";
 import { SERVICE_ICONS } from "./take-ticket";
 import { useStore } from "./store";
 import {
@@ -75,7 +83,15 @@ function QueueRing({
   );
 }
 
-function QrCode({ value, className }: { value: string; className?: string }) {
+function QrCode({
+  value,
+  label,
+  className,
+}: {
+  value: string;
+  label: string;
+  className?: string;
+}) {
   const { data, size } = React.useMemo(
     () => encode(value, { ecc: "M" }),
     [value],
@@ -89,12 +105,44 @@ function QrCode({ value, className }: { value: string; className?: string }) {
       viewBox={`-2 -2 ${size + 4} ${size + 4}`}
       className={className}
       role="img"
-      aria-label="Check-in QR code"
+      aria-label={label}
       shapeRendering="crispEdges"
     >
       <rect x="-2" y="-2" width={size + 4} height={size + 4} fill="white" />
       <path d={d} fill="var(--color-navy-950)" />
     </svg>
+  );
+}
+
+/**
+ * Demo only: the clock runs in real time, so this puts fast-forward next to the
+ * countdown instead of leaving it in the options menu.
+ */
+function DemoSpeed() {
+  const { speed, setSpeed, t } = useStore();
+  return (
+    <div className="demo-speed">
+      <span className="demo-speed-label">
+        <FastForward className="demo-speed-icon" aria-hidden />
+        {t("demoSpeedShort")}
+      </span>
+      <ToggleGroup
+        value={[String(speed)]}
+        onValueChange={(v) => v[0] && setSpeed(Number(v[0]))}
+        aria-label={t("demoSpeed")}
+        className="demo-speed-group"
+      >
+        {SPEEDS.map((s) => (
+          <Toggle
+            key={s}
+            value={String(s)}
+            className={cx("demo-speed-item", focusRing)}
+          >
+            {s === 1 ? t("realtime") : `${s}×`}
+          </Toggle>
+        ))}
+      </ToggleGroup>
+    </div>
   );
 }
 
@@ -194,12 +242,14 @@ export function TicketStub({ className }: { className?: string }) {
           {t("nowServing", { n: serving })} ·{" "}
           {t("counterLabel", { n: ticket.counter })}
         </p>
+        <DemoSpeed />
 
         <div className="ticket-stub-div" />
 
         <div className="ticket-stub-div-check-in">
           <QrCode
             value={`DASHHOUR:${ticket.id}:${ticket.number}`}
+            label={t("checkInQr")}
             className="ticket-stub-qr-code"
           />
           <div className="ticket-stub-div-check-in-2">

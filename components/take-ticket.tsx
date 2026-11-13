@@ -81,11 +81,19 @@ function ServiceOption({
       {queue && (
         <span className="service-option-span-min">
           <span className="service-option-span-min-2">
-            <span className="minute-number">{queue.wait}</span>
-            <span className="service-option-span-min-3">{t("min")}</span>
+            {queue.wait > 0 ? (
+              <>
+                <span className="minute-number">{queue.wait}</span>
+                <span className="service-option-span-min-3">{t("min")}</span>
+              </>
+            ) : (
+              t("availableNow")
+            )}
           </span>
           <span className="service-option-span-waiting-count">
-            {t("waitingCount", { n: queue.waiting })}
+            {queue.waiting > 0
+              ? t("waitingCount", { n: queue.waiting })
+              : t("noWait")}
           </span>
         </span>
       )}
@@ -204,7 +212,10 @@ function SheetBody({ view }: { view: BranchView }) {
         <div>
           <p className="sheet-body-p-eta-label">
             <Footprints className="sheet-body-clock3" aria-hidden />
-            <NumericText text={t("walkMin", { n: view.travel.walk })} />
+            {/* One flex item, so the row's gap doesn't split "5 min walk". */}
+            <span>
+              <NumericText text={t("walkMin", { n: view.travel.walk })} />
+            </span>
           </p>
           <p className="sheet-time-value sheet-time-departure">
             <NumericText
@@ -283,7 +294,7 @@ export function TakeTicketSheet() {
 }
 
 /** The ticket machine animation shown while a ticket is printing (the loading screen in sketch ②). */
-function Kiosk() {
+function Kiosk({ sign }: { sign: string }) {
   return (
     <svg
       viewBox="0 0 120 170"
@@ -305,7 +316,7 @@ function Kiosk() {
         fill="currentColor"
         stroke="none"
       >
-        BANK
+        {sign}
       </text>
       <rect x="10" y="34" width="100" height="94" rx="5" />
       <path d="M26 50h68M26 60h68M26 70h40" strokeLinecap="round" />
@@ -354,7 +365,7 @@ export function IssuingOverlay() {
           <Dialog.Title className="issuing-overlay-dialog-title-issuing">
             {t("issuing")}
           </Dialog.Title>
-          <Kiosk />
+          <Kiosk sign={t("bankSign")} />
         </Dialog.Popup>
       </Dialog.Portal>
     </Dialog.Root>

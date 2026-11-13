@@ -14,6 +14,7 @@ const STRINGS = {
   myTicket: { en: "My ticket", ko: "내 번호표" },
   account: { en: "Account", ko: "내 정보" },
   back: { en: "Back", ko: "뒤로" },
+  mainNav: { en: "Main", ko: "주요 메뉴" },
 
   // Header actions
   refresh: { en: "Refresh", ko: "새로고침" },
@@ -27,10 +28,12 @@ const STRINGS = {
   demoClock: { en: "Demo clock", ko: "데모 시계" },
   language: { en: "Language", ko: "언어" },
   demoSpeed: { en: "Demo clock speed", ko: "데모 시계 속도" },
+  demoSpeedShort: { en: "Demo speed", ko: "데모 속도" },
   realtime: { en: "Real time", ko: "실시간" },
   resetDemo: { en: "Reset demo", ko: "데모 초기화" },
   resetDone: { en: "Demo reset", ko: "데모를 초기화했습니다" },
   aboutProject: { en: "From sketch to prototype", ko: "스케치에서 프로토타입까지" },
+  aboutApp: { en: "About Dash Hour", ko: "Dash Hour 소개" },
 
   // Home
   goodMorning: { en: "Good morning", ko: "좋은 아침이에요" },
@@ -40,6 +43,8 @@ const STRINGS = {
   nearby: { en: "Nearby branches", ko: "주변 지점" },
   sortWait: { en: "Shortest wait", ko: "대기 짧은 순" },
   sortDistance: { en: "Nearest", ko: "가까운 순" },
+  filters: { en: "Filters", ko: "필터" },
+  sort: { en: "Sort", ko: "정렬" },
   filterAll: { en: "All", ko: "전체" },
   filterBank: { en: "Choose bank", ko: "은행 선택" },
   allBanks: { en: "All banks", ko: "전체 은행" },
@@ -136,6 +141,7 @@ const STRINGS = {
   },
   viewTicket: { en: "View my ticket", ko: "내 번호표 보기" },
   issuing: { en: "Printing your ticket…", ko: "번호표를 뽑고 있습니다." },
+  bankSign: { en: "BANK", ko: "은행" },
   issued: { en: "Ticket {num} issued", ko: "{num}번 번호표가 발급되었습니다" },
   issuedBody: { en: "{branch} · about {m} min", ko: "{branch} · 약 {m}분" },
 
@@ -146,6 +152,8 @@ const STRINGS = {
   aheadOfYou: { en: "{n} ahead of you", ko: "앞에 {n}명" },
   counterLabel: { en: "Counter {n}", ko: "{n}번 창구" },
   checkIn: { en: "Scan at the branch kiosk to check in", ko: "지점 키오스크에 스캔해 도착을 알려주세요" },
+  checkInQr: { en: "Check-in QR code", ko: "체크인 QR 코드" },
+  getThere: { en: "Getting to the branch", ko: "지점까지 가는 길" },
   directions: { en: "Directions", ko: "길찾기" },
   delayTurn: { en: "Delay turn", ko: "순번 미루기" },
   timeLeft: { en: "left", ko: "남음" },
@@ -227,6 +235,7 @@ const STRINGS = {
     en: "Dash Hour tells you when to leave and alerts you as your number gets close.",
     ko: "출발할 시간을 알려주고, 내 차례가 가까워지면 알림을 보내드려요.",
   },
+  steps: { en: "Steps", ko: "단계" },
   next: { en: "Next", ko: "다음" },
   getStarted: { en: "Get started", ko: "시작하기" },
   skip: { en: "Skip", ko: "건너뛰기" },

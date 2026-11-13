@@ -85,7 +85,23 @@ function MobileHome() {
   const { favorites, others, t, lang, ticket } = useStore();
   const greeting = useGreeting();
   const [showAll, setShowAll] = React.useState(false);
-  const visible = showAll ? others : others.slice(0, LIST_LIMIT);
+  // The card recommends the shortest queue whatever the list is sorted by, and that
+  // branch then leaves the list so it isn't shown twice.
+  const recommended = ticket
+    ? null
+    : (others.reduce<BranchView | null>(
+        (best, v) =>
+          !best ||
+          v.wait < best.wait ||
+          (v.wait === best.wait && v.distance < best.distance)
+            ? v
+            : best,
+        null,
+      ) ?? null);
+  const rest = recommended
+    ? others.filter((v) => v.id !== recommended.id)
+    : others;
+  const visible = showAll ? rest : rest.slice(0, LIST_LIMIT);
   const empty = favorites.length + others.length === 0;
 
   return (
@@ -137,8 +153,8 @@ function MobileHome() {
       <div className="mobile-home-div-favorites">
         {ticket ? (
           <ActiveTicketCard />
-        ) : others[0] ? (
-          <Recommendation view={others[0]} />
+        ) : recommended ? (
+          <Recommendation view={recommended} />
         ) : null}
         <FilterChips compact className="mobile-home-filter-chips" />
         {empty && <EmptyFilters />}
@@ -153,7 +169,7 @@ function MobileHome() {
             ))}
           </section>
         )}
-        {others.length > 0 && (
+        {rest.length > 0 && (
           <section
             aria-label={t("nearby")}
             className="mobile-home-section-favorites"
@@ -170,7 +186,7 @@ function MobileHome() {
             ))}
           </section>
         )}
-        {others.length > LIST_LIMIT && (
+        {rest.length > LIST_LIMIT && (
           <button
             type="button"
             onClick={() => setShowAll((s) => !s)}
@@ -179,7 +195,7 @@ function MobileHome() {
           >
             {showAll
               ? t("showLess")
-              : t("showMore", { n: others.length - LIST_LIMIT })}
+              : t("showMore", { n: rest.length - LIST_LIMIT })}
             <ChevronDown
               className={cx(
                 "mobile-home-chevron-down",

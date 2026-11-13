@@ -6,11 +6,12 @@ It started in 2016 as six pages of pen sketches and won the first BlueHack Samsu
 
 - **Phones:** a bottom tab bar (Home, Map, Ticket, My) and an installable home-screen app.
 - **Desktop:** branch list, map and branch panel side by side, with My ticket and Account pages.
-- **`/story`:** a "from sketch to prototype" page. It shows the redrawn sketches, a switch to see each original notepad page, and English summaries of the Korean notes.
+- **`/about`:** an About page for the product as if it had shipped: what it's for, how it works, the rules it keeps and where it came from, in Korean and English, with an animated logo.
+- **`/story`:** a "from sketch to prototype" page. It shows the redrawn sketches, a switch to see each original notepad page, and summaries of the handwritten notes, in Korean and English.
 
 > **Not affiliated with any bank.** Dash Hour is an independent prototype. The banks named in it have not endorsed or sponsored it, and their names and logos are trademarks of their owners, used only to identify each bank. See [Bank names and logos](#bank-names-and-logos).
 
-Queue data is simulated; the map, stations and walking routes are real, and branch locations, addresses and phone numbers are illustrative. A demo clock starts at 10:32 and runs 10× faster than real time, so you can watch a ticket count down, get called to a counter, or miss your turn. You can change the speed, switch between English and 한국어, replay the intro or reset the demo from the ⋮ menu or the account page.
+Queue data is simulated; the map, stations and walking routes are real, and branch locations, addresses and phone numbers are illustrative. A demo clock starts at 10:32 and runs in real time by default; switch it to 10× or 30× to watch a ticket count down, get called to a counter, or miss your turn in a minute or two. You can change the speed, switch between English and 한국어, replay the intro or reset the demo from the ⋮ menu or the account page.
 
 ## Screens
 
@@ -20,8 +21,10 @@ Queue data is simulated; the map, stations and walking routes are real, and bran
 | `/map` | Real street map of Gangnam Station (OpenStreetMap) with pins showing each branch's wait, the subway stations, your walking route once you hold a ticket, zoom and "my location" controls, filters, and a card for the selected branch. Labels follow the app language. |
 | `/branch/[id]` | Photo, open status and address; live queues for each counter type; crowd by hour with the quietest time; walking, bus and taxi times with a map of the walking route; facilities; address, hours, phone and number of counters. |
 | Take a ticket | Bottom sheet: pick a counter type (deposits & withdrawals, loans & consultation, foreign exchange, business banking), see when you'll be called and when to leave, and turn on a heads-up alert. One ticket at a time. |
-| `/ticket` | Ticket with your number, counter type, "be there by" time, a ring and countdown that empty as the queue moves, a QR code for kiosk check-in, directions, "delay turn" (once), cancel, a timeline, what to bring, and the branch. When your number is called you get a counter number and 10 minutes to get there, or the ticket is released as a no-show. |
+| `/ticket` | Ticket with your number, counter type, "be there by" time, a ring and countdown that empty as the queue moves, a demo-speed switch (real time, 10×, 30×) under the ring, a QR code for kiosk check-in, directions, "delay turn" (once), cancel, a timeline, a map of the walking route with walk, bus and taxi times, what to bring, and the branch. When your number is called you get a counter number and 10 minutes to get there, or the ticket is released as a no-show. |
 | `/me` | Visits, time not spent in line, no-shows (3 pauses ticketing for 30 days), recent visits, notification settings, language and demo speed. |
+
+| `/about` | The product's About page: the pitch, the problem, three steps, four principles, the prototype in numbers, the hackathon origin, questions and a closing call to action. Follows the app's language and has its own EN/한국어 switch. The ticket logo assembles on load, then tears along its perforation and snaps back every few seconds. |
 
 Each of the original sketches maps to these screens; `/story` links from each sketch to the matching part of the prototype.
 
@@ -31,7 +34,7 @@ Each of the original sketches maps to these screens; `/story` links from each sk
 - [Base UI](https://base-ui.com) 1.9: Drawer, Dialog, Alert Dialog, Menu, Toast, Radio Group, Toggle Group, Switch, Meter, Progress, Input.
 - [MapLibre GL JS](https://maplibre.org) with [OpenFreeMap](https://openfreemap.org) vector tiles (OpenStreetMap data, no API key), recoloured to the app's palette. MapLibre loads only when a map is on screen.
 - Walking routes come from OpenStreetMap via the OSRM foot profile at [routing.openstreetmap.de](https://routing.openstreetmap.de). They are fetched once by `scripts/fetch-routes.mjs` and stored in `lib/routes.ts`, so the app makes no routing calls.
-- Regular CSS organized by component in `app/styles/`, [Lucide](https://lucide.dev) icons, Inter and Noto Sans KR, and [uqr](https://github.com/unjs/uqr) for the check-in QR code.
+- Regular CSS organized by component in `app/styles/`, [Lucide](https://lucide.dev) icons, Inter (set slightly tight, `--tracking-inter`) and Noto Sans KR, and [uqr](https://github.com/unjs/uqr) for the check-in QR code.
 
 ## Develop
 
@@ -60,8 +63,9 @@ pnpm run deploy
 
 - **Sketches:** `sketches/` holds the full-size redrawn sketches as transparent PNGs, and `public/sketches/` the web-sized copies plus the original notepad photos used on `/story`. Each was made by sending the original photo to the image edit endpoint with `background: "transparent"`, asking for black pen line work only. Script: `sketches/generate.py`.
 - **App art:** `public/images/` holds eight branch scenes (opaque, made before the transparent-background rule) and the onboarding, empty-ticket and "your turn" illustrations (transparent), converted to WebP. Script: `scripts/generate_image.py`.
+- **About page:** the ten `public/images/about-*.webp` illustrations were made with `scripts/generate_image.py` (2.6 sunburst, low, transparent; the hero at 1536x1024, the rest at 1024x1024), then trimmed to the artwork and converted to WebP. Each prompt described one scene and ended with the same style line: flat illustration with paper grain, the app's navy, gold and cream, no text.
 
-The images already in the repo were made earlier with GPT Image 2.5 (`gpt-image-2.5-sunburst`), also at `quality: "low"`. They stay as they are and do not need regenerating.
+The other images were made earlier with GPT Image 2.5 (`gpt-image-2.5-sunburst`), also at `quality: "low"`. They stay as they are and do not need regenerating.
 
 Two things to know about 2.6. OpenAI's Batch API does not accept either 2.6 model (`-sunburst` or `-flare`; it answers `model_not_found`), so every request is synchronous. And a `low` image costs more than it did on 2.5: 664 image output tokens at 1536x1024 or 1024x1536 and 824 at 1024x1024 (2.5 used 158 and 196), which at $30 per 1M is about $0.02-0.025 per image. A subject on a transparent background comes back at alpha 254 rather than 255, so treat 250 and above as opaque when measuring a cut-out.
 
@@ -90,6 +94,7 @@ MG Saemaeul Geumgo has no freely licensed logo file on Commons, so its badge sho
 
 ```
 app/(app)/           home, map, ticket, account and branch routes sharing one app shell
+app/about/           the product's About page
 app/story/           the sketch-to-prototype case study
 components/          shell, cards, map, ticket, sheets, onboarding, store
 app/styles/          design tokens, reset, component styles and responsive states

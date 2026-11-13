@@ -57,11 +57,11 @@ async function checkModalType(dialog: Locator) {
 
 async function open(page: Page, path: string) {
   await page.goto(path);
-  if (path !== "/story") {
+  if (path !== "/story" && path !== "/about") {
     // Client-side controls are ready after the store persists its initial state.
     await page.waitForFunction(
       () =>
-        JSON.parse(localStorage.getItem("dashhour:v2") || "{}").settings !=
+        JSON.parse(localStorage.getItem("dashhour:v3") || "{}").settings !=
         null,
     );
   }
@@ -70,7 +70,7 @@ async function open(page: Page, path: string) {
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
     localStorage.setItem(
-      "dashhour:v2",
+      "dashhour:v3",
       JSON.stringify({
         onboarded: true,
         lang: "ko",
@@ -270,7 +270,7 @@ test("mobile list rows open the branch and layouts fit small screens", async ({
   // The whole row is one link: clicking the wait time on the right opens it.
   await page.mouse.click(box.x + box.width - 12, box.y + box.height - 12);
   await expect(page).toHaveURL(new RegExp(href!));
-  for (const route of ["/", "/map", "/ticket", "/me", "/story"]) {
+  for (const route of ["/", "/map", "/ticket", "/me", "/story", "/about"]) {
     await open(page, route);
     await checkPointers(page);
     expect(
@@ -397,7 +397,7 @@ for (const width of [1440, 390]) {
       await expect(content).toHaveCSS("opacity", "1");
     await toasts.nth(1).hover();
     await expect(async () => checkStack()).toPass();
-    await toasts.nth(1).getByRole("button", { name: "Close" }).click();
+    await toasts.nth(1).getByRole("button", { name: "닫기" }).click();
     await page.clock.runFor(600);
     await expect(toasts).toHaveCount(2);
     await expect(async () => checkStack()).toPass();
@@ -619,4 +619,188 @@ test("styled bank select shows logos and supports keyboard selection", async ({
   await expect(page.getByRole("listbox")).toHaveCount(0);
   await expect(bank).toBeFocused();
   await expect(bank).toContainText("신한은행");
+});
+
+test("a first visit runs the demo clock in real time and Inter is set slightly tight", async ({
+  page,
+}) => {
+  // Runs after the beforeEach script, so this visit has no saved state.
+  await page.addInitScript(() => {
+    if (!sessionStorage.getItem("cleared")) {
+      localStorage.removeItem("dashhour:v3");
+      sessionStorage.setItem("cleared", "1");
+    }
+  });
+  await open(page, "/");
+  await page.getByRole("button", { name: "건너뛰기" }).click();
+  expect(
+    await page.evaluate(
+      () => JSON.parse(localStorage.getItem("dashhour:v3")!).clock.speed,
+    ),
+  ).toBe(1);
+  await page
+    .getByRole("button", { name: "옵션" })
+    .filter({ visible: true })
+    .click();
+  await expect(
+    page.getByRole("menuitemradio", { name: "실시간" }),
+  ).toHaveAttribute("aria-checked", "true");
+  await page.keyboard.press("Escape");
+  for (const selector of ["body", ".desktop-list .minute-number"]) {
+    const tracking = await page
+      .locator(selector)
+      .first()
+      .evaluate((e) => {
+        const style = getComputedStyle(e);
+        return parseFloat(style.letterSpacing) / parseFloat(style.fontSize);
+      });
+    expect(tracking).toBeLessThan(-0.01);
+    expect(tracking).toBeGreaterThan(-0.03);
+  }
+});
+
+test("story page shows the mark without the wordmark and follows the language", async ({
+  page,
+}) => {
+  await open(page, "/story");
+  const header = page.locator(".site-header");
+  await expect(header.locator(".logo-mark")).toBeVisible();
+  await expect(header).not.toContainText("DASH HOUR");
+  const title = page.getByRole("heading", { level: 1 });
+  await expect(title).toContainText("노트 여섯 장에서");
+  await expect(page.locator(".sketch-note").first()).toContainText("상단 바");
+  await expect(page.locator(".story-page-div")).toHaveAttribute("lang", "ko");
+  // The page is prerendered, so the first click can land before hydration.
+  await expect(async () => {
+    await header.getByRole("button", { name: "EN" }).click();
+    await expect(title).toContainText("From a notepad", { timeout: 500 });
+  }).toPass();
+  await expect(page.locator(".sketch-note").first()).toContainText("Refresh");
+  await expect(page.locator(".story-page-div")).toHaveAttribute("lang", "en");
+  await checkPointers(page);
+});
+
+test("English sets a space before units, and the home card isn't repeated in the list", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    const saved = JSON.parse(localStorage.getItem("dashhour:v3")!);
+    localStorage.setItem("dashhour:v3", JSON.stringify({ ...saved, lang: "en" }));
+  });
+  await open(page, "/");
+  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+  const wait = page.locator(".desktop-list .card-wait").first();
+  const number = (await wait.locator(".minute-number").boundingBox())!;
+  const unit = (await wait.locator(".card-wait-unit").boundingBox())!;
+  expect(unit.x - number.x - number.width).toBeGreaterThan(1.5);
+  // Phone home: the recommended branch is the shortest queue and leaves the list.
+  await page.setViewportSize({ width: 390, height: 844 });
+  const recommended = await page
+    .locator(".recommendation-p")
+    .evaluate((e) => e.textContent!.split(" ").at(-1)!);
+  const waits = await page
+    .locator(".mobile-home-branch-card .minute-number")
+    .evaluateAll((elements) => elements.map((e) => Number(e.textContent)));
+  const best = Number(
+    await page.locator(".recommendation-span.minute-number").textContent(),
+  );
+  for (const value of waits) expect(value).toBeGreaterThanOrEqual(best);
+  await expect(
+    page.locator(".mobile-home-branch-card .branch-row-name", {
+      hasText: recommended,
+    }),
+  ).toHaveCount(0);
+});
+
+test("the ticket page offers fast-forward, a route map and localized labels", async ({
+  page,
+}) => {
+  // Runs after the beforeEach script: a reload keeps the state saved just before it.
+  await page.addInitScript(() => {
+    const kept = sessionStorage.getItem("kept");
+    if (kept) localStorage.setItem("dashhour:v3", kept);
+  });
+  await open(page, "/");
+  await page.locator(".desktop-list .take-ticket-button").nth(1).click();
+  const dialog = page.getByRole("dialog");
+  await dialog.getByRole("button", { name: "번호표 받기" }).click();
+  await expect(page.getByText("은행", { exact: true })).toBeVisible();
+  await expect(page).toHaveURL(/\/ticket$/, { timeout: 10000 });
+  // After a reload, the explorer selects the branch you hold a ticket for.
+  const branch = await page.locator(".ticket-stub-span-3").textContent();
+  await page.evaluate(() =>
+    sessionStorage.setItem("kept", localStorage.getItem("dashhour:v3")!),
+  );
+  await page.reload();
+  const nav = page.getByRole("navigation", { name: "주요 메뉴" });
+  await nav.getByRole("link", { name: "지점 찾기" }).click();
+  await expect(page.locator(".branch-panel-title")).toHaveText(branch!);
+  await nav.getByRole("link", { name: "내 번호표" }).click();
+  const speed = page.getByRole("group", { name: "데모 시계 속도" });
+  await speed.getByRole("button", { name: "10×" }).click();
+  await expect(speed.getByRole("button", { name: "10×" })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  expect(
+    await page.evaluate(
+      () => JSON.parse(localStorage.getItem("dashhour:v3")!).clock.speed,
+    ),
+  ).toBe(10);
+  await expect(page.getByRole("img", { name: "체크인 QR 코드" })).toBeVisible();
+  await expect(page.locator(".ticket-screen-route")).toBeVisible();
+  await checkPointers(page);
+});
+
+test("about page switches language, animates the logo and loads its illustrations", async ({
+  page,
+}) => {
+  await page.goto("/about");
+  const title = page.getByRole("heading", { level: 1 });
+  await expect(title).toContainText("줄은 저희가 설게요.");
+  await expect(page.locator(".about-hero-logo .logo-hero-stub")).toHaveCSS(
+    "animation-name",
+    /logo-hero-tear/,
+  );
+  const art = page.locator("img.about-art");
+  await expect(art).toHaveCount(10);
+  for (const image of await art.all()) {
+    // The hero illustration floats, so it never counts as stable for Playwright's own scroll.
+    await image.evaluate((e) => e.scrollIntoView({ block: "center" }));
+    await expect
+      .poll(() => image.evaluate((e: HTMLImageElement) => e.naturalWidth))
+      .toBeGreaterThan(0);
+  }
+  // Sections below the fold wait, then show once they scroll into view.
+  const pending = page.locator('.reveal[data-reveal="pending"]');
+  await expect(pending).not.toHaveCount(0);
+  for (const section of await page.locator(".reveal").all())
+    await section.evaluate((e) => e.scrollIntoView({ block: "center" }));
+  await expect(pending).toHaveCount(0);
+  await page.getByRole("button", { name: "EN" }).click();
+  await expect(title).toContainText("hold your place in line");
+  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+  expect(
+    await page.evaluate(
+      () => JSON.parse(localStorage.getItem("dashhour:v3")!).lang,
+    ),
+  ).toBe("en");
+  const question = page.getByRole("button", {
+    name: "Can I use it at a real bank?",
+  });
+  await question.click();
+  await expect(question).toHaveAttribute("aria-expanded", "true");
+  await expect(page.getByText("Dash Hour is a design prototype")).toBeVisible();
+  await checkPointers(page);
+  await page.setViewportSize({ width: 320, height: 700 });
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  // With motion off nothing waits to be revealed.
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.reload();
+  await expect(title).toBeVisible();
+  await expect(page.locator(".reveal[data-reveal]")).toHaveCount(0);
 });

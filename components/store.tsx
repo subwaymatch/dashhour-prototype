@@ -26,6 +26,7 @@ import {
 } from "@/lib/data";
 import { translate, type Lang, type StringKey } from "@/lib/i18n";
 import { WALKING_ROUTES } from "@/lib/routes";
+import { STORAGE_KEY } from "@/lib/storage";
 import {
   DEFAULT_SPEED,
   SIM_START,
@@ -74,7 +75,6 @@ type Persisted = {
   onboarded: boolean;
 };
 
-const STORAGE_KEY = "dashhour:v2";
 const DEFAULT_SETTINGS: Settings = { turnAlerts: true, aheadAlerts: true };
 
 type Store = {
@@ -269,8 +269,14 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
   const viewById = React.useCallback((id: string | null | undefined) => views.find((v) => v.id === id) ?? null, [views]);
 
-  // Default selection from sketch ⑤: a favorite first, otherwise the shortest queue.
-  const selected = sorted.find((v) => v.id === selectedId) ?? favorites[0] ?? others[0] ?? viewById(selectedId) ?? views[0];
+  // Default selection: the branch you hold a ticket for, then (sketch ⑤) a favorite, otherwise the shortest queue.
+  const selected =
+    sorted.find((v) => v.id === selectedId) ??
+    (ticket ? sorted.find((v) => v.id === ticket.branchId) : undefined) ??
+    favorites[0] ??
+    others[0] ??
+    viewById(selectedId) ??
+    views[0];
   const ticketBranch = ticket ? viewById(ticket.branchId) : null;
   const status = ticket ? ticketStatus(ticket, sim) : null;
   const noShows = history.filter((v) => v.status === "missed" && Date.now() - v.at < 30 * 24 * 60 * 60 * 1000).length;

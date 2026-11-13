@@ -44,6 +44,8 @@ export function CrowdChart({
 
   return (
     <svg
+      // A new branch redraws the curve.
+      key={branch.id}
       viewBox={`0 0 ${W} ${H}`}
       className="crowd-chart-svg"
       role="img"
@@ -94,9 +96,15 @@ export function CrowdChart({
           fill="rgb(16 185 129 / 0.12)"
         />
       )}
-      <path d={area} fill={`url(#crowd-fill-${branch.id})`} />
+      <path
+        d={area}
+        fill={`url(#crowd-fill-${branch.id})`}
+        className="crowd-chart-area"
+      />
       <path
         d={line}
+        pathLength={1}
+        className="crowd-chart-line"
         fill="none"
         stroke="var(--color-gold-500)"
         strokeWidth="2.5"
@@ -125,6 +133,13 @@ export function CrowdChart({
         strokeWidth="1.5"
       />
       <circle cx={nx} cy={PAD.top - 6} r="3.5" fill="var(--color-navy-900)" />
+      <circle
+        cx={nx}
+        cy={ny}
+        r="4.5"
+        fill="var(--color-navy-900)"
+        className="crowd-chart-now"
+      />
       <circle
         cx={nx}
         cy={ny}

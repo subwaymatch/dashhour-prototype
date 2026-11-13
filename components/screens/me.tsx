@@ -9,6 +9,7 @@ import {
   BookOpen,
   ChevronRight,
   Clock4,
+  Info,
   Languages,
   RotateCcw,
   ShieldAlert,
@@ -264,7 +265,7 @@ export function MeScreen() {
                   >
                     {SPEEDS.map((s) => (
                       <Toggle key={s} value={String(s)} className={segItem}>
-                        {s}×
+                        {s === 1 ? t("realtime") : `${s}×`}
                       </Toggle>
                     ))}
                   </ToggleGroup>
@@ -307,6 +308,11 @@ export function MeScreen() {
                   />
                 </button>
               ))}
+              <Link href="/about" className={cx("me-screen-button", focusRing)}>
+                <Info className="me-screen-icon" aria-hidden />
+                <span className="me-screen-span-2">{t("aboutApp")}</span>
+                <ChevronRight className="me-screen-chevron-right" aria-hidden />
+              </Link>
               <Link
                 href="/story"
                 className={cx("me-screen-link-about-project", focusRing)}
