@@ -298,10 +298,12 @@ const darkIconButton = cx("dark-icon-button");
 
 function useSection() {
   const path = usePathname() ?? "/";
-  if (path.startsWith("/ticket")) return "ticket";
-  if (path.startsWith("/me")) return "me";
-  if (path.startsWith("/map")) return "map";
-  return "home";
+  if (path === "/ticket") return "ticket";
+  if (path === "/me") return "me";
+  if (path === "/map") return "map";
+  if (path === "/" || path.startsWith("/branch/")) return "home";
+  // Not found: no tab is the current page.
+  return null;
 }
 
 function TicketChip() {
@@ -446,14 +448,18 @@ const lightIconButton = cx("light-icon-button");
 export function MobileTopBar({
   title,
   children,
+  heading = true,
 }: {
   title: string;
   children?: React.ReactNode;
+  /** False when the page has its own h1 on phones. */
+  heading?: boolean;
 }) {
+  const Title = heading ? "h1" : "p";
   return (
     <div className="mobile-top-bar-div">
       <div className="mobile-top-bar-div-2">
-        <h1 className="mobile-top-bar-h1">{title}</h1>
+        <Title className="mobile-top-bar-h1">{title}</Title>
         {children}
         <OptionsMenu className={lightIconButton} />
       </div>

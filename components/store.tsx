@@ -129,6 +129,11 @@ type Store = {
 
 const StoreContext = React.createContext<Store | null>(null);
 
+/** The store when this component is inside <StoreProvider>, otherwise null. */
+export function useOptionalStore() {
+  return React.useContext(StoreContext);
+}
+
 export function useStore() {
   const store = React.useContext(StoreContext);
   if (!store) throw new Error("useStore must be used inside <StoreProvider>");
