@@ -202,9 +202,11 @@ export function CrowdSection({
 
 export function RouteSection({
   view,
+  title,
   className,
 }: {
   view: BranchView;
+  title?: string;
   className?: string;
 }) {
   const { t, lang, showOnMap } = useStore();
@@ -215,7 +217,7 @@ export function RouteSection({
   ];
   return (
     <Section
-      title={t("route")}
+      title={title ?? t("route")}
       icon={MapPin}
       aside={<span className="route-section-span">{view.via[lang]}</span>}
       className={className}
@@ -474,7 +476,7 @@ export function BranchScreen({ id }: { id: string }) {
             </p>
             <p className="branch-screen-action-wait">
               <span className="minute-number">{view.wait}</span>
-              {t("minWait")}
+              <span>{t("minWait")}</span>
               <span className="branch-screen-action-queue">
                 · {t("waitingCount", { n: view.waiting })}
               </span>

@@ -7,7 +7,7 @@ It started in 2016 as six pages of pen sketches and won the first BlueHack Samsu
 - **Phones:** a bottom tab bar (Home, Map, Ticket, My) and an installable home-screen app.
 - **Desktop:** branch list, map and branch panel side by side, with My ticket and Account pages.
 - **`/about`:** an About page for the product as if it had shipped: what it's for, how it works, the rules it keeps and where it came from, in Korean and English, with an animated logo.
-- **`/story`:** a "from sketch to prototype" page. It shows the redrawn sketches, a switch to see each original notepad page, and English summaries of the Korean notes.
+- **`/story`:** a "from sketch to prototype" page. It shows the redrawn sketches, a switch to see each original notepad page, and summaries of the handwritten notes, in Korean and English.
 
 > **Not affiliated with any bank.** Dash Hour is an independent prototype. The banks named in it have not endorsed or sponsored it, and their names and logos are trademarks of their owners, used only to identify each bank. See [Bank names and logos](#bank-names-and-logos).
 
@@ -21,7 +21,7 @@ Queue data is simulated; the map, stations and walking routes are real, and bran
 | `/map` | Real street map of Gangnam Station (OpenStreetMap) with pins showing each branch's wait, the subway stations, your walking route once you hold a ticket, zoom and "my location" controls, filters, and a card for the selected branch. Labels follow the app language. |
 | `/branch/[id]` | Photo, open status and address; live queues for each counter type; crowd by hour with the quietest time; walking, bus and taxi times with a map of the walking route; facilities; address, hours, phone and number of counters. |
 | Take a ticket | Bottom sheet: pick a counter type (deposits & withdrawals, loans & consultation, foreign exchange, business banking), see when you'll be called and when to leave, and turn on a heads-up alert. One ticket at a time. |
-| `/ticket` | Ticket with your number, counter type, "be there by" time, a ring and countdown that empty as the queue moves, a QR code for kiosk check-in, directions, "delay turn" (once), cancel, a timeline, what to bring, and the branch. When your number is called you get a counter number and 10 minutes to get there, or the ticket is released as a no-show. |
+| `/ticket` | Ticket with your number, counter type, "be there by" time, a ring and countdown that empty as the queue moves, a demo-speed switch (real time, 10×, 30×) under the ring, a QR code for kiosk check-in, directions, "delay turn" (once), cancel, a timeline, a map of the walking route with walk, bus and taxi times, what to bring, and the branch. When your number is called you get a counter number and 10 minutes to get there, or the ticket is released as a no-show. |
 | `/me` | Visits, time not spent in line, no-shows (3 pauses ticketing for 30 days), recent visits, notification settings, language and demo speed. |
 
 | `/about` | The product's About page: the pitch, the problem, three steps, four principles, the prototype in numbers, the hackathon origin, questions and a closing call to action. Follows the app's language and has its own EN/한국어 switch. The ticket logo assembles on load, then tears along its perforation and snaps back every few seconds. |

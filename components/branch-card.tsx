@@ -282,7 +282,7 @@ export function BranchRow({
           {view.wait > 0 ? (
             <>
               <span className="minute-number">{view.wait}</span>
-              {t("min")}
+              <span>{t("min")}</span>
             </>
           ) : (
             t("availableNow")
@@ -533,7 +533,7 @@ export function FilterChips({
       multiple
       value={filters}
       onValueChange={(v) => setFilters(v as FilterKey[])}
-      aria-label="Filters"
+      aria-label={t("filters")}
       className={cx("filter-chips-toggle-group-clear-filters", className)}
     >
       {FILTERS.map(({ key: f, icon: Icon }) => (
@@ -671,7 +671,7 @@ export function SortToggle({ className }: { className?: string }) {
       value={[sort]}
       onValueChange={(v) => v[0] && setSort(v[0] as SortKey)}
       className={cx("sort-toggle-toggle-group-sort-wait", className)}
-      aria-label="Sort"
+      aria-label={t("sort")}
     >
       <Toggle value="wait" className={item}>
         {t("sortWait")}

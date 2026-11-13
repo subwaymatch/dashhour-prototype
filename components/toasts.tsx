@@ -2,6 +2,7 @@
 
 import { Toast } from "@base-ui/react/toast";
 import { X } from "lucide-react";
+import { useStore } from "./store";
 
 export function Toasts() {
   return (
@@ -15,6 +16,7 @@ export function Toasts() {
 
 function ToastList() {
   const { toasts } = Toast.useToastManager();
+  const { t } = useStore();
   return toasts.map((toast) => (
     <Toast.Root
       key={toast.id}
@@ -27,7 +29,7 @@ function ToastList() {
           <Toast.Title className="toast-list-toast-title" />
           <Toast.Description className="toast-list-toast-description" />
         </div>
-        <Toast.Close aria-label="Close" className="toast-list-toast-close">
+        <Toast.Close aria-label={t("close")} className="toast-list-toast-close">
           <X className="toast-list-x" />
         </Toast.Close>
       </Toast.Content>

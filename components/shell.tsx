@@ -338,7 +338,7 @@ export function DesktopHeader() {
       <Link href="/" aria-label="Dash Hour" className="desktop-header-link">
         <LogoMark className="desktop-header-logo-mark" />
       </Link>
-      <nav aria-label="Main" className="desktop-header-nav">
+      <nav aria-label={t("mainNav")} className="desktop-header-nav">
         {nav.map((n) => (
           <Link
             key={n.href}
@@ -391,7 +391,7 @@ export function BottomNav() {
     { href: "/me", key: "me", label: t("me"), icon: CircleUserRound },
   ] as const;
   return (
-    <nav aria-label="Main" className="bottom-nav-nav">
+    <nav aria-label={t("mainNav")} className="bottom-nav-nav">
       <ul className="bottom-nav-ul">
         {items.map(({ href, key, label, icon: Icon }) => {
           const active = section === key;

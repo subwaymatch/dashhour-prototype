@@ -294,7 +294,7 @@ export function TakeTicketSheet() {
 }
 
 /** The ticket machine animation shown while a ticket is printing (the loading screen in sketch ②). */
-function Kiosk() {
+function Kiosk({ sign }: { sign: string }) {
   return (
     <svg
       viewBox="0 0 120 170"
@@ -316,7 +316,7 @@ function Kiosk() {
         fill="currentColor"
         stroke="none"
       >
-        BANK
+        {sign}
       </text>
       <rect x="10" y="34" width="100" height="94" rx="5" />
       <path d="M26 50h68M26 60h68M26 70h40" strokeLinecap="round" />
@@ -365,7 +365,7 @@ export function IssuingOverlay() {
           <Dialog.Title className="issuing-overlay-dialog-title-issuing">
             {t("issuing")}
           </Dialog.Title>
-          <Kiosk />
+          <Kiosk sign={t("bankSign")} />
         </Dialog.Popup>
       </Dialog.Portal>
     </Dialog.Root>

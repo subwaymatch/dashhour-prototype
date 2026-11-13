@@ -1,6 +1,7 @@
 @layer theme, base, components;
 @import "./styles/base.css";
 @import "./styles/ui.css";
+@import "./styles/site-header.css";
 @import "./styles/story-page.css";
 @import "./styles/about-page.css";
 @import "./styles/bank-badge.css";
@@ -58,6 +59,10 @@
   .minute-number {
     font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
     font-variant-numeric: tabular-nums;
+  }
+  /* English sets a thin space before the unit ("11 min"); Korean stays closed up ("11분"). */
+  :lang(en) .minute-number + span:not(.about-number-unit, .stats-unit) {
+    margin-inline-start: 0.18em;
   }
   .minute-value {
     display: inline-flex;

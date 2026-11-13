@@ -2,6 +2,7 @@
 
 import { MobileTopBar } from "../shell";
 import { useStore } from "../store";
+import { RouteSection } from "./branch";
 import {
   BringList,
   EmptyTicket,
@@ -11,7 +12,7 @@ import {
 } from "../ticket";
 
 export function TicketScreen() {
-  const { ticket, ready, t } = useStore();
+  const { ticket, ticketBranch, ready, t } = useStore();
   return (
     <>
       <MobileTopBar title={t("myTicket")} />
@@ -24,6 +25,13 @@ export function TicketScreen() {
             <TicketStub className="ticket-screen-ticket-stub" />
             <div className="ticket-screen-div-3">
               <TicketTimeline />
+              {ticketBranch && (
+                <RouteSection
+                  view={ticketBranch}
+                  title={t("getThere")}
+                  className="ticket-screen-route"
+                />
+              )}
               <BringList />
               <TicketBranchCard />
             </div>

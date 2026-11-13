@@ -6,8 +6,9 @@ import { ArrowRight, Plus } from "lucide-react";
 import { BANKS, BRANCHES, SERVICES } from "@/lib/data";
 import type { Lang } from "@/lib/i18n";
 import { GRACE_MIN } from "@/lib/sim";
-import { AnimatedLogo, LogoMark } from "./logo";
+import { AnimatedLogo } from "./logo";
 import { CountUp, Reveal } from "./motion";
+import { SiteHeader } from "./site-header";
 import { cx } from "./ui";
 import { useSavedLang } from "./use-saved-lang";
 
@@ -58,6 +59,7 @@ type Copy = {
   title: [string, string];
   lead: string;
   story: string;
+  storyShort: string;
   heroAlt: string;
   problem: { label: string; title: string; body: string[]; alt: string };
   steps: {
@@ -97,6 +99,7 @@ const COPY: Record<Lang, Copy> = {
     title: ["줄은 저희가 설게요.", "제시간에만 오세요."],
     lead: "Dash Hour는 은행에 도착하기 전에 번호표를 미리 뽑는 앱입니다. 지점마다 지금 몇 명이 기다리는지, 하루 중 언제 덜 붐비는지 보여주고, 내 번호가 불릴 때에 맞춰 출발할 시간을 알려드려요.",
     story: "스케치에서 프로토타입까지",
+    storyShort: "스케치",
     heroAlt: "카페에 앉아 휴대폰으로 번호표를 받는 사람. 멀리 은행 앞에는 줄이 서 있다.",
     problem: {
       label: "왜 만들었나요",
@@ -219,6 +222,7 @@ const COPY: Record<Lang, Copy> = {
     title: ["We’ll hold your place in line.", "You just show up on time."],
     lead: "Dash Hour lets you take a bank’s queue number before you get there. It shows how many people are waiting at each branch and when it gets quieter through the day, and tells you when to leave so you arrive as your number is called.",
     story: "From sketch to prototype",
+    storyShort: "Sketches",
     heroAlt:
       "A woman at a café table receiving a queue ticket on her phone, with a line outside a bank in the distance.",
     problem: {
@@ -338,42 +342,18 @@ const COPY: Record<Lang, Copy> = {
   },
 };
 
-const LANGS: Array<[Lang, string]> = [
-  ["en", "EN"],
-  ["ko", "한국어"],
-];
-
 export function AboutPage() {
   const [lang, setLang] = useSavedLang();
   const c = COPY[lang];
 
   return (
     <div lang={lang} className="about plain-page">
-      <header className="about-header">
-        <div className="about-header-inner">
-          <Link href="/" aria-label="Dash Hour" className="about-header-logo">
-            <LogoMark className="about-header-logo-mark" />
-          </Link>
-          <div className="about-header-space" />
-          <div role="group" aria-label="Language" className="about-lang">
-            {LANGS.map(([value, label]) => (
-              <button
-                key={value}
-                type="button"
-                lang={value}
-                aria-pressed={lang === value}
-                onClick={() => setLang(value)}
-                className="about-lang-button"
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-          <Link href="/" className="about-header-cta">
-            {c.open} <ArrowRight className="about-icon" aria-hidden />
-          </Link>
-        </div>
-      </header>
+      <SiteHeader
+        lang={lang}
+        setLang={setLang}
+        link={{ href: "/story", label: c.storyShort }}
+        cta={c.open}
+      />
 
       <main>
         <section className="about-hero">
