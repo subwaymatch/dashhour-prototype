@@ -182,14 +182,14 @@ function NotFoundContent({ lang }: { lang: Lang }) {
             {c.links.map(({ href, icon: Icon, title, desc }) => (
               <li key={href}>
                 <Link href={href} className="nf-link">
-                  <span className="nf-link-icon">
-                    <Icon aria-hidden />
-                  </span>
+                  <Icon className="nf-link-icon" aria-hidden />
                   <span className="nf-link-text">
-                    <span className="nf-link-title">{title}</span>
+                    <span className="nf-link-title">
+                      {title}
+                      <ArrowRight className="nf-link-arrow" aria-hidden />
+                    </span>
                     <span className="nf-link-desc">{desc}</span>
                   </span>
-                  <ArrowRight className="nf-link-arrow" aria-hidden />
                 </Link>
               </li>
             ))}

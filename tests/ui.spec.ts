@@ -827,6 +827,11 @@ test("unknown addresses get a styled 404 inside the app shell", async ({
   await expect(
     page.getByRole("button", { name: "이전 페이지로" }),
   ).toHaveCSS("border-top-width", "0px");
+  // Suggestions are a plain list: no card borders or fills.
+  for (const link of await page.locator(".nf-link").all()) {
+    await expect(link).toHaveCSS("border-top-width", "0px");
+    await expect(link).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+  }
   // No tab claims to be the current page.
   await expect(
     page.locator('.desktop-header-nav [aria-current="page"]'),
