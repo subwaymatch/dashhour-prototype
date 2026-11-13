@@ -31,6 +31,7 @@ const STRINGS = {
   resetDemo: { en: "Reset demo", ko: "데모 초기화" },
   resetDone: { en: "Demo reset", ko: "데모를 초기화했습니다" },
   aboutProject: { en: "From sketch to prototype", ko: "스케치에서 프로토타입까지" },
+  aboutApp: { en: "About Dash Hour", ko: "Dash Hour 소개" },
 
   // Home
   goodMorning: { en: "Good morning", ko: "좋은 아침이에요" },

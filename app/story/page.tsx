@@ -7,7 +7,7 @@ import {
   SquarePlus,
   Trophy,
 } from "lucide-react";
-import { LogoMark, Wordmark } from "@/components/logo";
+import { LogoMark } from "@/components/logo";
 import { SketchCard, type Sketch } from "@/components/sketch-card";
 
 export const metadata: Metadata = {
@@ -103,14 +103,16 @@ const TEAM = [
 
 export default function StoryPage() {
   return (
-    <div className="story-page-div plain-page">
+    <div lang="en" className="story-page-div plain-page">
       <header className="story-page-header">
         <div className="story-page-div-2">
-          <Link href="/" className="story-page-link">
+          <Link href="/" aria-label="Dash Hour" className="story-page-link">
             <LogoMark className="story-page-logo-mark" />
-            <Wordmark className="story-page-wordmark" />
           </Link>
           <div className="story-page-div-3" />
+          <Link href="/about" className="story-page-link-about">
+            About
+          </Link>
           <Link href="/" className="story-page-link-2">
             Open the prototype{" "}
             <ArrowRight className="story-page-arrow-right" aria-hidden />

@@ -47,10 +47,15 @@ export function FavoriteButton({
   tone?: "light" | "dark";
 }) {
   const { toggleFavorite, t } = useStore();
+  // Only a star the user just switched on pops, not the ones already saved.
+  const [popped, setPopped] = React.useState(false);
   return (
     <button
       type="button"
-      onClick={() => toggleFavorite(view.id)}
+      onClick={() => {
+        setPopped(!view.favorite);
+        toggleFavorite(view.id);
+      }}
       aria-pressed={view.favorite}
       aria-label={view.favorite ? t("removeFavorite") : t("addFavorite")}
       className={cx(
@@ -64,6 +69,7 @@ export function FavoriteButton({
         className={cx(
           "favorite-icon",
           view.favorite && "favorite-icon-selected",
+          view.favorite && popped && "favorite-icon-pop",
         )}
         strokeWidth={1.8}
       />

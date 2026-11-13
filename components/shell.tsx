@@ -9,6 +9,7 @@ import { Menu } from "@base-ui/react/menu";
 import {
   BookOpen,
   Check,
+  Info,
   CircleUserRound,
   EllipsisVertical,
   House,
@@ -250,6 +251,13 @@ export function OptionsMenu({ className }: { className?: string }) {
             </Menu.Item>
             <Menu.LinkItem
               className={itemClass}
+              render={<Link href="/about" />}
+            >
+              <Info className="options-menu-sparkles" aria-hidden />
+              {t("aboutApp")}
+            </Menu.LinkItem>
+            <Menu.LinkItem
+              className={itemClass}
               render={<Link href="/story" />}
             >
               <BookOpen className="options-menu-sparkles" aria-hidden />
@@ -410,6 +418,7 @@ export function BottomNav() {
                   />
                   {key === "ticket" && ticket && (
                     <span
+                      key={status?.called ? "called" : status?.ahead}
                       className={cx(
                         "bottom-nav-span-3",
                         status?.called

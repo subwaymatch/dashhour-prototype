@@ -81,11 +81,19 @@ function ServiceOption({
       {queue && (
         <span className="service-option-span-min">
           <span className="service-option-span-min-2">
-            <span className="minute-number">{queue.wait}</span>
-            <span className="service-option-span-min-3">{t("min")}</span>
+            {queue.wait > 0 ? (
+              <>
+                <span className="minute-number">{queue.wait}</span>
+                <span className="service-option-span-min-3">{t("min")}</span>
+              </>
+            ) : (
+              t("availableNow")
+            )}
           </span>
           <span className="service-option-span-waiting-count">
-            {t("waitingCount", { n: queue.waiting })}
+            {queue.waiting > 0
+              ? t("waitingCount", { n: queue.waiting })
+              : t("noWait")}
           </span>
         </span>
       )}
@@ -204,7 +212,10 @@ function SheetBody({ view }: { view: BranchView }) {
         <div>
           <p className="sheet-body-p-eta-label">
             <Footprints className="sheet-body-clock3" aria-hidden />
-            <NumericText text={t("walkMin", { n: view.travel.walk })} />
+            {/* One flex item, so the row's gap doesn't split "5 min walk". */}
+            <span>
+              <NumericText text={t("walkMin", { n: view.travel.walk })} />
+            </span>
           </p>
           <p className="sheet-time-value sheet-time-departure">
             <NumericText

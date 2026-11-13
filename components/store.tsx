@@ -26,6 +26,7 @@ import {
 } from "@/lib/data";
 import { translate, type Lang, type StringKey } from "@/lib/i18n";
 import { WALKING_ROUTES } from "@/lib/routes";
+import { STORAGE_KEY } from "@/lib/storage";
 import {
   DEFAULT_SPEED,
   SIM_START,
@@ -74,7 +75,6 @@ type Persisted = {
   onboarded: boolean;
 };
 
-const STORAGE_KEY = "dashhour:v2";
 const DEFAULT_SETTINGS: Settings = { turnAlerts: true, aheadAlerts: true };
 
 type Store = {

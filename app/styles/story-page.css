@@ -34,15 +34,28 @@
     width: auto;
     color: var(--color-white);
   }
-  .story-page-wordmark {
-    font-size: var(--text-lg);
-    /* The logo mark alone leaves room for the button on narrow phones. */
-    @media (width < 28rem) {
-      display: none;
-    }
-  }
   .story-page-div-3 {
     flex: 1;
+  }
+  .story-page-link-about {
+    display: inline-flex;
+    height: 2.5rem;
+    align-items: center;
+    border-radius: var(--radius-md);
+    padding-inline: 0.75rem;
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-medium);
+    color: color-mix(in srgb, #fff 80%, transparent);
+    transition: color 150ms;
+    &:hover {
+      @media (hover: hover) {
+        color: var(--color-white);
+      }
+    }
+    &:focus-visible {
+      outline: 2px solid var(--color-gold-300);
+      outline-offset: 1px;
+    }
   }
   .story-page-link-2 {
     display: inline-flex;

@@ -38,8 +38,12 @@
     --font-weight-bold: 700;
     --font-weight-extrabold: 800;
     --font-weight-black: 900;
+    /* Inter is set slightly tight everywhere: this at text sizes, --tracking-tight on
+       headings and large numerals. Hangul in the same run shares the value, since
+       letter-spacing can't be set per font in a fallback stack. */
+    --tracking-inter: -0.015em;
     --tracking-tight: -0.025em;
-    --tracking-normal: 0em;
+    --tracking-normal: var(--tracking-inter);
     --tracking-wide: 0.025em;
     --tracking-wider: 0.05em;
     --leading-tight: 1.25;
@@ -347,10 +351,12 @@ body {
 }
 @layer base {
   body {
-    letter-spacing: -0.012em;
+    letter-spacing: var(--tracking-inter);
   }
+  /* Korean breaks between words, not inside them. */
   :lang(ko) {
-    letter-spacing: 0;
+    word-break: keep-all;
+    overflow-wrap: break-word;
   }
 }
 .root {

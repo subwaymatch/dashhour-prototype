@@ -4,6 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { Switch } from "@base-ui/react/switch";
 import { ArrowRight } from "lucide-react";
+import { useReveal } from "./motion";
 import { cx } from "./ui";
 
 export type Sketch = {
@@ -22,10 +23,12 @@ export type Sketch = {
 export function SketchCard({ sketch }: { sketch: Sketch }) {
   const [original, setOriginal] = React.useState(false);
   const id = React.useId();
+  const ref = useReveal<HTMLElement>();
   return (
     <article
+      ref={ref}
       className={cx(
-        "sketch",
+        "sketch reveal",
         sketch.wide && "sketch-wide",
         sketch.row && "sketch-row",
       )}

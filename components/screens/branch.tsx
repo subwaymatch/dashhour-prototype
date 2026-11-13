@@ -146,11 +146,21 @@ export function ServiceQueues({
                       : "service-queues-p-min"
                   }
                 >
-                  <span className="minute-number">{q.wait}</span>
-                  <span className="service-queues-span-min">{t("min")}</span>
+                  {q.wait > 0 ? (
+                    <>
+                      <span className="minute-number">{q.wait}</span>
+                      <span className="service-queues-span-min">
+                        {t("min")}
+                      </span>
+                    </>
+                  ) : (
+                    t("availableNow")
+                  )}
                 </p>
                 <p className="crowd-note-span-usual">
-                  {t("waitingCount", { n: q.waiting })}
+                  {q.waiting > 0
+                    ? t("waitingCount", { n: q.waiting })
+                    : t("noWait")}
                 </p>
               </div>
             )}
