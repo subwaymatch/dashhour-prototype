@@ -26,7 +26,7 @@ Queue data is simulated; the map, stations and walking routes are real, and bran
 
 | `/about` | The product's About page: the pitch, the problem, three steps, four principles, the prototype in numbers, the hackathon origin, questions and a closing call to action. Follows the app's language and has its own EN/한국어 switch. The ticket logo assembles on load, then tears along its perforation and snaps back every few seconds. |
 
-| Not found | Any address the app doesn't have, including an unknown branch, returns a 404 inside the app shell (tab bar and header stay; no tab is marked current). A torn "No. 404" ticket rolls its digits in like a queue display, beside an illustration of someone lost at a signpost. The page shows the address that was asked for, offers home and back, and links to the map, your ticket, About and the sketches. |
+| Not found | Any address the app doesn't have, including an unknown branch, returns a 404 inside the app shell (tab bar and header stay; no tab is marked current). A torn "No. 404" ticket rolls its digits in like a queue display, beside an illustration of someone lost at a signpost. The page shows the address that was asked for, offers home and back, and links to the map, your ticket, About and the sketches. A first visit doesn't get the intro here; it appears once you reach an app screen. |
 
 Each of the original sketches maps to these screens; `/story` links from each sketch to the matching part of the prototype.
 

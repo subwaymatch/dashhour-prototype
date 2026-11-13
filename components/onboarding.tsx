@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Dialog } from "@base-ui/react/dialog";
 import { ArrowRight, ChevronsRight } from "lucide-react";
+import { useSection } from "./shell";
 import { useStore } from "./store";
 import { cx, focusRing, navyButton } from "./ui";
 
@@ -13,14 +14,19 @@ const SLIDES = [
 ] as const;
 
 export function Onboarding() {
-  const { showOnboarding, setShowOnboarding, t } = useStore();
+  const { showOnboarding, introRequested, setShowOnboarding, t } = useStore();
+  // A first visit gets the intro on an app screen, never on the 404 page. It waits
+  // there and shows once the visitor moves on to the app. (About and the sketch
+  // story are outside the app layout and never mount this.)
+  const onAppScreen = useSection() !== null;
+  const open = showOnboarding && (introRequested || onAppScreen);
   const [step, setStep] = React.useState(0);
   const slide = SLIDES[step];
   const last = step === SLIDES.length - 1;
 
   return (
     <Dialog.Root
-      open={showOnboarding}
+      open={open}
       onOpenChange={(open) => {
         setShowOnboarding(open);
         if (!open) window.setTimeout(() => setStep(0), 300);
