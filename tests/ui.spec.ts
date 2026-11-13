@@ -827,10 +827,12 @@ test("unknown addresses get a styled 404 inside the app shell", async ({
   await expect(
     page.getByRole("button", { name: "이전 페이지로" }),
   ).toHaveCSS("border-top-width", "0px");
-  // Suggestions are a plain list: no card borders or fills.
+  // Suggestions are a plain list: no card borders or fills, 17px titles and 15px notes.
   for (const link of await page.locator(".nf-link").all()) {
     await expect(link).toHaveCSS("border-top-width", "0px");
     await expect(link).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+    await expect(link.locator(".nf-link-title")).toHaveCSS("font-size", "17px");
+    await expect(link.locator(".nf-link-desc")).toHaveCSS("font-size", "15px");
   }
   // No tab claims to be the current page.
   await expect(
@@ -876,4 +878,31 @@ test("unknown addresses get a styled 404 inside the app shell", async ({
   await expect(title).toHaveText("이 페이지는 대기열에 없어요");
   await page.getByRole("link", { name: "홈으로 가기" }).click();
   await expect(page).toHaveURL(/\/$/);
+});
+
+test("a first visit shows the intro only on app screens, not on the 404, About or story pages", async ({
+  page,
+}) => {
+  // Runs after the beforeEach script: every load here is a first visit.
+  await page.addInitScript(() => localStorage.removeItem("dashhour:v3"));
+  const intro = page.locator(".onboarding-dialog-popup-skip");
+  for (const path of ["/about", "/story", "/no/such/page", "/branch/not-a-branch"]) {
+    await page.goto(path);
+    await page.waitForLoadState("networkidle");
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await expect(intro).toHaveCount(0);
+  }
+  // Still a first visit: once the visitor reaches the app, the intro appears.
+  await page.getByRole("link", { name: "홈으로 가기" }).click();
+  await expect(page).toHaveURL(/\/$/);
+  await expect(intro).toBeVisible();
+  await page.getByRole("button", { name: "건너뛰기" }).click();
+  await expect(intro).toHaveCount(0);
+  // Asked for from the menu, it opens on the 404 page too.
+  await page.goto("/no/such/page");
+  await page.waitForLoadState("networkidle");
+  await expect(intro).toHaveCount(0);
+  await page.getByRole("button", { name: "옵션" }).filter({ visible: true }).click();
+  await page.getByRole("menuitem", { name: "소개 다시 보기" }).click();
+  await expect(intro).toBeVisible();
 });

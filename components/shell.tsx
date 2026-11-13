@@ -21,6 +21,7 @@ import {
   Ticket,
   X,
 } from "lucide-react";
+import { appSection } from "@/lib/app-paths";
 import { SPEEDS, formatCountdown } from "@/lib/sim";
 import { BankBadge } from "./bank-badge";
 import { LogoMark } from "./logo";
@@ -296,14 +297,9 @@ export function RefreshButton({ className }: { className?: string }) {
 
 const darkIconButton = cx("dark-icon-button");
 
-function useSection() {
-  const path = usePathname() ?? "/";
-  if (path === "/ticket") return "ticket";
-  if (path === "/me") return "me";
-  if (path === "/map") return "map";
-  if (path === "/" || path.startsWith("/branch/")) return "home";
-  // Not found: no tab is the current page.
-  return null;
+/** The current tab; null on the 404 page, where no tab is the current page. */
+export function useSection() {
+  return appSection(usePathname() ?? "/");
 }
 
 function TicketChip() {

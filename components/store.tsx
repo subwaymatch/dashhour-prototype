@@ -117,6 +117,8 @@ type Store = {
   settings: Settings;
   setSettings: (settings: Settings) => void;
   showOnboarding: boolean;
+  /** True when the intro was opened from a menu, not shown for a first visit. */
+  introRequested: boolean;
   setShowOnboarding: (show: boolean) => void;
   goToTicket: () => void;
   showOnMap: (id: string) => void;
@@ -174,6 +176,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [settings, setSettings] = React.useState<Settings>(DEFAULT_SETTINGS);
   const [onboarded, setOnboarded] = React.useState(true);
   const [showOnboarding, setShowOnboardingState] = React.useState(false);
+  const [introRequested, setIntroRequested] = React.useState(false);
   const [sim, setSim] = React.useState(SIM_START);
 
   const [sort, setSort] = React.useState<SortKey>("wait");
@@ -429,8 +432,10 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     notify(translate(lang, "delayed"), translate(lang, "delayedBody"));
   }, [ticket, status, notify, lang]);
 
+  // Called by the intro itself and by "Replay intro"; the first-visit intro is set on load.
   const setShowOnboarding = React.useCallback((show: boolean) => {
     setShowOnboardingState(show);
+    setIntroRequested(show);
     if (!show) setOnboarded(true);
   }, []);
 
@@ -500,6 +505,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     settings,
     setSettings,
     showOnboarding,
+    introRequested,
     setShowOnboarding,
     goToTicket,
     showOnMap,
