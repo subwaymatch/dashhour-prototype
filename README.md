@@ -26,6 +26,8 @@ Queue data is simulated; the map, stations and walking routes are real, and bran
 
 | `/about` | The product's About page: the pitch, the problem, three steps, four principles, the prototype in numbers, the hackathon origin, questions and a closing call to action. Follows the app's language and has its own EN/한국어 switch. The ticket logo assembles on load, then tears along its perforation and snaps back every few seconds. |
 
+| Not found | Any address the app doesn't have, including an unknown branch, returns a 404 inside the app shell (tab bar and header stay; no tab is marked current). A torn "No. 404" ticket rolls its digits in like a queue display, beside an illustration of someone lost at a signpost. The page shows the address that was asked for, offers home and back, and links to the map, your ticket, About and the sketches. |
+
 Each of the original sketches maps to these screens; `/story` links from each sketch to the matching part of the prototype.
 
 ## Stack
@@ -64,6 +66,8 @@ pnpm run deploy
 - **Sketches:** `sketches/` holds the full-size redrawn sketches as transparent PNGs, and `public/sketches/` the web-sized copies plus the original notepad photos used on `/story`. Each was made by sending the original photo to the image edit endpoint with `background: "transparent"`, asking for black pen line work only. Script: `sketches/generate.py`.
 - **App art:** `public/images/` holds eight branch scenes (opaque, made before the transparent-background rule) and the onboarding, empty-ticket and "your turn" illustrations (transparent), converted to WebP. Script: `scripts/generate_image.py`.
 - **About page:** the ten `public/images/about-*.webp` illustrations were made with `scripts/generate_image.py` (2.6 sunburst, low, transparent; the hero at 1536x1024, the rest at 1024x1024), then trimmed to the artwork and converted to WebP. Each prompt described one scene and ended with the same style line: flat illustration with paper grain, the app's navy, gold and cream, no text.
+
+- **Not found:** `public/images/not-found.webp` was made the same way at 1024x1024 (three prompts tried; the signpost one was kept), trimmed and converted to WebP.
 
 The other images were made earlier with GPT Image 2.5 (`gpt-image-2.5-sunburst`), also at `quality: "low"`. They stay as they are and do not need regenerating.
 

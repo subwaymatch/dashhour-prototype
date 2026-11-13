@@ -1,0 +1,375 @@
+/* components/not-found.tsx */
+@layer components {
+  .nf {
+    background-color: var(--color-white);
+    color: var(--color-ink);
+  }
+  .nf-main {
+    margin-inline: auto;
+    max-width: var(--container-6xl);
+    padding-inline: 1.25rem;
+    padding-top: 1.5rem;
+    padding-bottom: 3rem;
+    @media (width >= 48rem) {
+      padding-inline: 2rem;
+      padding-top: 3.5rem;
+      padding-bottom: 5rem;
+    }
+  }
+
+  .nf-hero {
+    display: grid;
+    align-items: center;
+    gap: 2rem;
+    @media (width >= 56rem) {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: 3rem;
+    }
+  }
+  .nf-copy > * {
+    animation: var(--animate-rise);
+  }
+  .nf-copy > :nth-child(2) {
+    animation-delay: 80ms;
+  }
+  .nf-copy > :nth-child(3) {
+    animation-delay: 140ms;
+  }
+  .nf-copy > :nth-child(n + 4) {
+    animation-delay: 200ms;
+  }
+
+  /* The 404 ticket: torn paper edges on the left and right, a perforated gold stub. */
+  .nf-ticket {
+    display: inline-block;
+    rotate: -3deg;
+    filter: drop-shadow(0 0 0.5px rgb(13 17 55 / 0.35))
+      drop-shadow(0 10px 22px rgb(13 17 55 / 0.12));
+  }
+  .nf-ticket-paper {
+    display: flex;
+    align-items: stretch;
+    --tooth: 12px;
+    mask:
+      conic-gradient(from 45deg at left, #0000, #000 1deg 89deg, #0000 90deg)
+        left / 51% var(--tooth) repeat-y,
+      conic-gradient(from 225deg at right, #0000, #000 1deg 89deg, #0000 90deg)
+        right / 51% var(--tooth) repeat-y;
+  }
+  .nf-ticket-main {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    background-color: var(--color-white);
+    padding-block: 0.875rem;
+    padding-left: 1.5rem;
+    padding-right: 1.125rem;
+  }
+  .nf-ticket-no {
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    color: var(--color-gold-700);
+  }
+  .nf-ticket-number {
+    display: flex;
+    font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+    font-size: var(--text-3xl);
+    line-height: 1;
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: -0.03em;
+    color: var(--color-navy-900);
+    font-variant-numeric: tabular-nums;
+  }
+  /* Each digit rolls up into its slot, one after another. */
+  .nf-ticket-digit {
+    display: inline-block;
+    overflow: hidden;
+    padding-block: 0.06em;
+    & > span {
+      display: inline-block;
+      animation: nf-roll 0.7s cubic-bezier(0.3, 1.3, 0.5, 1) both;
+      animation-delay: calc(0.35s + var(--i) * 0.12s);
+    }
+  }
+  .nf-ticket-stub {
+    display: flex;
+    align-items: center;
+    border-left: 2px dashed color-mix(in srgb, #0d1137 22%, transparent);
+    background-color: var(--color-gold-500);
+    padding-left: 0.875rem;
+    padding-right: 1.25rem;
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-semibold);
+    white-space: nowrap;
+    color: var(--color-navy-950);
+  }
+
+  .nf-title {
+    margin-top: 1.25rem;
+    @media (width >= 56rem) {
+      margin-top: 1.75rem;
+    }
+    max-width: 18ch;
+    font-size: var(--text-2xl);
+    line-height: 1.15;
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: var(--tracking-tight);
+    color: var(--color-navy-900);
+    text-wrap: balance;
+    @media (width >= 48rem) {
+      font-size: var(--text-3xl);
+    }
+  }
+  .nf-body {
+    margin-top: 1rem;
+    max-width: 32rem;
+    font-size: var(--text-base);
+    line-height: var(--leading-relaxed);
+    color: color-mix(in srgb, #1d1f2e 80%, transparent);
+  }
+  .nf-path {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: 0.5rem;
+    row-gap: 0.25rem;
+    font-size: var(--text-xs);
+    color: var(--color-muted);
+  }
+  .nf-path-code {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    border-radius: var(--radius-sm);
+    background-color: var(--color-paper);
+    padding-inline: 0.375rem;
+    padding-block: 0.125rem;
+    font-size: var(--text-xs);
+    color: var(--color-ink);
+  }
+  .nf-actions {
+    margin-top: 1.5rem;
+    @media (width >= 48rem) {
+      margin-top: 2rem;
+    }
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .nf-button,
+  .nf-button-secondary {
+    display: inline-flex;
+    height: 3rem;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: var(--radius-md);
+    padding-inline: 1.25rem;
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-semibold);
+    transition: background-color 150ms;
+    &:focus-visible {
+      outline: 2px solid var(--color-navy-700);
+      outline-offset: 2px;
+    }
+  }
+  .nf-button {
+    background-color: var(--color-navy-900);
+    color: var(--color-white);
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-navy-800);
+      }
+    }
+  }
+  /* No border: a soft fill sets it apart from the primary button. */
+  .nf-button-secondary {
+    background-color: var(--color-paper);
+    color: var(--color-navy-900);
+    &:hover {
+      @media (hover: hover) {
+        background-color: color-mix(in srgb, #e7e4dc 80%, #f3f2ee);
+      }
+    }
+    &:active {
+      background-color: var(--color-line);
+    }
+  }
+  .nf-icon {
+    width: 1.125rem;
+    height: 1.125rem;
+    flex-shrink: 0;
+  }
+  @media (hover: hover) {
+    .nf-button-secondary:hover .nf-icon {
+      animation: nf-nudge 0.5s var(--ease-out);
+    }
+  }
+
+  .nf-art {
+    position: relative;
+    margin-inline: auto;
+    width: 100%;
+    max-width: 24rem;
+    animation: nf-art-in 0.9s 0.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .nf-blob {
+    position: absolute;
+    inset: 12% 2% 4% 6%;
+    border-radius: 46% 54% 52% 48% / 52% 46% 54% 48%;
+    background-color: var(--color-gold-100);
+    animation: about-blob 14s ease-in-out infinite;
+  }
+  .nf-img {
+    position: relative;
+    width: 100%;
+    height: auto;
+    /* Rocking gently, as if looking from one sign to the next. */
+    transform-origin: 50% 100%;
+    animation: nf-ponder 6s ease-in-out infinite;
+  }
+  /* On phones a small picture leads, short enough that the way home stays on screen.
+     After the rules above so it overrides them. */
+  @media (width < 56rem) {
+    .nf-hero {
+      gap: 0.75rem;
+    }
+    .nf-art {
+      order: -1;
+      justify-self: center;
+      width: auto;
+      max-width: none;
+      height: clamp(8.5rem, 24dvh, 12.5rem);
+      aspect-ratio: 664 / 800;
+    }
+    .nf-img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  /* Short phones: keep the picture small enough that the home button clears the tab bar. */
+  @media (width < 56rem) and (height < 760px) {
+    .nf-art {
+      height: 6.5rem;
+    }
+    .nf-title {
+      margin-top: 1rem;
+    }
+  }
+  @media (width < 56rem) and (height < 660px) {
+    .nf-art {
+      height: 5rem;
+    }
+  }
+
+  /* Plain list: no cards or rules, just spacing and a shared text edge. */
+  .nf-next {
+    margin-top: 3.5rem;
+    animation: var(--animate-rise);
+    animation-delay: 260ms;
+    @media (width >= 48rem) {
+      margin-top: 6rem;
+    }
+  }
+  .nf-next-title {
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-ink);
+  }
+  .nf-links {
+    margin-top: 1.25rem;
+    display: grid;
+    row-gap: 1.5rem;
+    column-gap: 2.5rem;
+    @media (width >= 40rem) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    @media (width >= 64rem) {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .nf-link {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    border-radius: var(--radius-sm);
+    &:focus-visible {
+      outline: 2px solid var(--color-navy-700);
+      outline-offset: 4px;
+    }
+  }
+  .nf-link-icon {
+    /* Centred on the title's first line. */
+    margin-top: 0.0625rem;
+    width: 1.25rem;
+    height: 1.25rem;
+    flex-shrink: 0;
+    color: var(--color-gold-700);
+  }
+  .nf-link-text {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .nf-link-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-navy-900);
+    transition: color 150ms;
+  }
+  .nf-link-desc {
+    font-size: var(--text-xs);
+    line-height: var(--leading-snug);
+    color: var(--color-muted);
+  }
+  .nf-link-arrow {
+    width: 0.875rem;
+    height: 0.875rem;
+    flex-shrink: 0;
+    color: var(--color-gold-700);
+    transition: translate 200ms var(--ease-out);
+  }
+  @media (hover: hover) {
+    .nf-link:hover .nf-link-title {
+      color: var(--color-gold-800);
+    }
+    .nf-link:hover .nf-link-arrow {
+      translate: 3px 0;
+    }
+  }
+}
+@keyframes nf-roll {
+  0% {
+    translate: 0 110%;
+  }
+  100% {
+    translate: 0 0;
+  }
+}
+@keyframes nf-art-in {
+  from {
+    opacity: 0;
+    scale: 0.95;
+  }
+}
+@keyframes nf-ponder {
+  0%,
+  100% {
+    rotate: 0deg;
+  }
+  30% {
+    rotate: -1.6deg;
+  }
+  70% {
+    rotate: 1.6deg;
+  }
+}
+@keyframes nf-nudge {
+  45% {
+    translate: -3px 0;
+  }
+}

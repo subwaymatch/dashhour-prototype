@@ -804,3 +804,76 @@ test("about page switches language, animates the logo and loads its illustration
   await expect(title).toBeVisible();
   await expect(page.locator(".reveal[data-reveal]")).toHaveCount(0);
 });
+
+test("unknown addresses get a styled 404 inside the app shell", async ({
+  page,
+}) => {
+  const response = await page.goto("/no/such/page");
+  expect(response!.status()).toBe(404);
+  await page.waitForFunction(
+    () =>
+      JSON.parse(localStorage.getItem("dashhour:v3") || "{}").settings != null,
+  );
+  const title = page.getByRole("heading", { level: 1 });
+  await expect(title).toHaveText("이 페이지는 대기열에 없어요");
+  await expect(page.getByRole("img", { name: "404 오류" })).toBeVisible();
+  await expect(page.locator(".nf-path-code")).toHaveText("/no/such/page");
+  await expect
+    .poll(() =>
+      page.locator(".nf-img").evaluate((e: HTMLImageElement) => e.naturalWidth),
+    )
+    .toBeGreaterThan(0);
+  // The back button is a soft fill without a border.
+  await expect(
+    page.getByRole("button", { name: "이전 페이지로" }),
+  ).toHaveCSS("border-top-width", "0px");
+  // Suggestions are a plain list: no card borders or fills.
+  for (const link of await page.locator(".nf-link").all()) {
+    await expect(link).toHaveCSS("border-top-width", "0px");
+    await expect(link).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+  }
+  // No tab claims to be the current page.
+  await expect(
+    page.locator('.desktop-header-nav [aria-current="page"]'),
+  ).toHaveCount(0);
+  await checkPointers(page);
+
+  // Phones: one h1, and the home button clears the tab bar even on short screens.
+  for (const [width, height] of [
+    [390, 844],
+    [375, 667],
+    [320, 640],
+  ]) {
+    await page.setViewportSize({ width, height });
+    await expect(page.locator("h1:visible")).toHaveCount(1);
+    await expect(
+      page.locator('.bottom-nav-nav [aria-current="page"]'),
+    ).toHaveCount(0);
+    const home = page.getByRole("link", { name: "홈으로 가기" });
+    await expect
+      .poll(async () => {
+        const button = (await home.boundingBox())!;
+        const nav = (await page.locator(".bottom-nav-nav").boundingBox())!;
+        return button.y + button.height <= nav.y;
+      })
+      .toBe(true);
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+  }
+
+  // The page follows the app's language setting.
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.getByRole("button", { name: "옵션" }).filter({ visible: true }).click();
+  await page.getByRole("menuitemradio", { name: "English" }).click();
+  await expect(title).toHaveText("This page isn’t in the queue");
+
+  // An unknown branch is a 404 too, and the home button leads back into the app.
+  // (The beforeEach script sets Korean again on every navigation.)
+  expect((await page.goto("/branch/not-a-branch"))!.status()).toBe(404);
+  await expect(title).toHaveText("이 페이지는 대기열에 없어요");
+  await page.getByRole("link", { name: "홈으로 가기" }).click();
+  await expect(page).toHaveURL(/\/$/);
+});
