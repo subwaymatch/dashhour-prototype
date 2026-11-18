@@ -808,8 +808,8 @@ test("about page switches language, animates the logo and loads its illustration
 test("unknown addresses get a styled 404 inside the app shell", async ({
   page,
 }) => {
-  const response = await page.goto("/no/such/page");
-  expect(response!.status()).toBe(404);
+  // A static single-page app answers every address with 200; the 404 is rendered in the page.
+  await page.goto("/no/such/page");
   await page.waitForFunction(
     () =>
       JSON.parse(localStorage.getItem("dashhour:v3") || "{}").settings != null,
@@ -874,7 +874,7 @@ test("unknown addresses get a styled 404 inside the app shell", async ({
 
   // An unknown branch is a 404 too, and the home button leads back into the app.
   // (The beforeEach script sets Korean again on every navigation.)
-  expect((await page.goto("/branch/not-a-branch"))!.status()).toBe(404);
+  await page.goto("/branch/not-a-branch");
   await expect(title).toHaveText("이 페이지는 대기열에 없어요");
   await page.getByRole("link", { name: "홈으로 가기" }).click();
   await expect(page).toHaveURL(/\/$/);

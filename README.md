@@ -26,25 +26,25 @@ Queue data is simulated; the map, stations and walking routes are real, and bran
 
 | `/about` | The product's About page: the pitch, the problem, three steps, four principles, the prototype in numbers, the hackathon origin, questions and a closing call to action. Follows the app's language and has its own EN/한국어 switch. The ticket logo assembles on load, then tears along its perforation and snaps back every few seconds. |
 
-| Not found | Any address the app doesn't have, including an unknown branch, returns a 404 inside the app shell (tab bar and header stay; no tab is marked current). A torn "No. 404" ticket rolls its digits in like a queue display, beside an illustration of someone lost at a signpost. The page shows the address that was asked for, offers home and back, and links to the map, your ticket, About and the sketches. A first visit doesn't get the intro here; it appears once you reach an app screen. |
+| Not found | Any address the app doesn't have, including an unknown branch, shows a 404 page inside the app shell (tab bar and header stay; no tab is marked current). A torn "No. 404" ticket rolls its digits in like a queue display, beside an illustration of someone lost at a signpost. The page shows the address that was asked for, offers home and back, and links to the map, your ticket, About and the sketches. A first visit doesn't get the intro here; it appears once you reach an app screen. |
 
 Each of the original sketches maps to these screens; `/story` links from each sketch to the matching part of the prototype.
 
 ## Stack
 
-- [Vinext](https://github.com/cloudflare/vinext) 1.4: the Next.js App Router API on Vite. Every route, including all 12 branch pages, is prerendered, and the app is served from Cloudflare Workers.
+- [Vite](https://vite.dev) 8 and React 19 as a single-page app, with [wouter](https://github.com/molefrog/wouter) for routing (`src/App.tsx`). It is served as static files from Cloudflare Workers: any address without a file gets `index.html`, and the app shows its 404 page for addresses it doesn't know.
 - [Base UI](https://base-ui.com) 1.9: Drawer, Dialog, Alert Dialog, Menu, Toast, Radio Group, Toggle Group, Switch, Meter, Progress, Input.
 - [MapLibre GL JS](https://maplibre.org) with [OpenFreeMap](https://openfreemap.org) vector tiles (OpenStreetMap data, no API key), recoloured to the app's palette. MapLibre loads only when a map is on screen.
-- Walking routes come from OpenStreetMap via the OSRM foot profile at [routing.openstreetmap.de](https://routing.openstreetmap.de). They are fetched once by `scripts/fetch-routes.mjs` and stored in `lib/routes.ts`, so the app makes no routing calls.
-- Regular CSS organized by component in `app/styles/`, [Lucide](https://lucide.dev) icons, Inter (set slightly tight, `--tracking-inter`) and Noto Sans KR, and [uqr](https://github.com/unjs/uqr) for the check-in QR code.
+- Walking routes come from OpenStreetMap via the OSRM foot profile at [routing.openstreetmap.de](https://routing.openstreetmap.de). They are fetched once by `scripts/fetch-routes.mjs` and stored in `src/lib/routes.ts`, so the app makes no routing calls.
+- Regular CSS organized by component in `src/styles/`, [Lucide](https://lucide.dev) icons, Inter (set slightly tight, `--tracking-inter`) and Noto Sans KR self-hosted from [Fontsource](https://fontsource.org), and [uqr](https://github.com/unjs/uqr) for the check-in QR code.
 
 ## Develop
 
 ```bash
 pnpm install
 pnpm dev          # dev server
-pnpm build        # production build + prerender
-pnpm start        # preview the built Worker locally
+pnpm build        # production build
+pnpm start        # preview the build locally, in the Workers runtime
 pnpm typecheck
 pnpm exec playwright install chromium  # once, for browser checks
 pnpm test:ui
@@ -53,7 +53,7 @@ node scripts/fetch-routes.mjs   # refresh walking routes after moving a branch
 
 ## Deploy to Cloudflare
 
-The Worker is named `dashhour` (see `cloudflare.config.ts`). Authenticate once with `pnpm exec cf auth login`, or set `CLOUDFLARE_API_TOKEN` (the "Edit Cloudflare Workers" template) and `CLOUDFLARE_ACCOUNT_ID`. Then run:
+The Worker is named `dashhour` (see `cloudflare.config.ts`) and serves only the built static files. Authenticate once with `pnpm exec cf auth login`, or set `CLOUDFLARE_API_TOKEN` (the "Edit Cloudflare Workers" template) and `CLOUDFLARE_ACCOUNT_ID`. Then run:
 
 ```bash
 pnpm run deploy
@@ -97,16 +97,16 @@ MG Saemaeul Geumgo has no freely licensed logo file on Commons, so its badge sho
 ## Project layout
 
 ```
-app/(app)/           home, map, ticket, account and branch routes sharing one app shell
-app/about/           the product's About page
-app/story/           the sketch-to-prototype case study
-components/          shell, cards, map, ticket, sheets, onboarding, store
-app/styles/          design tokens, reset, component styles and responsive states
-components/screens/  one file per screen
-lib/                 branches, services and crowd model, demo clock, EN/KO strings, walking routes
-public/banks/        bank logos (see Bank names and logos)
-public/images/       generated branch scenes and illustrations
-public/sketches/     redrawn sketches (WebP) and original pages
-scripts/             image generation, walking-route and bank-logo scripts
-sketches/            full-size transparent PNG sketches + redraw script
+index.html               page shell, default title and social tags
+src/main.tsx             entry: fonts, global CSS, React root
+src/App.tsx              routes; app screens and the 404 share one app shell, About and the story stand alone
+src/components/          shell, cards, map, ticket, sheets, onboarding, store, About and story pages
+src/components/screens/  one file per app screen
+src/styles/              design tokens, reset, component styles and responsive states
+src/lib/                 branches, services and crowd model, demo clock, EN/KO strings, walking routes, page titles
+public/banks/            bank logos (see Bank names and logos)
+public/images/           generated branch scenes and illustrations
+public/sketches/         redrawn sketches (WebP) and original pages
+scripts/                 image generation, walking-route and bank-logo scripts
+sketches/                full-size transparent PNG sketches + redraw script
 ```

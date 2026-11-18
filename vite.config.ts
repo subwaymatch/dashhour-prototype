@@ -1,19 +1,8 @@
 import { defineConfig } from "vite";
-import vinext from "vinext";
+import react from "@vitejs/plugin-react";
 import { cloudflare } from "@cloudflare/vite-plugin";
-import { staticAssetsAdapter } from "@vinext/cloudflare/cache/static-assets-adapter";
 
 export default defineConfig({
-  plugins: [
-    vinext({
-      cache: { cdn: staticAssetsAdapter() },
-      prerender: { routes: "*" },
-    }),
-    cloudflare({
-      viteEnvironment: {
-        name: "rsc",
-        childEnvironments: ["ssr"],
-      },
-    }),
-  ],
+  plugins: [react(), cloudflare()],
+  resolve: { tsconfigPaths: true },
 });
