@@ -401,12 +401,7 @@ export function BottomNav() {
                   active ? "bottom-nav-link-2" : "bottom-nav-link-3",
                 )}
               >
-                <span
-                  className={cx(
-                    "bottom-nav-span",
-                    active && "bottom-nav-span-2",
-                  )}
-                >
+                <span className="bottom-nav-span">
                   <Icon
                     className="bottom-nav-icon"
                     strokeWidth={active ? 2.1 : 1.8}

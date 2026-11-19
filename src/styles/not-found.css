@@ -105,10 +105,11 @@
     color: var(--color-navy-950);
   }
 
+  /* The tilted ticket dips below its box on the left, so the gap is wider than it reads. */
   .nf-title {
-    margin-top: 1.25rem;
+    margin-top: 2.25rem;
     @media (width >= 56rem) {
-      margin-top: 1.75rem;
+      margin-top: 3rem;
     }
     max-width: 18ch;
     font-size: var(--text-2xl);
@@ -182,17 +183,18 @@
       }
     }
   }
-  /* No border: a soft fill sets it apart from the primary button. */
+  /* A text button: no border or fill, so only the primary button reads as a button. */
   .nf-button-secondary {
-    background-color: var(--color-paper);
+    padding-inline: 0.75rem;
     color: var(--color-navy-900);
+    transition: color 150ms;
     &:hover {
       @media (hover: hover) {
-        background-color: color-mix(in srgb, #e7e4dc 80%, #f3f2ee);
+        color: var(--color-gold-800);
       }
     }
     &:active {
-      background-color: var(--color-line);
+      color: var(--color-gold-800);
     }
   }
   .nf-icon {
@@ -253,7 +255,7 @@
       height: 6.5rem;
     }
     .nf-title {
-      margin-top: 1rem;
+      margin-top: 1.75rem;
     }
   }
   @media (width < 56rem) and (height < 660px) {

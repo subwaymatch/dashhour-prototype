@@ -479,6 +479,8 @@
   .bottom-nav-link-3 {
     color: var(--color-muted);
   }
+  /* Holds the icon and the queue badge. No fill: the current tab is marked by colour and
+     a heavier stroke only. */
   .bottom-nav-span {
     position: relative;
     display: flex;
@@ -486,15 +488,6 @@
     width: 3rem;
     align-items: center;
     justify-content: center;
-    border-radius: var(--radius-md);
-    transition-property:
-      color, background-color, border-color, outline-color,
-      text-decoration-color, fill, stroke;
-    transition-timing-function: var(--default-transition-timing-function);
-    transition-duration: var(--default-transition-duration);
-  }
-  .bottom-nav-span-2 {
-    background-color: var(--color-gold-100);
   }
   .bottom-nav-icon {
     width: 22px;
