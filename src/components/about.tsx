@@ -393,27 +393,25 @@ export function AboutPage() {
           </Reveal>
         </section>
 
-        <section className="about-tint">
-          <div className="about-section">
-            <Reveal>
-              <p className="about-eyebrow">{c.steps.label}</p>
-              <h2 className="about-h2">{c.steps.title}</h2>
-            </Reveal>
-            <ol className="about-steps">
-              {c.steps.items.map((s, i) => (
-                <Reveal as="li" key={s.image} delay={i * 120} className="about-step">
-                  <div className="about-step-art">
-                    <Art name={s.image} alt={s.alt} />
-                  </div>
-                  <p className="about-step-number minute-number" aria-hidden>
-                    {i + 1}
-                  </p>
-                  <h3 className="about-h3">{s.title}</h3>
-                  <p className="about-small">{s.body}</p>
-                </Reveal>
-              ))}
-            </ol>
-          </div>
+        <section className="about-section">
+          <Reveal>
+            <p className="about-eyebrow">{c.steps.label}</p>
+            <h2 className="about-h2">{c.steps.title}</h2>
+          </Reveal>
+          <ol className="about-steps">
+            {c.steps.items.map((s, i) => (
+              <Reveal as="li" key={s.image} delay={i * 120} className="about-step">
+                <div className="about-step-art">
+                  <Art name={s.image} alt={s.alt} />
+                </div>
+                <p className="about-step-number minute-number" aria-hidden>
+                  {i + 1}
+                </p>
+                <h3 className="about-h3">{s.title}</h3>
+                <p className="about-small">{s.body}</p>
+              </Reveal>
+            ))}
+          </ol>
         </section>
 
         <section className="about-section">

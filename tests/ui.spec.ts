@@ -264,6 +264,13 @@ test("mobile list rows open the branch and layouts fit small screens", async ({
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await open(page, "/");
+  // The current tab is marked by colour alone: no fill behind its icon.
+  const currentTab = page.locator('.bottom-nav-nav [aria-current="page"]');
+  await expect(currentTab).toHaveCount(1);
+  await expect(currentTab.locator(".bottom-nav-span")).toHaveCSS(
+    "background-color",
+    "rgba(0, 0, 0, 0)",
+  );
   const row = page.locator(".branch-row").filter({ visible: true }).first();
   const href = await row.getAttribute("href");
   const box = (await row.boundingBox())!;
@@ -777,6 +784,15 @@ test("about page switches language, animates the logo and loads its illustration
   for (const section of await page.locator(".reveal").all())
     await section.evaluate((e) => e.scrollIntoView({ block: "center" }));
   await expect(pending).toHaveCount(0);
+  // The three steps sit on the white page, not on cards or a tinted band.
+  const steps = page.locator(".about-step");
+  await expect(steps).toHaveCount(3);
+  for (const step of await steps.all())
+    await expect(step).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+  await expect(page.locator("section:has(.about-steps)")).toHaveCSS(
+    "background-color",
+    "rgba(0, 0, 0, 0)",
+  );
   await page.getByRole("button", { name: "EN" }).click();
   await expect(title).toContainText("hold your place in line");
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
@@ -823,10 +839,10 @@ test("unknown addresses get a styled 404 inside the app shell", async ({
       page.locator(".nf-img").evaluate((e: HTMLImageElement) => e.naturalWidth),
     )
     .toBeGreaterThan(0);
-  // The back button is a soft fill without a border.
-  await expect(
-    page.getByRole("button", { name: "이전 페이지로" }),
-  ).toHaveCSS("border-top-width", "0px");
+  // The back button is a text button: no border and no fill.
+  const back = page.getByRole("button", { name: "이전 페이지로" });
+  await expect(back).toHaveCSS("border-top-width", "0px");
+  await expect(back).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
   // Suggestions are a plain list: no card borders or fills, 17px titles and 15px notes.
   for (const link of await page.locator(".nf-link").all()) {
     await expect(link).toHaveCSS("border-top-width", "0px");

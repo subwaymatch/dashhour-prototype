@@ -238,31 +238,29 @@
     }
   }
 
-  /* Steps */
-  .about-tint {
-    background-color: var(--color-paper);
-  }
+  /* Steps: no cards or tint. Each step shares one left edge from picture to text, the
+     pictures stand on a common baseline, and wide gutters keep the columns apart. */
   .about-steps {
     margin-top: 2.5rem;
     display: grid;
-    gap: 1rem;
+    row-gap: 3.5rem;
     @media (width >= 48rem) {
+      margin-top: 3.5rem;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 1.5rem;
+      column-gap: 2.5rem;
+    }
+    @media (width >= 64rem) {
+      column-gap: 4rem;
     }
   }
-  .about-step {
-    border-radius: var(--radius-lg);
-    background-color: var(--color-white);
-    padding: 1.5rem;
-  }
   .about-step-art {
-    margin-inline: auto;
-    height: 11rem;
-    max-width: 14rem;
+    height: 10rem;
     transition: translate 300ms var(--ease-out);
     @media (width >= 48rem) {
       height: 13rem;
+    }
+    & .about-art {
+      object-position: left bottom;
     }
   }
   @media (hover: hover) {
@@ -271,8 +269,8 @@
     }
   }
   .about-step-number {
-    margin-top: 1.25rem;
-    margin-bottom: 0.625rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
     display: flex;
     width: 1.75rem;
     height: 1.75rem;
